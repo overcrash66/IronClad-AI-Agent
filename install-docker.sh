@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================================================
 #  IronClad AI Agent — Docker Quick-Start
-#  Usage: curl -fsSL https://overcrash66.github.io/ironclad-docs/install-docker.sh | bash
+#  Usage: curl -fsSL https://overcrash66.github.io/IronClad-AI-Agent/install-docker.sh | bash
 # ============================================================
 set -euo pipefail
 

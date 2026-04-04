@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================================================
 #  IronClad AI Agent — Automated Installer (Linux / macOS / WSL2)
-#  Usage: curl -fsSL https://overcrash66.github.io/ironclad-docs/install.sh | bash
+#  Usage: curl -fsSL https://overcrash66.github.io/IronClad-AI-Agent/install.sh | bash
 # ============================================================
 set -euo pipefail
 
@@ -285,7 +285,7 @@ print_summary() {
   echo -e "  ${BOLD}Environment flags:${NC}"
   echo -e "    export IRONCLAD_ALLOW_LOCAL_EXEC=1           ${BOLD}# Allow local tool execution${NC}"
   echo ""
-  echo -e "  ${BOLD}Docs:${NC}  https://overcrash66.github.io/ironclad-docs/"
+  echo -e "  ${BOLD}Docs:${NC}  https://overcrash66.github.io/IronClad-AI-Agent/"
   echo ""
 }
 

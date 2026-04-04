@@ -6,7 +6,7 @@
   Downloads and installs Rust, compiles ironclad-ai-agent from crates.io,
   generates a default settings.toml, and optionally installs Ollama.
 .EXAMPLE
-  iwr -useb https://overcrash66.github.io/ironclad-docs/install.ps1 | iex
+  iwr -useb https://overcrash66.github.io/IronClad-AI-Agent/install.ps1 | iex
 #>
 
 $ErrorActionPreference = 'Stop'
@@ -260,7 +260,7 @@ function Write-Summary {
   Write-Host "  Environment flag:" -ForegroundColor White
   Write-Host '    $env:IRONCLAD_ALLOW_LOCAL_EXEC = "1"' -ForegroundColor DarkGray
   Write-Host ""
-  Write-Host "  Docs:  https://overcrash66.github.io/ironclad-docs/" -ForegroundColor Cyan
+  Write-Host "  Docs:  https://overcrash66.github.io/IronClad-AI-Agent/" -ForegroundColor Cyan
   Write-Host ""
 }
 
