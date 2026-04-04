@@ -1,0 +1,235 @@
+# IronClad Default Configuration
+# Override nested config values via environment variable: IRONCLAD__<SECTION>__<KEY>
+# e.g. IRONCLAD__LLM__DEFAULT_PROVIDER=openai
+
+[general]
+workspace_dir = "./scratchpad"
+log_level = "info"
+audit_db = "ironclad_audit.db"
+
+[security]
+# Path patterns that are explicitly allowed (glob patterns)
+# Can be overridden via IRONCLAD__SECURITY__ALLOWED_PATH_PATTERNS as a comma-separated string
+allowed_path_patterns = ["**"]
+# Path patterns that are explicitly blocked (glob patterns)
+# These take precedence over allowed patterns
+# Can be overridden via IRONCLAD__SECURITY__BLOCKED_PATH_PATTERNS as a comma-separated string
+blocked_path_patterns = ["**/.env", "**/.git/**", "**/secrets/**", "**/*.pem", "**/*.key"]
+# Whether to enforce strict path validation
+strict_path_validation = true
+# Maximum path length (characters)
+max_path_length = 4096
+# Autonomous mode — skip TUI approval dialogs for all Governor-classified intents (Yellow + Red).
+# NOTE: blocked operations remain blocked even in autonomous mode, including git commit/push/pull/merge
+# and GitHub or MCP write actions against external repositories.
+# WARNING: Only enable if you fully trust the agent. All actions are still audit-logged.
+# Can also be set via: IRONCLAD__SECURITY__AUTONOMOUS_MODE=true (env var / .env file)
+autonomous_mode = false
+
+[sandbox]
+backend = "wsl" # "docker" | "wsl" | "local" (no sandbox, maximum speed)
+# WSL Distro or Docker Image
+default_image = "Ubuntu"
+# Docker-specific settings (ignored for WSL)
+socket = ""
+timeout_secs = 60
+memory_limit_mb = 4096
+cpu_limit = 2.0
+network_enabled = true
+
+[llm]
+default_provider = "ollama"   # ollama | openai | anthropic
+timeout_secs = 420             # Timeout for LLM requests (seconds) — 4B/8B models respond in <30s on RTX 5060ti
+loop_timeout_secs = 180       # Total QA-loop budget (3 retries × 90s = 270s max, this caps it)
+max_retries = 2               # Maximum retry attempts for failed requests
+max_model_size_b = 0          # Maximum Ollama model size in billions of parameters (0 = unlimited)
+qa_enabled = true             # Enable QA review step (set to false for faster output without quality validation)
+orchestrator_enabled = true    # Enable model routing/planning step
+force_use_default_model = true # Force execution on default model, ignoring routing choice
+turbo_mode = false            # Turbo mode for maximum speed (disables orchestrator + QA)
+max_tool_calls = 30           # Maximum tool calls per task (higher = more complex workflows)
+agentic_mode = true           # Enable ReAct-style reasoning (Thought → Action → Observation cycles)
+# session_budget_secs = 600  # Optional: hard wall-clock limit per QA-loop run (seconds). Uncomment to enable.
+# max_parallel_tools = 4    # Maximum concurrent tool calls per turn (default: 4, min: 1)
+# context_compression = false  # Summarise dropped context messages before sliding-window truncation
+
+[llm.ollama]
+# WSL users: Use 127.0.0.1 instead of localhost for 10x faster connections
+# localhost DNS resolution adds ~300ms per request in WSL2 mirrored mode
+base_url = "http://127.0.0.1:11434"
+planner_model = "qwen3-vl:4b"
+qa_model = "qwen3-vl:4b"
+model = "qwen3-vl:4b"
+vision = true  # Set to true if using a vision model (e.g., llava)
+keep_alive = "10m"  # Keep model in memory for faster subsequent requests
+
+[llm.openai]
+base_url = "https://api.openai.com/v1"
+model = "gpt-4o"
+
+[llm.anthropic]
+base_url = "https://api.anthropic.com/v1"
+model = "claude-3-5-sonnet-20240620"
+
+[llm.nvidia]
+base_url = "https://integrate.api.nvidia.com/v1"
+model = "meta/llama-3.1-70b-instruct"
+
+[llm.translation]
+enabled = false
+base_url = "http://127.0.0.1:11434"
+model = "translategemma"
+[integrations.telegram]
+enabled = false
+allowed_chat_ids = []
+trusted_chat_ids = []
+
+# Remote AI Agent Endpoints (DeepAgents / LangGraph interop)
+# Uncomment and configure to enable remote_agent skill.
+# [integrations.remote_agents]
+# enabled = false
+# [[integrations.remote_agents.endpoints]]
+# name         = "deepagents"
+# url          = "http://localhost:8123/invoke"
+# key          = ""            # bearer token (leave blank for no auth)
+# timeout_secs = 120
+
+[browser]
+headless = true  # Set to false to see the browser window (Visual Mode)
+
+[memory]
+# Maximum messages to keep per session (0 = unlimited)
+max_messages_per_session = 50
+# Maximum age of sessions in days before archiving (0 = no limit)
+max_session_age_days = 30
+# Whether to automatically archive old sessions
+auto_archive = true
+# Interval in hours between cleanup runs (0 = disabled)
+cleanup_interval_hours = 24
+
+[api]
+# Whether the HTTP API is enabled
+enabled = false
+# The host to bind to
+host = "127.0.0.1"
+# The port to listen on
+port = 3000
+# Optional API key for authenticating requests (leave blank for none)
+api_key = ""
+
+# Dashboard Configuration - Localhost Web Control Center
+# Provides real-time visibility into agent operations
+[dashboard]
+# Enable the web dashboard
+enabled = true
+# Port for the dashboard (bound to 127.0.0.1 only for security)
+port = 8080
+# Username for Basic Auth (optional - leave empty for no auth)
+username = ""
+# Password for Basic Auth (optional - leave empty for no auth)
+password = ""
+
+# RAG (Retrieval-Augmented Generation) Knowledge Base Configuration
+# Indexes your workspace code into a local vector database for context retrieval
+[rag]
+# Enable or disable RAG functionality entirely
+# When disabled, no indexing occurs and RAG skill is not registered
+enabled = true
+
+# Vector database path - relative to workspace or absolute
+db_path = "memory.db"
+
+# ==========================================
+# MCP (Model Context Protocol) Servers
+# ==========================================
+# Configure external tools via standard MCP protocol.
+# Each section under [mcp.server_name] registers a new server.
+
+# Example: Filesystem MCP server (Node.js)
+# Uncomment all lines below to enable:
+# [mcp.filesystem]
+# command = "npx"
+# args = ["-y", "@modelcontextprotocol/server-filesystem", "E:/"]
+
+# Example: SQLite MCP server (Python)
+# [mcp.sqlite]
+# command = "uvx"
+# args = ["mcp-server-sqlite", "--db-path", "test.db"]
+
+# Embedding provider: "ollama" (local), "openai" (cloud), or "nvidia" (cloud)
+embedding_provider = "ollama"
+
+# Model name for embeddings
+# Ollama options: "nomic-embed-text", "all-minilm", "mxbai-embed-large"
+# OpenAI options: "text-embedding-3-small", "text-embedding-3-large"
+# NVIDIA options: "nvidia/nv-embedqa-e5-v5", "nvidia/llama-3.2-nv-embedqa-1b-v2"
+embedding_model = "nomic-embed-text"
+
+# Chunking configuration
+# Target chunk size in tokens - smaller = more granular, larger = more context
+chunk_size = 512
+
+# Overlap between chunks in tokens - helps maintain context across boundaries
+chunk_overlap = 50
+
+# Retrieval configuration
+# Maximum number of chunks to retrieve per query
+max_results = 10
+
+# Minimum similarity score (0.0 to 1.0) - filter out low-quality matches
+min_similarity = 0.7
+
+# File patterns to include in index - glob patterns
+include_patterns = ["**/*.rs", "**/*.py", "**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx", "**/*.go", "**/*.java", "**/*.md", "**/*.txt"]
+
+# File patterns to exclude from index - glob patterns
+exclude_patterns = ["**/target/**", "**/node_modules/**", "**/.git/**", "**/dist/**", "**/build/**", "**/.venv/**"]
+
+# Indexing behavior
+# Automatically index workspace on startup when RAG is enabled
+auto_index = true
+
+# Watch for file changes and update index incrementally
+watch_changes = true
+
+# Debounce interval for file change events in milliseconds
+watch_debounce_ms = 1000
+
+# Maximum file size to index in KB - skip very large files
+max_file_size_kb = 500
+
+# Orchestrator integration
+# Automatically inject RAG context into system prompt
+auto_inject_context = true
+
+# Maximum tokens of RAG context to inject - prevents context overflow
+max_context_tokens = 2000
+
+# Local Tools & Script Execution Configuration
+[tools]
+# Whether to enforce Python virtual environment (venv) isolation for local tools.
+python_venv_enforced = true
+
+# Whether to allow local tools to execute potentially dangerous system-level commands (apt, sudo, etc).
+allow_system_commands = true
+
+# Mapping of file extensions to execution commands.
+# These determine how scripts in the 'tools/' directory are executed.
+[tools.extensions]
+py = "python3"
+sh = "bash"
+js = "node"
+ps1 = "powershell -ExecutionPolicy Bypass -File" 
+
+[faceless_yt]
+enabled = true
+output_dir = "./workspace/yt_videos"
+niche = "AI news"
+languages = ["en", "fr"]
+default_format = "16:9"
+tts_voice_en = "en-US-GuyNeural"
+tts_voice_fr = "fr-FR-HenriNeural"
+pexels_api_key = ""  # Or set via IRONCLAD__FACELESS_YT__PEXELS_API_KEY env var
+background_music_dir = "./assets/music"
+youtube_upload = false
+max_video_duration_secs = 300
