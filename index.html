@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Install — IronClad AI Agent</title>
-  <meta name="description" content="Install IronClad, the secure-by-design autonomous AI agent built in Rust. One-command install scripts for Linux, macOS, Windows, and Docker.">
+  <meta name="description"
+    content="Install IronClad, the secure-by-design autonomous AI agent built in Rust. One-command install scripts for Linux, macOS, Windows, and Docker.">
   <meta name="keywords" content="IronClad, AI Agent, Rust, autonomous, security, LLM, install">
   <meta name="author" content="overcrash66">
 
@@ -19,327 +21,350 @@
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<!-- ═══════════════════════ HEADER ═══════════════════════ -->
-<header class="site-header">
-  <div class="header-inner">
-    <a href="#" class="header-brand">
-      <img src="assets/logo.png" alt="IronClad Logo">
-      <span>IronClad</span>
-    </a>
-    <nav class="header-nav">
-      <a href="#quick-install">Install</a>
-      <a href="#manual-install">Manual</a>
-      <a href="#configuration">Config</a>
-      <a href="#troubleshooting">Help</a>
-      <a href="https://github.com/overcrash66/IronClad" target="_blank" rel="noopener" class="btn-outline">⭐ GitHub</a>
-      <a href="https://crates.io/crates/ironclad-ai-agent" target="_blank" rel="noopener" class="btn-outline">📦 Crates.io</a>
-    </nav>
-    <button class="mobile-toggle" aria-label="Toggle navigation">☰</button>
-  </div>
-</header>
-
-<!-- ═══════════════════ SIDEBAR OVERLAY ═══════════════════ -->
-<div class="sidebar-overlay"></div>
-
-<!-- ═══════════════════════ LAYOUT ═══════════════════════ -->
-<div class="page-wrapper">
-
-  <!-- ──────── Sidebar ──────── -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <h4>Getting Started</h4>
-      <a href="#quick-install" class="active"><span class="icon">⚡</span> Quick Install</a>
-      <a href="#prerequisites"><span class="icon">📋</span> Prerequisites</a>
-      <a href="#manual-install"><span class="icon">🔧</span> Manual Install</a>
+  <!-- ═══════════════════════ HEADER ═══════════════════════ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#" class="header-brand">
+        <img src="assets/logo.png" alt="IronClad Logo">
+        <span>IronClad</span>
+      </a>
+      <nav class="header-nav">
+        <a href="#quick-install">Install</a>
+        <a href="#manual-install">Manual</a>
+        <a href="#configuration">Config</a>
+        <a href="#troubleshooting">Help</a>
+        <a href="https://github.com/overcrash66/IronClad" target="_blank" rel="noopener" class="btn-outline">⭐
+          GitHub</a>
+        <a href="https://crates.io/crates/ironclad-ai-agent" target="_blank" rel="noopener" class="btn-outline">📦
+          Crates.io</a>
+      </nav>
+      <button class="mobile-toggle" aria-label="Toggle navigation">☰</button>
     </div>
-    <div class="sidebar-section">
-      <h4>Install Methods</h4>
-      <a href="#cargo-install"><span class="icon">📦</span> Cargo Install</a>
-      <a href="#prebuilt"><span class="icon">⬇️</span> Pre-built Binaries</a>
-      <a href="#from-source"><span class="icon">🛠️</span> Build from Source</a>
-      <a href="#docker"><span class="icon">🐳</span> Docker</a>
-    </div>
-    <div class="sidebar-section">
-      <h4>Configure & Run</h4>
-      <a href="#configuration"><span class="icon">⚙️</span> Configuration</a>
-      <a href="#env-variables"><span class="icon">🔑</span> API Keys & Env</a>
-      <a href="#verify"><span class="icon">✅</span> Verify Install</a>
-    </div>
-    <div class="sidebar-section">
-      <h4>Help</h4>
-      <a href="#troubleshooting"><span class="icon">🔍</span> Troubleshooting</a>
-      <a href="#wsl2-tips"><span class="icon">🪟</span> WSL2 Tips</a>
-    </div>
-  </aside>
+  </header>
 
-  <!-- ──────── Main Content ──────── -->
-  <main class="main-content">
+  <!-- ═══════════════════ SIDEBAR OVERLAY ═══════════════════ -->
+  <div class="sidebar-overlay"></div>
 
-    <!-- ═════════ HERO ═════════ -->
-    <section class="hero" id="hero">
-      <img src="assets/logo.png" alt="IronClad Logo" class="hero-logo">
-      <h1>Install IronClad AI Agent</h1>
-      <p>Secure-by-Design Autonomous AI Agent — built in Rust.
-         One command to install, full control over your environment.</p>
+  <!-- ═══════════════════════ LAYOUT ═══════════════════════ -->
+  <div class="page-wrapper">
 
-      <div class="hero-install">
-        <span class="cmd">cargo install ironclad-ai-agent</span>
-        <button class="copy-btn" aria-label="Copy command">📋</button>
+    <!-- ──────── Sidebar ──────── -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h4>Getting Started</h4>
+        <a href="#quick-install" class="active"><span class="icon">⚡</span> Quick Install</a>
+        <a href="#prerequisites"><span class="icon">📋</span> Prerequisites</a>
+        <a href="#manual-install"><span class="icon">🔧</span> Manual Install</a>
       </div>
-
-      <div class="hero-badges">
-        <img src="https://img.shields.io/crates/v/ironclad-ai-agent?style=flat-square&color=6c8aff&label=crates.io" alt="Crates.io version">
-        <img src="https://img.shields.io/badge/License-GPLv3-blue?style=flat-square" alt="License: GPL v3">
-        <img src="https://img.shields.io/badge/rust-stable-orange?style=flat-square" alt="Rust stable">
-        <img src="https://img.shields.io/badge/platform-Win%20%7C%20Linux%20%7C%20macOS-lightgrey?style=flat-square" alt="Platforms">
+      <div class="sidebar-section">
+        <h4>Install Methods</h4>
+        <a href="#cargo-install"><span class="icon">📦</span> Cargo Install</a>
+        <a href="#prebuilt"><span class="icon">⬇️</span> Pre-built Binaries</a>
+        <a href="#from-source"><span class="icon">🛠️</span> Build from Source</a>
+        <a href="#docker"><span class="icon">🐳</span> Docker</a>
       </div>
-    </section>
-
-    <!-- ═════════ QUICK INSTALL ═════════ -->
-    <section class="section" id="quick-install">
-      <h2>⚡ Quick Install <a href="#quick-install" class="anchor">#</a></h2>
-      <p>Run the automated installer for your platform. It handles system dependencies, Rust, IronClad, and configuration — all in one command.</p>
-
-      <div class="tabs">
-        <div class="tab-buttons">
-          <button class="tab-btn active" data-tab="linux">🐧 Linux / macOS / WSL2</button>
-          <button class="tab-btn" data-tab="windows">🪟 Windows (PowerShell)</button>
-          <button class="tab-btn" data-tab="docker">🐳 Docker</button>
-        </div>
-
-        <div class="tab-panel active" data-panel="linux">
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash</span>
-              <button class="copy-code-btn">📋 Copy</button>
-            </div>
-            <pre><code>curl -fsSL https://overcrash66.github.io/ironclad-docs/install.sh | bash</code></pre>
-          </div>
-          <div class="callout tip">
-            <p><strong>What this does:</strong> Detects your package manager (apt/dnf/brew/pacman), installs build dependencies, Rust, and IronClad from crates.io. Generates a default <code>settings.toml</code> and optionally installs Ollama.</p>
-          </div>
-        </div>
-
-        <div class="tab-panel" data-panel="windows">
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>PowerShell (as Administrator)</span>
-              <button class="copy-code-btn">📋 Copy</button>
-            </div>
-            <pre><code>iwr -useb https://overcrash66.github.io/ironclad-docs/install.ps1 | iex</code></pre>
-          </div>
-          <div class="callout warning">
-            <p><strong>Prerequisite:</strong> Visual Studio Build Tools with <em>"Desktop development with C++"</em> must be installed. <a href="https://visualstudio.microsoft.com/downloads/" target="_blank" rel="noopener">Download here</a>.</p>
-          </div>
-        </div>
-
-        <div class="tab-panel" data-panel="docker">
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash</span>
-              <button class="copy-code-btn">📋 Copy</button>
-            </div>
-            <pre><code>curl -fsSL https://overcrash66.github.io/ironclad-docs/install-docker.sh | bash</code></pre>
-          </div>
-          <div class="callout info">
-            <p><strong>No Rust needed.</strong> Builds a multi-stage Docker image and runs IronClad in a container. Ollama must be running on the host.</p>
-          </div>
-        </div>
+      <div class="sidebar-section">
+        <h4>Configure & Run</h4>
+        <a href="#configuration"><span class="icon">⚙️</span> Configuration</a>
+        <a href="#env-variables"><span class="icon">🔑</span> API Keys & Env</a>
+        <a href="#verify"><span class="icon">✅</span> Verify Install</a>
       </div>
-    </section>
+      <div class="sidebar-section">
+        <h4>Help</h4>
+        <a href="#troubleshooting"><span class="icon">🔍</span> Troubleshooting</a>
+        <a href="#wsl2-tips"><span class="icon">🪟</span> WSL2 Tips</a>
+      </div>
+    </aside>
 
-    <!-- ═════════ PREREQUISITES ═════════ -->
-    <section class="section" id="prerequisites">
-      <h2>📋 Prerequisites <a href="#prerequisites" class="anchor">#</a></h2>
-      <p>If you prefer to install manually, ensure these are in place first.</p>
+    <!-- ──────── Main Content ──────── -->
+    <main class="main-content">
 
-      <h3>System Dependencies</h3>
+      <!-- ═════════ HERO ═════════ -->
+      <section class="hero" id="hero">
+        <img src="assets/logo.png" alt="IronClad Logo" class="hero-logo">
+        <h1>Install IronClad AI Agent</h1>
+        <p>Secure-by-Design Autonomous AI Agent — built in Rust.
+          One command to install, full control over your environment.</p>
 
-      <div class="tabs">
-        <div class="tab-buttons">
-          <button class="tab-btn active" data-tab="prereq-ubuntu">Ubuntu / Debian</button>
-          <button class="tab-btn" data-tab="prereq-fedora">Fedora / RHEL</button>
-          <button class="tab-btn" data-tab="prereq-arch">Arch Linux</button>
-          <button class="tab-btn" data-tab="prereq-macos">macOS</button>
-          <button class="tab-btn" data-tab="prereq-windows">Windows</button>
+        <div class="hero-install">
+          <span class="cmd">cargo install ironclad-ai-agent</span>
+          <button class="copy-btn" aria-label="Copy command">📋</button>
         </div>
 
-        <div class="tab-panel active" data-panel="prereq-ubuntu">
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash</span>
-              <button class="copy-code-btn">📋 Copy</button>
+        <div class="hero-badges">
+          <img src="https://img.shields.io/crates/v/ironclad-ai-agent?style=flat-square&color=6c8aff&label=crates.io"
+            alt="Crates.io version">
+          <img src="https://img.shields.io/badge/License-GPLv3-blue?style=flat-square" alt="License: GPL v3">
+          <img src="https://img.shields.io/badge/rust-stable-orange?style=flat-square" alt="Rust stable">
+          <img src="https://img.shields.io/badge/platform-Win%20%7C%20Linux%20%7C%20macOS-lightgrey?style=flat-square"
+            alt="Platforms">
+        </div>
+      </section>
+
+      <!-- ═════════ QUICK INSTALL ═════════ -->
+      <section class="section" id="quick-install">
+        <h2>⚡ Quick Install <a href="#quick-install" class="anchor">#</a></h2>
+        <p>Run the automated installer for your platform. It handles system dependencies, Rust, IronClad, and
+          configuration — all in one command.</p>
+
+        <div class="tabs">
+          <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="linux">🐧 Linux / macOS / WSL2</button>
+            <button class="tab-btn" data-tab="windows">🪟 Windows (PowerShell)</button>
+            <button class="tab-btn" data-tab="docker">🐳 Docker</button>
+          </div>
+
+          <div class="tab-panel active" data-panel="linux">
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>curl -fsSL https://overcrash66.github.io/ironclad-docs/install.sh | bash</code></pre>
             </div>
-            <pre><code>sudo apt update
+            <div class="callout tip">
+              <p><strong>What this does:</strong> Detects your package manager (apt/dnf/brew/pacman), installs build
+                dependencies, Rust, and IronClad from crates.io. Generates a default <code>settings.toml</code> and
+                optionally installs Ollama.</p>
+            </div>
+          </div>
+
+          <div class="tab-panel" data-panel="windows">
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>PowerShell (as Administrator)</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>iwr -useb https://overcrash66.github.io/ironclad-docs/install.ps1 | iex</code></pre>
+            </div>
+            <div class="callout warning">
+              <p><strong>Prerequisite:</strong> Visual Studio Build Tools with <em>"Desktop development with C++"</em>
+                must be installed. <a href="https://visualstudio.microsoft.com/downloads/" target="_blank"
+                  rel="noopener">Download here</a>.</p>
+            </div>
+          </div>
+
+          <div class="tab-panel" data-panel="docker">
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>curl -fsSL https://overcrash66.github.io/ironclad-docs/install-docker.sh | bash</code></pre>
+            </div>
+            <div class="callout info">
+              <p><strong>No Rust needed.</strong> Builds a multi-stage Docker image and runs IronClad in a container.
+                Ollama must be running on the host.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════════ PREREQUISITES ═════════ -->
+      <section class="section" id="prerequisites">
+        <h2>📋 Prerequisites <a href="#prerequisites" class="anchor">#</a></h2>
+        <p>If you prefer to install manually, ensure these are in place first.</p>
+
+        <h3>System Dependencies</h3>
+
+        <div class="tabs">
+          <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="prereq-ubuntu">Ubuntu / Debian</button>
+            <button class="tab-btn" data-tab="prereq-fedora">Fedora / RHEL</button>
+            <button class="tab-btn" data-tab="prereq-arch">Arch Linux</button>
+            <button class="tab-btn" data-tab="prereq-macos">macOS</button>
+            <button class="tab-btn" data-tab="prereq-windows">Windows</button>
+          </div>
+
+          <div class="tab-panel active" data-panel="prereq-ubuntu">
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>sudo apt update
 sudo apt install -y build-essential pkg-config libssl-dev curl git</code></pre>
-          </div>
-        </div>
-
-        <div class="tab-panel" data-panel="prereq-fedora">
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash</span>
-              <button class="copy-code-btn">📋 Copy</button>
             </div>
-            <pre><code>sudo dnf install -y gcc pkgconf-pkg-config openssl-devel curl git</code></pre>
           </div>
-        </div>
 
-        <div class="tab-panel" data-panel="prereq-arch">
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash</span>
-              <button class="copy-code-btn">📋 Copy</button>
+          <div class="tab-panel" data-panel="prereq-fedora">
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>sudo dnf install -y gcc pkgconf-pkg-config openssl-devel curl git</code></pre>
             </div>
-            <pre><code>sudo pacman -Syu --noconfirm base-devel openssl curl git</code></pre>
           </div>
-        </div>
 
-        <div class="tab-panel" data-panel="prereq-macos">
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash</span>
-              <button class="copy-code-btn">📋 Copy</button>
+          <div class="tab-panel" data-panel="prereq-arch">
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>sudo pacman -Syu --noconfirm base-devel openssl curl git</code></pre>
             </div>
-            <pre><code>xcode-select --install</code></pre>
           </div>
-          <div class="callout tip">
-            <p>If you use Homebrew: <code>brew install openssl pkg-config</code></p>
-          </div>
-        </div>
 
-        <div class="tab-panel" data-panel="prereq-windows">
-          <p>Install <a href="https://visualstudio.microsoft.com/downloads/" target="_blank" rel="noopener">Visual Studio Build Tools</a> with the <strong>"Desktop development with C++"</strong> workload.</p>
-          <div class="callout info">
-            <p>During installation, make sure to check <em>"MSVC v143 - VS 2022 C++ x64/x86 build tools"</em> and <em>"Windows SDK"</em>.</p>
-          </div>
-        </div>
-      </div>
-
-      <h3>Rust Toolchain</h3>
-      <p>Install Rust from <a href="https://rustup.rs/" target="_blank" rel="noopener">rustup.rs</a>:</p>
-
-      <div class="tabs">
-        <div class="tab-buttons">
-          <button class="tab-btn active" data-tab="rust-unix">Linux / macOS</button>
-          <button class="tab-btn" data-tab="rust-win">Windows</button>
-        </div>
-
-        <div class="tab-panel active" data-panel="rust-unix">
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash</span>
-              <button class="copy-code-btn">📋 Copy</button>
+          <div class="tab-panel" data-panel="prereq-macos">
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>xcode-select --install</code></pre>
             </div>
-            <pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></pre>
+            <div class="callout tip">
+              <p>If you use Homebrew: <code>brew install openssl pkg-config</code></p>
+            </div>
+          </div>
+
+          <div class="tab-panel" data-panel="prereq-windows">
+            <p>Install <a href="https://visualstudio.microsoft.com/downloads/" target="_blank" rel="noopener">Visual
+                Studio Build Tools</a> with the <strong>"Desktop development with C++"</strong> workload.</p>
+            <div class="callout info">
+              <p>During installation, make sure to check <em>"MSVC v143 - VS 2022 C++ x64/x86 build tools"</em> and
+                <em>"Windows SDK"</em>.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="tab-panel" data-panel="rust-win">
-          <p>Download and run <code>rustup-init.exe</code> from <a href="https://rustup.rs/" target="_blank" rel="noopener">rustup.rs</a>.</p>
-        </div>
-      </div>
+        <h3>Rust Toolchain</h3>
+        <p>Install Rust from <a href="https://rustup.rs/" target="_blank" rel="noopener">rustup.rs</a>:</p>
 
-      <h3>LLM Provider (choose one)</h3>
-      <table class="platform-table">
-        <thead>
-          <tr><th>Provider</th><th>Type</th><th>Setup</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Ollama</strong> (default)</td>
-            <td>Local</td>
-            <td>Install from <a href="https://ollama.com/" target="_blank" rel="noopener">ollama.com</a>, then <code>ollama pull llama3</code></td>
-          </tr>
-          <tr>
-            <td><strong>LM Studio</strong></td>
-            <td>Local</td>
-            <td>Download from <a href="https://lmstudio.ai/" target="_blank" rel="noopener">lmstudio.ai</a>, start local server</td>
-          </tr>
-          <tr>
-            <td><strong>OpenAI</strong></td>
-            <td>Cloud</td>
-            <td>Set <code>default_provider = "openai"</code> + <code>IRONCLAD_OPENAI_KEY</code></td>
-          </tr>
-          <tr>
-            <td><strong>Anthropic</strong></td>
-            <td>Cloud</td>
-            <td>Set <code>default_provider = "anthropic"</code> + <code>IRONCLAD_ANTHROPIC_KEY</code></td>
-          </tr>
-          <tr>
-            <td><strong>Google Gemini</strong></td>
-            <td>Cloud</td>
-            <td>Set <code>default_provider = "gemini"</code> + API key</td>
-          </tr>
-          <tr>
-            <td><strong>NVIDIA NIM</strong></td>
-            <td>Cloud</td>
-            <td>Set <code>default_provider = "nvidia"</code> + API key</td>
-          </tr>
-          <tr>
-            <td><strong>Any OpenAI-compatible</strong></td>
-            <td>Local/Cloud</td>
-            <td>Configure as <code>openai</code> provider with custom <code>base_url</code></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+        <div class="tabs">
+          <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="rust-unix">Linux / macOS</button>
+            <button class="tab-btn" data-tab="rust-win">Windows</button>
+          </div>
 
-    <!-- ═════════ MANUAL INSTALL (Step-by-Step) ═════════ -->
-    <section class="section" id="manual-install">
-      <h2>🔧 Manual Install (Step-by-Step) <a href="#manual-install" class="anchor">#</a></h2>
-      <p>For users who prefer full control. Follow these steps in order.</p>
-
-      <div class="steps">
-
-        <!-- Step 1 -->
-        <div class="step">
-          <h3>Install system dependencies</h3>
-          <p>See <a href="#prerequisites">Prerequisites</a> above for your platform-specific commands.</p>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="step">
-          <h3>Install Rust</h3>
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash</span>
-              <button class="copy-code-btn">📋 Copy</button>
+          <div class="tab-panel active" data-panel="rust-unix">
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></pre>
             </div>
-            <pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+          </div>
+
+          <div class="tab-panel" data-panel="rust-win">
+            <p>Download and run <code>rustup-init.exe</code> from <a href="https://rustup.rs/" target="_blank"
+                rel="noopener">rustup.rs</a>.</p>
+          </div>
+        </div>
+
+        <h3>LLM Provider (choose one)</h3>
+        <table class="platform-table">
+          <thead>
+            <tr>
+              <th>Provider</th>
+              <th>Type</th>
+              <th>Setup</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ollama</strong> (default)</td>
+              <td>Local</td>
+              <td>Install from <a href="https://ollama.com/" target="_blank" rel="noopener">ollama.com</a>, then
+                <code>ollama pull llama3</code>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>LM Studio</strong></td>
+              <td>Local</td>
+              <td>Download from <a href="https://lmstudio.ai/" target="_blank" rel="noopener">lmstudio.ai</a>, start
+                local server</td>
+            </tr>
+            <tr>
+              <td><strong>OpenAI</strong></td>
+              <td>Cloud</td>
+              <td>Set <code>default_provider = "openai"</code> + <code>IRONCLAD_OPENAI_KEY</code></td>
+            </tr>
+            <tr>
+              <td><strong>Anthropic</strong></td>
+              <td>Cloud</td>
+              <td>Set <code>default_provider = "anthropic"</code> + <code>IRONCLAD_ANTHROPIC_KEY</code></td>
+            </tr>
+            <tr>
+              <td><strong>Google Gemini</strong></td>
+              <td>Cloud</td>
+              <td>Set <code>default_provider = "gemini"</code> + API key</td>
+            </tr>
+            <tr>
+              <td><strong>NVIDIA NIM</strong></td>
+              <td>Cloud</td>
+              <td>Set <code>default_provider = "nvidia"</code> + API key</td>
+            </tr>
+            <tr>
+              <td><strong>Any OpenAI-compatible</strong></td>
+              <td>Local/Cloud</td>
+              <td>Configure as <code>openai</code> provider with custom <code>base_url</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═════════ MANUAL INSTALL (Step-by-Step) ═════════ -->
+      <section class="section" id="manual-install">
+        <h2>🔧 Manual Install (Step-by-Step) <a href="#manual-install" class="anchor">#</a></h2>
+        <p>For users who prefer full control. Follow these steps in order.</p>
+
+        <div class="steps">
+
+          <!-- Step 1 -->
+          <div class="step">
+            <h3>Install system dependencies</h3>
+            <p>See <a href="#prerequisites">Prerequisites</a> above for your platform-specific commands.</p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step">
+            <h3>Install Rust</h3>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source "$HOME/.cargo/env"</code></pre>
-          </div>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="step" id="cargo-install">
-          <h3>Install IronClad via cargo</h3>
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash</span>
-              <button class="copy-code-btn">📋 Copy</button>
             </div>
-            <pre><code>cargo install ironclad-ai-agent</code></pre>
           </div>
-          <div class="callout info">
-            <p>This compiles from source and installs the binary to <code>~/.cargo/bin/</code>. Takes 3–8 minutes depending on your system.</p>
-          </div>
-        </div>
 
-        <!-- Step 4 -->
-        <div class="step">
-          <h3>Create <code>settings.toml</code></h3>
-          <p>Download the default configuration file or copy from below:</p>
-          <a href="settings.toml" download class="btn btn-secondary mb-2">⬇️ Download settings.toml</a>
-
-          <div class="code-block mt-2">
-            <div class="code-block-header">
-              <span>settings.toml (minimal)</span>
-              <button class="copy-code-btn">📋 Copy</button>
+          <!-- Step 3 -->
+          <div class="step" id="cargo-install">
+            <h3>Install IronClad via cargo</h3>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>cargo install ironclad-ai-agent</code></pre>
             </div>
-            <pre><code><span class="code-comment"># IronClad Minimal Configuration</span>
+            <div class="callout info">
+              <p>This compiles from source and installs the binary to <code>~/.cargo/bin/</code>. Takes 3–8 minutes
+                depending on your system.</p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="step">
+            <h3>Create <code>settings.toml</code></h3>
+            <p>Download the default configuration file or copy from below:</p>
+            <a href="settings.toml" download class="btn btn-secondary mb-2">⬇️ Download settings.toml</a>
+
+            <div class="code-block mt-2">
+              <div class="code-block-header">
+                <span>settings.toml (minimal)</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code><span class="code-comment"># IronClad Minimal Configuration</span>
 
 <span class="code-keyword">[general]</span>
 workspace_dir = <span class="code-string">"./scratchpad"</span>
@@ -369,28 +394,30 @@ enabled = false
 <span class="code-keyword">[tools]</span>
 python_venv_enforced = true
 allow_system_commands = false</code></pre>
-          </div>
-
-          <p class="text-muted mt-1">Place this file in the same directory as the binary, or at <code>~/.config/ironclad/settings.toml</code>.</p>
-        </div>
-
-        <!-- Step 5 -->
-        <div class="step" id="env-variables">
-          <h3>Set environment variables</h3>
-
-          <div class="tabs">
-            <div class="tab-buttons">
-              <button class="tab-btn active" data-tab="env-unix">Linux / macOS</button>
-              <button class="tab-btn" data-tab="env-win">Windows PowerShell</button>
             </div>
 
-            <div class="tab-panel active" data-panel="env-unix">
-              <div class="code-block">
-                <div class="code-block-header">
-                  <span>~/.bashrc or ~/.zshrc</span>
-                  <button class="copy-code-btn">📋 Copy</button>
-                </div>
-                <pre><code><span class="code-comment"># Required for local tool execution</span>
+            <p class="text-muted mt-1">Place this file in the same directory as the binary, or at
+              <code>~/.config/ironclad/settings.toml</code>.
+            </p>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="step" id="env-variables">
+            <h3>Set environment variables</h3>
+
+            <div class="tabs">
+              <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="env-unix">Linux / macOS</button>
+                <button class="tab-btn" data-tab="env-win">Windows PowerShell</button>
+              </div>
+
+              <div class="tab-panel active" data-panel="env-unix">
+                <div class="code-block">
+                  <div class="code-block-header">
+                    <span>~/.bashrc or ~/.zshrc</span>
+                    <button class="copy-code-btn">📋 Copy</button>
+                  </div>
+                  <pre><code><span class="code-comment"># Required for local tool execution</span>
 export IRONCLAD_ALLOW_LOCAL_EXEC=1
 
 <span class="code-comment"># API keys (set only the providers you use)</span>
@@ -398,16 +425,16 @@ export IRONCLAD_OPENAI_KEY=<span class="code-string">"sk-..."</span>
 export IRONCLAD_ANTHROPIC_KEY=<span class="code-string">"sk-ant-..."</span>
 export IRONCLAD_GITHUB_KEY=<span class="code-string">"ghp_..."</span>
 export IRONCLAD_TELEGRAM_KEY=<span class="code-string">"123456:ABC-..."</span></code></pre>
-              </div>
-            </div>
-
-            <div class="tab-panel" data-panel="env-win">
-              <div class="code-block">
-                <div class="code-block-header">
-                  <span>PowerShell</span>
-                  <button class="copy-code-btn">📋 Copy</button>
                 </div>
-                <pre><code><span class="code-comment"># Required for local tool execution</span>
+              </div>
+
+              <div class="tab-panel" data-panel="env-win">
+                <div class="code-block">
+                  <div class="code-block-header">
+                    <span>PowerShell</span>
+                    <button class="copy-code-btn">📋 Copy</button>
+                  </div>
+                  <pre><code><span class="code-comment"># Required for local tool execution</span>
 $env:IRONCLAD_ALLOW_LOCAL_EXEC = <span class="code-string">"1"</span>
 
 <span class="code-comment"># API keys (set only the providers you use)</span>
@@ -415,109 +442,116 @@ $env:IRONCLAD_OPENAI_KEY    = <span class="code-string">"sk-..."</span>
 $env:IRONCLAD_ANTHROPIC_KEY = <span class="code-string">"sk-ant-..."</span>
 $env:IRONCLAD_GITHUB_KEY    = <span class="code-string">"ghp_..."</span>
 $env:IRONCLAD_TELEGRAM_KEY  = <span class="code-string">"123456:ABC-..."</span></code></pre>
-              </div>
-              <div class="callout tip">
-                <p>To persist across sessions, use <code>[System.Environment]::SetEnvironmentVariable("IRONCLAD_OPENAI_KEY", "sk-...", "User")</code></p>
+                </div>
+                <div class="callout tip">
+                  <p>To persist across sessions, use
+                    <code>[System.Environment]::SetEnvironmentVariable("IRONCLAD_OPENAI_KEY", "sk-...", "User")</code>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Step 6 -->
-        <div class="step">
-          <h3>Install an LLM provider</h3>
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>bash — Install Ollama (recommended)</span>
-              <button class="copy-code-btn">📋 Copy</button>
-            </div>
-            <pre><code>curl -fsSL https://ollama.com/install.sh | sh
+          <!-- Step 6 -->
+          <div class="step">
+            <h3>Install an LLM provider</h3>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span>bash — Install Ollama (recommended)</span>
+                <button class="copy-code-btn">📋 Copy</button>
+              </div>
+              <pre><code>curl -fsSL https://ollama.com/install.sh | sh
 ollama pull llama3</code></pre>
-          </div>
-          <div class="callout tip">
-            <p><strong>No cloud API key needed.</strong> IronClad works entirely offline with Ollama. For Windows, download from <a href="https://ollama.com/download/windows" target="_blank" rel="noopener">ollama.com/download/windows</a>.</p>
-          </div>
-        </div>
-
-        <!-- Step 7 -->
-        <div class="step">
-          <h3>Run IronClad</h3>
-          <div class="tabs">
-            <div class="tab-buttons">
-              <button class="tab-btn active" data-tab="run-unix">Linux / macOS</button>
-              <button class="tab-btn" data-tab="run-win">Windows</button>
             </div>
-            <div class="tab-panel active" data-panel="run-unix">
-              <div class="code-block">
-                <div class="code-block-header">
-                  <span>bash</span>
-                  <button class="copy-code-btn">📋 Copy</button>
+            <div class="callout tip">
+              <p><strong>No cloud API key needed.</strong> IronClad works entirely offline with Ollama. For Windows,
+                download from <a href="https://ollama.com/download/windows" target="_blank"
+                  rel="noopener">ollama.com/download/windows</a>.</p>
+            </div>
+          </div>
+
+          <!-- Step 7 -->
+          <div class="step">
+            <h3>Run IronClad</h3>
+            <div class="tabs">
+              <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="run-unix">Linux / macOS</button>
+                <button class="tab-btn" data-tab="run-win">Windows</button>
+              </div>
+              <div class="tab-panel active" data-panel="run-unix">
+                <div class="code-block">
+                  <div class="code-block-header">
+                    <span>bash</span>
+                    <button class="copy-code-btn">📋 Copy</button>
+                  </div>
+                  <pre><code>ironclad-ai-agent</code></pre>
                 </div>
-                <pre><code>ironclad-ai-agent</code></pre>
+              </div>
+              <div class="tab-panel" data-panel="run-win">
+                <div class="code-block">
+                  <div class="code-block-header">
+                    <span>PowerShell</span>
+                    <button class="copy-code-btn">📋 Copy</button>
+                  </div>
+                  <pre><code>ironclad-ai-agent.exe</code></pre>
+                </div>
               </div>
             </div>
-            <div class="tab-panel" data-panel="run-win">
-              <div class="code-block">
-                <div class="code-block-header">
-                  <span>PowerShell</span>
-                  <button class="copy-code-btn">📋 Copy</button>
-                </div>
-                <pre><code>ironclad-ai-agent.exe</code></pre>
-              </div>
-            </div>
           </div>
-        </div>
 
-      </div><!-- .steps -->
-    </section>
+        </div><!-- .steps -->
+      </section>
 
-    <!-- ═════════ PRE-BUILT BINARIES ═════════ -->
-    <section class="section" id="prebuilt">
-      <h2>⬇️ Pre-built Binaries <a href="#prebuilt" class="anchor">#</a></h2>
-      <p>If you don't want to compile from source, download a pre-built binary from GitHub Releases.</p>
+      <!-- ═════════ PRE-BUILT BINARIES ═════════ -->
+      <section class="section" id="prebuilt">
+        <h2>⬇️ Pre-built Binaries <a href="#prebuilt" class="anchor">#</a></h2>
+        <p>If you don't want to compile from source, download a pre-built binary from GitHub Releases.</p>
 
-      <table class="platform-table">
-        <thead>
-          <tr><th>Platform</th><th>Architecture</th><th>Download</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>🪟 Windows</td>
-            <td>x86_64</td>
-            <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank" rel="noopener">ironclad-ai-agent-windows-x86_64.zip</a></td>
-          </tr>
-          <tr>
-            <td>🐧 Linux</td>
-            <td>x86_64</td>
-            <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank" rel="noopener">ironclad-ai-agent-linux-x86_64.tar.gz</a></td>
-          </tr>
-          <tr>
-            <td>🍎 macOS (Apple Silicon)</td>
-            <td>aarch64</td>
-            <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank" rel="noopener">ironclad-ai-agent-macos-aarch64.tar.gz</a></td>
-          </tr>
-          <tr>
-            <td>🍎 macOS (Intel)</td>
-            <td>x86_64</td>
-            <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank" rel="noopener">ironclad-ai-agent-macos-x86_64.tar.gz</a></td>
-          </tr>
-        </tbody>
-      </table>
+        <table class="platform-table">
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Architecture</th>
+              <th>Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🪟 Windows</td>
+              <td>x86_64</td>
+              <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank"
+                  rel="noopener">ironclad-ai-agent-windows-x86_64.zip</a></td>
+            </tr>
+            <tr>
+              <td>🐧 Linux</td>
+              <td>x86_64</td>
+              <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank"
+                  rel="noopener">ironclad-ai-agent-linux-x86_64.tar.gz</a></td>
+            </tr>
+            <tr>
+              <td>🍎 macOS (Intel)</td>
+              <td>x86_64</td>
+              <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank"
+                  rel="noopener">ironclad-ai-agent-macos-x86_64.tar.gz</a></td>
+            </tr>
+          </tbody>
+        </table>
 
-      <a href="https://github.com/overcrash66/IronClad/releases" target="_blank" rel="noopener" class="btn btn-primary">📥 View All Releases</a>
-    </section>
+        <a href="https://github.com/overcrash66/IronClad/releases" target="_blank" rel="noopener"
+          class="btn btn-primary">📥 View All Releases</a>
+      </section>
 
-    <!-- ═════════ BUILD FROM SOURCE ═════════ -->
-    <section class="section" id="from-source">
-      <h2>🛠️ Build from Source <a href="#from-source" class="anchor">#</a></h2>
-      <p>For developers who want to modify or contribute to IronClad.</p>
+      <!-- ═════════ BUILD FROM SOURCE ═════════ -->
+      <section class="section" id="from-source">
+        <h2>🛠️ Build from Source <a href="#from-source" class="anchor">#</a></h2>
+        <p>For developers who want to modify or contribute to IronClad.</p>
 
-      <div class="code-block">
-        <div class="code-block-header">
-          <span>bash</span>
-          <button class="copy-code-btn">📋 Copy</button>
-        </div>
-        <pre><code>git clone https://github.com/overcrash66/IronClad.git
+        <div class="code-block">
+          <div class="code-block-header">
+            <span>bash</span>
+            <button class="copy-code-btn">📋 Copy</button>
+          </div>
+          <pre><code>git clone https://github.com/overcrash66/IronClad.git
 cd IronClad
 cargo build --release
 
@@ -526,53 +560,56 @@ cargo build --release
 
 <span class="code-comment"># Or run a one-shot task</span>
 ./target/release/ironclad-ai-agent orchestrate --task "Your task here"</code></pre>
-      </div>
-    </section>
-
-    <!-- ═════════ DOCKER ═════════ -->
-    <section class="section" id="docker">
-      <h2>🐳 Docker <a href="#docker" class="anchor">#</a></h2>
-      <p>Run IronClad without installing Rust on your host. The Docker install script builds a multi-stage image automatically.</p>
-
-      <div class="code-block">
-        <div class="code-block-header">
-          <span>bash — one-liner</span>
-          <button class="copy-code-btn">📋 Copy</button>
         </div>
-        <pre><code>curl -fsSL https://overcrash66.github.io/ironclad-docs/install-docker.sh | bash</code></pre>
-      </div>
+      </section>
 
-      <h3>Manual Docker run</h3>
-      <div class="code-block">
-        <div class="code-block-header">
-          <span>bash</span>
-          <button class="copy-code-btn">📋 Copy</button>
+      <!-- ═════════ DOCKER ═════════ -->
+      <section class="section" id="docker">
+        <h2>🐳 Docker <a href="#docker" class="anchor">#</a></h2>
+        <p>Run IronClad without installing Rust on your host. The Docker install script builds a multi-stage image
+          automatically.</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span>bash — one-liner</span>
+            <button class="copy-code-btn">📋 Copy</button>
+          </div>
+          <pre><code>curl -fsSL https://overcrash66.github.io/ironclad-docs/install-docker.sh | bash</code></pre>
         </div>
-        <pre><code>docker run -it --rm \
+
+        <h3>Manual Docker run</h3>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span>bash</span>
+            <button class="copy-code-btn">📋 Copy</button>
+          </div>
+          <pre><code>docker run -it --rm \
   -v ~/.config/ironclad/settings.toml:/workspace/settings.toml \
   -v ~/ironclad-workspace:/workspace/scratchpad \
   -p 8080:8080 -p 3000:3000 \
   -e IRONCLAD_OPENAI_KEY=$IRONCLAD_OPENAI_KEY \
   -e IRONCLAD_TELEGRAM_KEY=$IRONCLAD_TELEGRAM_KEY \
   ironclad-ai-agent</code></pre>
-      </div>
-
-      <div class="callout info">
-        <p><strong>Ollama access:</strong> The generated <code>settings.toml</code> uses <code>host.docker.internal:11434</code> to reach Ollama running on your host machine.</p>
-      </div>
-    </section>
-
-    <!-- ═════════ CONFIGURATION ═════════ -->
-    <section class="section" id="configuration">
-      <h2>⚙️ Configuration <a href="#configuration" class="anchor">#</a></h2>
-      <p>All options live in <code>settings.toml</code>. Here are the most important ones:</p>
-
-      <div class="code-block">
-        <div class="code-block-header">
-          <span>settings.toml — key options</span>
-          <button class="copy-code-btn">📋 Copy</button>
         </div>
-        <pre><code><span class="code-keyword">[sandbox]</span>
+
+        <div class="callout info">
+          <p><strong>Ollama access:</strong> The generated <code>settings.toml</code> uses
+            <code>host.docker.internal:11434</code> to reach Ollama running on your host machine.
+          </p>
+        </div>
+      </section>
+
+      <!-- ═════════ CONFIGURATION ═════════ -->
+      <section class="section" id="configuration">
+        <h2>⚙️ Configuration <a href="#configuration" class="anchor">#</a></h2>
+        <p>All options live in <code>settings.toml</code>. Here are the most important ones:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span>settings.toml — key options</span>
+            <button class="copy-code-btn">📋 Copy</button>
+          </div>
+          <pre><code><span class="code-keyword">[sandbox]</span>
 backend = <span class="code-string">"local"</span>          <span class="code-comment"># "wsl" | "docker" | "local"</span>
 
 <span class="code-keyword">[llm]</span>
@@ -603,35 +640,38 @@ autonomous_mode = false       <span class="code-comment"># true = skip TUI appro
 <span class="code-keyword">[dashboard]</span>
 enabled = true
 port = 8080</code></pre>
-      </div>
-
-      <div class="callout tip">
-        <p><strong>Web Dashboard:</strong> Once running, open <code>http://127.0.0.1:8080</code> — the <strong>⚙ Settings</strong> tab lets you configure everything visually without editing TOML files!</p>
-      </div>
-
-      <p>Environment variables can override any nested config value using the pattern <code>IRONCLAD__&lt;SECTION&gt;__&lt;KEY&gt;</code>. For example:</p>
-      <div class="code-block">
-        <div class="code-block-header">
-          <span>bash</span>
-          <button class="copy-code-btn">📋 Copy</button>
         </div>
-        <pre><code>export IRONCLAD__LLM__DEFAULT_PROVIDER=openai
+
+        <div class="callout tip">
+          <p><strong>Web Dashboard:</strong> Once running, open <code>http://127.0.0.1:8080</code> — the <strong>⚙
+              Settings</strong> tab lets you configure everything visually without editing TOML files!</p>
+        </div>
+
+        <p>Environment variables can override any nested config value using the pattern
+          <code>IRONCLAD__&lt;SECTION&gt;__&lt;KEY&gt;</code>. For example:
+        </p>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span>bash</span>
+            <button class="copy-code-btn">📋 Copy</button>
+          </div>
+          <pre><code>export IRONCLAD__LLM__DEFAULT_PROVIDER=openai
 export IRONCLAD__SECURITY__AUTONOMOUS_MODE=true</code></pre>
-      </div>
-
-      <a href="settings.toml" download class="btn btn-secondary">⬇️ Download Full settings.toml</a>
-    </section>
-
-    <!-- ═════════ VERIFY ═════════ -->
-    <section class="section" id="verify">
-      <h2>✅ Verify Installation <a href="#verify" class="anchor">#</a></h2>
-
-      <div class="code-block">
-        <div class="code-block-header">
-          <span>bash</span>
-          <button class="copy-code-btn">📋 Copy</button>
         </div>
-        <pre><code><span class="code-comment"># Check the binary is available</span>
+
+        <a href="settings.toml" download class="btn btn-secondary">⬇️ Download Full settings.toml</a>
+      </section>
+
+      <!-- ═════════ VERIFY ═════════ -->
+      <section class="section" id="verify">
+        <h2>✅ Verify Installation <a href="#verify" class="anchor">#</a></h2>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span>bash</span>
+            <button class="copy-code-btn">📋 Copy</button>
+          </div>
+          <pre><code><span class="code-comment"># Check the binary is available</span>
 ironclad-ai-agent --version
 
 <span class="code-comment"># Start IronClad</span>
@@ -639,124 +679,133 @@ ironclad-ai-agent
 
 <span class="code-comment"># Open the Web Dashboard</span>
 <span class="code-comment"># → http://127.0.0.1:8080</span></code></pre>
-      </div>
+        </div>
 
-      <p>You should see the interactive TUI:</p>
-      <div class="code-block">
-        <div class="code-block-header"><span>Terminal Output</span></div>
-        <pre><code>╔═══════════════════════════════════╗
+        <p>You should see the interactive TUI:</p>
+        <div class="code-block">
+          <div class="code-block-header"><span>Terminal Output</span></div>
+          <pre><code>╔═══════════════════════════════════╗
 ║  IronClad — Secure AI Agent       ║
 ╚═══════════════════════════════════╝
 Persona: default  │  Provider: ollama  │  Model: llama3
 
 Type a task and press Enter. Type /help for commands.
 &gt;</code></pre>
-      </div>
+        </div>
 
-      <p>Try these tasks to confirm everything works:</p>
-      <div class="code-block">
-        <div class="code-block-header"><span>Example tasks</span></div>
-        <pre><code>&gt; List the files in the current directory
+        <p>Try these tasks to confirm everything works:</p>
+        <div class="code-block">
+          <div class="code-block-header"><span>Example tasks</span></div>
+          <pre><code>&gt; List the files in the current directory
 &gt; What is the current system time?
 &gt; Search the web for "Rust programming language"</code></pre>
-      </div>
-    </section>
-
-    <!-- ═════════ TROUBLESHOOTING ═════════ -->
-    <section class="section" id="troubleshooting">
-      <h2>🔍 Troubleshooting <a href="#troubleshooting" class="anchor">#</a></h2>
-
-      <div class="card">
-        <h3>❌ "connection refused" connecting to Ollama</h3>
-        <p>Make sure Ollama is running:</p>
-        <div class="code-block">
-          <div class="code-block-header"><span>bash</span><button class="copy-code-btn">📋 Copy</button></div>
-          <pre><code>ollama serve</code></pre>
         </div>
-        <p>On Windows with WSL2, use <code>127.0.0.1</code> (not <code>localhost</code>) in <code>settings.toml</code> to avoid ~300ms DNS delays.</p>
-      </div>
+      </section>
 
-      <div class="card">
-        <h3>❌ WSL2 command failures</h3>
-        <p>Verify your WSL distro name matches <code>settings.toml</code>:</p>
-        <div class="code-block">
-          <div class="code-block-header"><span>PowerShell</span><button class="copy-code-btn">📋 Copy</button></div>
-          <pre><code>wsl --list</code></pre>
+      <!-- ═════════ TROUBLESHOOTING ═════════ -->
+      <section class="section" id="troubleshooting">
+        <h2>🔍 Troubleshooting <a href="#troubleshooting" class="anchor">#</a></h2>
+
+        <div class="card">
+          <h3>❌ "connection refused" connecting to Ollama</h3>
+          <p>Make sure Ollama is running:</p>
+          <div class="code-block">
+            <div class="code-block-header"><span>bash</span><button class="copy-code-btn">📋 Copy</button></div>
+            <pre><code>ollama serve</code></pre>
+          </div>
+          <p>On Windows with WSL2, use <code>127.0.0.1</code> (not <code>localhost</code>) in <code>settings.toml</code>
+            to avoid ~300ms DNS delays.</p>
         </div>
-      </div>
 
-      <div class="card">
-        <h3>⏱️ Model responds slowly</h3>
-        <p>Enable turbo mode and keep-alive:</p>
-        <div class="code-block">
-          <div class="code-block-header"><span>settings.toml</span><button class="copy-code-btn">📋 Copy</button></div>
-          <pre><code>[llm]
+        <div class="card">
+          <h3>❌ WSL2 command failures</h3>
+          <p>Verify your WSL distro name matches <code>settings.toml</code>:</p>
+          <div class="code-block">
+            <div class="code-block-header"><span>PowerShell</span><button class="copy-code-btn">📋 Copy</button></div>
+            <pre><code>wsl --list</code></pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>⏱️ Model responds slowly</h3>
+          <p>Enable turbo mode and keep-alive:</p>
+          <div class="code-block">
+            <div class="code-block-header"><span>settings.toml</span><button class="copy-code-btn">📋 Copy</button>
+            </div>
+            <pre><code>[llm]
 turbo_mode = true
 
 [llm.ollama]
 keep_alive = "10m"</code></pre>
+          </div>
+          <p>Or switch <code>backend = "local"</code> to eliminate sandbox overhead.</p>
         </div>
-        <p>Or switch <code>backend = "local"</code> to eliminate sandbox overhead.</p>
-      </div>
 
-      <div class="card">
-        <h3>🚫 "Blocked" actions</h3>
-        <p>IronClad's Traffic Light policy blocks certain operations by design. To allow Yellow/Red actions without manual approval:</p>
-        <div class="code-block">
-          <div class="code-block-header"><span>settings.toml</span><button class="copy-code-btn">📋 Copy</button></div>
-          <pre><code>[security]
+        <div class="card">
+          <h3>🚫 "Blocked" actions</h3>
+          <p>IronClad's Traffic Light policy blocks certain operations by design. To allow Yellow/Red actions without
+            manual approval:</p>
+          <div class="code-block">
+            <div class="code-block-header"><span>settings.toml</span><button class="copy-code-btn">📋 Copy</button>
+            </div>
+            <pre><code>[security]
 autonomous_mode = true</code></pre>
+          </div>
+          <div class="callout warning">
+            <p><strong>Caution:</strong> This skips TUI confirmation dialogs. Some operations (force-push, path
+              traversal) remain hard-blocked regardless.</p>
+          </div>
         </div>
-        <div class="callout warning">
-          <p><strong>Caution:</strong> This skips TUI confirmation dialogs. Some operations (force-push, path traversal) remain hard-blocked regardless.</p>
-        </div>
-      </div>
 
-      <div class="card">
-        <h3>🔗 Linking errors during compilation</h3>
-        <p>If <code>cargo install</code> fails with linker errors, ensure system dependencies are installed:</p>
+        <div class="card">
+          <h3>🔗 Linking errors during compilation</h3>
+          <p>If <code>cargo install</code> fails with linker errors, ensure system dependencies are installed:</p>
+          <div class="code-block">
+            <div class="code-block-header"><span>bash — Ubuntu/Debian</span><button class="copy-code-btn">📋
+                Copy</button></div>
+            <pre><code>sudo apt install -y build-essential pkg-config libssl-dev</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════════ WSL2 TIPS ═════════ -->
+      <section class="section" id="wsl2-tips">
+        <h2>🪟 WSL2 Tips <a href="#wsl2-tips" class="anchor">#</a></h2>
+        <p>For best performance on Windows with Ollama and WSL2:</p>
+
         <div class="code-block">
-          <div class="code-block-header"><span>bash — Ubuntu/Debian</span><button class="copy-code-btn">📋 Copy</button></div>
-          <pre><code>sudo apt install -y build-essential pkg-config libssl-dev</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═════════ WSL2 TIPS ═════════ -->
-    <section class="section" id="wsl2-tips">
-      <h2>🪟 WSL2 Tips <a href="#wsl2-tips" class="anchor">#</a></h2>
-      <p>For best performance on Windows with Ollama and WSL2:</p>
-
-      <div class="code-block">
-        <div class="code-block-header">
-          <span>%USERPROFILE%\.wslconfig</span>
-          <button class="copy-code-btn">📋 Copy</button>
-        </div>
-        <pre><code>[wsl2]
+          <div class="code-block-header">
+            <span>%USERPROFILE%\.wslconfig</span>
+            <button class="copy-code-btn">📋 Copy</button>
+          </div>
+          <pre><code>[wsl2]
 networkingMode=mirrored
 dnsTunneling=true
 autoMemoryReclaim=gradual</code></pre>
-      </div>
+        </div>
 
-      <div class="callout tip">
-        <p>Use <code>127.0.0.1</code> instead of <code>localhost</code> in <code>settings.toml</code> to avoid ~300ms DNS resolution delays in WSL2 mirrored networking mode.</p>
-      </div>
-    </section>
+        <div class="callout tip">
+          <p>Use <code>127.0.0.1</code> instead of <code>localhost</code> in <code>settings.toml</code> to avoid ~300ms
+            DNS resolution delays in WSL2 mirrored networking mode.</p>
+        </div>
+      </section>
 
-  </main><!-- .main-content -->
-</div><!-- .page-wrapper -->
+    </main><!-- .main-content -->
+  </div><!-- .page-wrapper -->
 
-<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
-<footer class="site-footer">
-  <p>
-    <a href="https://github.com/overcrash66/IronClad" target="_blank" rel="noopener">GitHub</a> ·
-    <a href="https://crates.io/crates/ironclad-ai-agent" target="_blank" rel="noopener">Crates.io</a> ·
-    <a href="https://github.com/overcrash66/IronClad/releases" target="_blank" rel="noopener">Releases</a>
-  </p>
-  <p>IronClad is released under the <a href="https://github.com/overcrash66/IronClad/blob/main/LICENSE" target="_blank" rel="noopener">GNU GPLv3 License</a>.</p>
-</footer>
+  <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+  <footer class="site-footer">
+    <p>
+      <a href="https://github.com/overcrash66/IronClad" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="https://crates.io/crates/ironclad-ai-agent" target="_blank" rel="noopener">Crates.io</a> ·
+      <a href="https://github.com/overcrash66/IronClad/releases" target="_blank" rel="noopener">Releases</a>
+    </p>
+    <p>IronClad is released under the <a href="https://github.com/overcrash66/IronClad/blob/main/LICENSE"
+        target="_blank" rel="noopener">GNU GPLv3 License</a>.</p>
+  </footer>
 
-<!-- Scripts -->
-<script src="js/main.js"></script>
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
 </body>
+
 </html>
