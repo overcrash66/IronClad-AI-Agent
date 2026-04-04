@@ -62,8 +62,6 @@
       <div class="sidebar-section">
         <h4>Install Methods</h4>
         <a href="#cargo-install"><span class="icon">📦</span> Cargo Install</a>
-        <a href="#prebuilt"><span class="icon">⬇️</span> Pre-built Binaries</a>
-        <a href="#from-source"><span class="icon">🛠️</span> Build from Source</a>
         <a href="#docker"><span class="icon">🐳</span> Docker</a>
       </div>
       <div class="sidebar-section">
@@ -500,67 +498,6 @@ ollama pull llama3</code></pre>
           </div>
 
         </div><!-- .steps -->
-      </section>
-
-      <!-- ═════════ PRE-BUILT BINARIES ═════════ -->
-      <section class="section" id="prebuilt">
-        <h2>⬇️ Pre-built Binaries <a href="#prebuilt" class="anchor">#</a></h2>
-        <p>If you don't want to compile from source, download a pre-built binary from GitHub Releases.</p>
-
-        <table class="platform-table">
-          <thead>
-            <tr>
-              <th>Platform</th>
-              <th>Architecture</th>
-              <th>Download</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>🪟 Windows</td>
-              <td>x86_64</td>
-              <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank"
-                  rel="noopener">ironclad-ai-agent-windows-x86_64.zip</a></td>
-            </tr>
-            <tr>
-              <td>🐧 Linux</td>
-              <td>x86_64</td>
-              <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank"
-                  rel="noopener">ironclad-ai-agent-linux-x86_64.tar.gz</a></td>
-            </tr>
-            <tr>
-              <td>🍎 macOS (Intel)</td>
-              <td>x86_64</td>
-              <td><a href="https://github.com/overcrash66/IronClad/releases/latest" target="_blank"
-                  rel="noopener">ironclad-ai-agent-macos-x86_64.tar.gz</a></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <a href="https://github.com/overcrash66/IronClad/releases" target="_blank" rel="noopener"
-          class="btn btn-primary">📥 View All Releases</a>
-      </section>
-
-      <!-- ═════════ BUILD FROM SOURCE ═════════ -->
-      <section class="section" id="from-source">
-        <h2>🛠️ Build from Source <a href="#from-source" class="anchor">#</a></h2>
-        <p>For developers who want to modify or contribute to IronClad.</p>
-
-        <div class="code-block">
-          <div class="code-block-header">
-            <span>bash</span>
-            <button class="copy-code-btn">📋 Copy</button>
-          </div>
-          <pre><code>git clone https://github.com/overcrash66/IronClad.git
-cd IronClad
-cargo build --release
-
-<span class="code-comment"># Run the interactive TUI</span>
-./target/release/ironclad-ai-agent
-
-<span class="code-comment"># Or run a one-shot task</span>
-./target/release/ironclad-ai-agent orchestrate --task "Your task here"</code></pre>
-        </div>
       </section>
 
       <!-- ═════════ DOCKER ═════════ -->
