@@ -5,6 +5,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-stable-orange.svg)](https://www.rust-lang.org/)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)]()
+[![Public Docs](https://img.shields.io/badge/docs-public-blue.svg)](https://github.com/overcrash66/IronClad-AI-Agent)
 
 <p align="center">
   <img src="docs/images/IronClad_Logo.png" alt="IronClad Logo" width="300" />
@@ -17,7 +18,6 @@ IronClad is a fully autonomous AI agent that treats the LLM as an **untrusted co
 ## Table of Contents
 
 - [What is IronClad?](#what-is-ironclad)
-- [Quick Start](#quick-start)
 - [Use Cases](#use-cases)
 - [Features](#features)
 - [Architecture](#architecture)
@@ -41,22 +41,6 @@ IronClad is a Rust-based AI agent that can autonomously:
 The key difference from other agents: IronClad classifies every action (Green / Yellow / Red / Blocked) and requires explicit approval for dangerous operations — even in autonomous mode.
 
 **Supported LLM providers:** Ollama (local, default) · OpenAI · Anthropic · Google Gemini · NVIDIA NIM · **Any OpenAI-compatible API** (LM Studio, Text Generation Web UI, llama.cpp server, etc.)
-
----
-
-## Quick Start
-
-**The easiest way to get started is by downloading the latest release for your platform.**
-
-1.  **Download**: Get the [latest release](https://github.com/overcrash66/IronClad/releases) for your OS (Windows, Linux, or macOS).
-2.  **Extract**: Unzip or untar the archive to a folder of your choice.
-3.  **Run**:
-    - **Windows**: Double-click `ironclad-ai-agent.exe` or run `.\ironclad-ai-agent.exe` in PowerShell.
-    - **Linux / macOS**: Run `./ironclad-ai-agent` in your terminal.
-4.  **Prerequisites**: [Ollama](https://ollama.com/) installed and a model pulled (e.g. `ollama pull llama3`).
-
-**Web Dashboard (Recommended Setup):**
-Once running, open `http://127.0.0.1:8080` in your browser. The Web Dashboard's **⚙ Settings** and **📖 Guides** tabs provide the easiest way to configure IronClad entirely visually!
 
 ---
 
@@ -299,6 +283,7 @@ IronClad works with a wide range of LLM providers. Pick whichever fits your setu
 |-------------|-------|
 | **WSL2** or **Docker** | Optional — only needed for `wsl` / `docker` backends |
 
+
 ### Install via crates.io
 
 If you have Rust installed, you can install IronClad directly from crates.io:
@@ -353,60 +338,60 @@ export IRONCLAD_GITHUB_KEY="ghp_..."
 export IRONCLAD_TELEGRAM_KEY="123456:ABC-..."
 ```
 
-See [docs/configuration.md](docs/configuration.md) for the full reference.
+See [docs/configuration.md](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/configuration.md) for the full reference.
 
 ---
 
 ## Documentation
 
-> **Full documentation hub:** [docs/index.md](docs/index.md)
+> **Public Documentation:** [IronClad Public Docs](https://github.com/overcrash66/IronClad-AI-Agent)
 
 ### Getting Started
 
 | Document | Description |
 |----------|-------------|
-| [Quick Start Guide](docs/quickstart.md) | Install, configure, and run your first task in 5 minutes |
-| [User Guide](user_guide_info.md) | Comprehensive user guide covering features, security, integrations, and more |
-| [Configuration Reference](docs/configuration.md) | Every `settings.toml` option explained |
-| [TUI Guide](docs/tui.md) | Terminal UI layout, slash commands, keyboard shortcuts |
-| [Architecture Overview](docs/architecture.md) | Three-Ring model, data flow, component map |
+| [Quick Start Guide](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/quickstart.md) | Install, configure, and run your first task in 5 minutes |
+| [User Guide](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/user_guide_info.md) | Comprehensive user guide covering features, security, integrations, and more |
+| [Configuration Reference](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/configuration.md) | Every `settings.toml` option explained |
+| [TUI Guide](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/tui.md) | Terminal UI layout, slash commands, keyboard shortcuts |
+| [Architecture Overview](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/architecture.md) | Three-Ring model, data flow, component map |
 
 ### Skills & Features
 
 | Document | Description |
 |----------|-------------|
-| [Deep Research](docs/deep_research.md) | GitHub · arXiv · Semantic Scholar multi-source research |
-| [Experiment Loop](docs/experiment_loop.md) | Autonomous iterative improvement with metric tracking |
-| [Concurrent Tool Dispatch](docs/concurrent-tools.md) | Parallel tool execution, `max_parallel_tools` config |
-| [Session Budget](docs/session-budget.md) | Wall-clock time limits for tasks |
-| [RAG Knowledge Base](docs/rag.md) | Codebase indexing and similarity search |
-| [Write Todos](docs/write-todos.md) | Persistent task lists across agent turns |
-| [program.md](docs/program-md.md) | Per-workspace instructions injected into every task |
-| [Autonomy](docs/autonomy.md) | Autonomous mode and Yellow/Red approval behaviour |
-| [Benchmark Suite](docs/benchmarks.md) | Deterministic offline tests and `bench_results.json` |
-| [System Prompts](docs/prompts.md) | Prompt templates, personas, customisation |
+| [Deep Research](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/deep_research.md) | GitHub · arXiv · Semantic Scholar multi-source research |
+| [Experiment Loop](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/experiment_loop.md) | Autonomous iterative improvement with metric tracking |
+| [Concurrent Tool Dispatch](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/concurrent-tools.md) | Parallel tool execution, `max_parallel_tools` config |
+| [Session Budget](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/session-budget.md) | Wall-clock time limits for tasks |
+| [RAG Knowledge Base](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/rag.md) | Codebase indexing and similarity search |
+| [Write Todos](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/write-todos.md) | Persistent task lists across agent turns |
+| [program.md](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/program-md.md) | Per-workspace instructions injected into every task |
+| [Autonomy](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/autonomy.md) | Autonomous mode and Yellow/Red approval behaviour |
+| [Benchmark Suite](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/benchmarks.md) | Deterministic offline tests and `bench_results.json` |
+| [System Prompts](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/prompts.md) | Prompt templates, personas, customisation |
 
 ### Integrations & Deployment
 
 | Document | Description |
 |----------|-------------|
-| [HTTP API Setup](docs/api_setup.md) | REST API endpoints, authentication, webhook ingestion |
-| [GitHub Action](docs/github-action.md) | CI/CD workflow template and usage examples |
-| [Integrations](docs/integrations.md) | LangGraph checkpoints, Remote Agents, Telegram, GitHub |
-| [Remote Agent Bridge](docs/remote-agent.md) | Delegate tasks to external agent endpoints |
-| [Telegram Setup](docs/configuration.md#integrationstelegram) | Bot configuration and access control |
-| [Web Dashboard](docs/dashboard.md) | Real-time observability UI, visual Settings management, and Interactive Guides |
-| [Pulse Scheduler](docs/pulse_scheduler.md) | Cron background jobs |
-| [MCP Setup](docs/mcp_setup.md) | Model Context Protocol server integration |
-| [Browser Automation](docs/browser_automation.md) | Playwright web scraping and visual browsing |
+| [HTTP API Setup](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/api_setup.md) | REST API endpoints, authentication, webhook ingestion |
+| [GitHub Action](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/github-action.md) | CI/CD workflow template and usage examples |
+| [Integrations](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/integrations.md) | LangGraph checkpoints, Remote Agents, Telegram, GitHub |
+| [Remote Agent Bridge](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/remote-agent.md) | Delegate tasks to external agent endpoints |
+| [Telegram Setup](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/configuration.md#integrationstelegram) | Bot configuration and access control |
+| [Web Dashboard](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/dashboard.md) | Real-time observability UI, visual Settings management, and Interactive Guides |
+| [Pulse Scheduler](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/pulse_scheduler.md) | Cron background jobs |
+| [MCP Setup](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/mcp_setup.md) | Model Context Protocol server integration |
+| [Browser Automation](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/browser_automation.md) | Playwright web scraping and visual browsing |
 
 ### Execution Backends
 
 | Document | Description |
 |----------|-------------|
-| [Local Backend](docs/local_backend.md) | Host execution without sandbox isolation |
-| [Multimodal Setup](docs/multimodal_setup.md) | TTS / STT / image input configuration |
-| [Local STT Setup](docs/local_stt_setup.md) | Speech-to-text with local models |
+| [Local Backend](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/local_backend.md) | Host execution without sandbox isolation |
+| [Multimodal Setup](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/multimodal_setup.md) | TTS / STT / image input configuration |
+| [Local STT Setup](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs/local_stt_setup.md) | Speech-to-text with local models |
 
 ---
 
