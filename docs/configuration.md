@@ -264,6 +264,29 @@ NVIDIA-specific settings.
 | `api_key` | string? | `null` | Optional inline API key override |
 | `vision` | boolean? | `null` | Override model vision capability when needed |
 
+### `[llm.stt]`
+
+Speech-to-Text (Whisper) configuration.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | boolean | `true` | Enable STT functionality |
+| `base_url` | string? | `null` | Base URL for OpenAI-compatible Whisper API |
+| `model` | string? | `"whisper-1"`| Whisper model name |
+| `api_key` | string? | `null` | Dedicated API key for STT |
+
+### `[llm.tts]`
+
+Text-to-Speech configuration.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | boolean | `true` | Enable TTS functionality |
+| `base_url` | string? | `null` | Base URL for OpenAI-compatible TTS API |
+| `model` | string? | `"tts-1"` | TTS model name |
+| `voice` | string? | `"alloy"` | Voice ID or name |
+| `api_key` | string? | `null` | Dedicated API key for TTS |
+
 ### `[llm.translation]`
 
 Translation settings for multilingual support.

@@ -45,6 +45,21 @@ Various background skills use Telegram to notify you upon completion:
 - **Bug Bounty**: Broadcasts findings that exceed the configured `confidence_threshold`.
 - **Pulse Jobs**: Alerts you when scheduled background tasks start and finish.
 
+### Voice Support
+IronClad can process voice messages sent via Telegram. 
+1.  **Transcription**: Requires STT to be configured (see [STT Setup](local_stt_setup.md)).
+2.  **Voice Reply**: Enable `voice_reply = true` under `[integrations.telegram]` to receive audio responses (requires TTS).
+
+**Example Configuration:**
+```toml
+[llm]
+local_stt_cmd = "python3 scripts/stt_whisper.py {input} tiny"
+
+[integrations.telegram]
+enabled = true
+voice_reply = true
+```
+
 ## Security & Privacy
 
 - **Whitelist Only**: IronClad will ignore any message from a Chat ID not in `allowed_chat_ids`.
