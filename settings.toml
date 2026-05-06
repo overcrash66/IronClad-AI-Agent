@@ -48,6 +48,8 @@ max_model_size_b = 0
 max_retries = 2
 max_tool_calls = 30
 orchestrator_enabled = true
+context_compression = true
+max_tokens = 60000
 qa_enabled = true
 # Speech-to-Text command template (for local Whisper)
 local_stt_cmd = "{python} scripts/transcribe_voice.py {input} --model base"
