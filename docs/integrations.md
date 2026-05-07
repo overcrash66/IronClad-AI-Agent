@@ -95,3 +95,21 @@ IronClad exposes `POST /api/v1/webhooks/github` for GitHub event handling. See `
 ## Telegram
 
 Real-time progress notifications are sent to a Telegram chat when `telegram.enabled = true` in `settings.toml`. See `settings.toml` for the full configuration reference.
+
+---
+
+## Faceless YouTube Pipeline
+
+The faceless YouTube pipeline is integrated as a core skill (`faceless_yt_pipeline_py`). 
+
+Configuration is done via `settings.toml` under `[faceless_yt]` section.
+
+**Key Features:**
+- Configurable TTS voices per language
+- Optional subtitle generation and burning
+- Improved Pexels search with example topics
+- Uses default LLM model from `[llm]` section
+
+See [Faceless YouTube Documentation](faceless_youtube.md) for full details.
+
+---
