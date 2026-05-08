@@ -469,6 +469,47 @@ Telegram bot integration.
 | `allowed_chat_ids` | [number] | `[]` | Allowed chat IDs |
 | `trusted_chat_ids` | [number] | `[]` | Trusted chat IDs (auto-approve commands) |
 
+### `[faceless_yt]`
+
+Faceless YouTube Pipeline configuration.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | boolean | `true` | Enable the faceless YouTube pipeline |
+| `pexels_api_key` | string? | `null` | Pexels API key for video clips |
+| `default_model` | string? | `null` | Override LLM model (uses `[llm]` model if empty) |
+| `generate_subtitles` | boolean? | `null` | Generate `.vtt` subtitle files (default: true) |
+| `burn_subtitles` | boolean? | `null` | Burn subtitles into video (requires `generate_subtitles=true`, default: true) |
+| `tts_voice_en` | string? | `null` | TTS voice for English (e.g., `"en-US-GuyNeural"`) |
+| `tts_voice_fr` | string? | `null` | TTS voice for French (e.g., `"fr-FR-HenriNeural"`) |
+| `tts_voice_es` | string? | `null` | TTS voice for Spanish |
+| `tts_voice_de` | string? | `null` | TTS voice for German |
+| `example_topic` | string? | `null` | Topic to search for example videos on Pexels |
+
+**Environment Variables:**
+```bash
+# LLM Configuration
+IRONCLAD__FACeless_YT__DEFAULT_MODEL="qwen3.5-35b-a3b"
+IRONCLAD__FACeless_YT__LLM_PROVIDER="ollama"
+IRONCLAD__FACeless_YT__LLM_URL="http://127.0.0.1:11434"
+
+# Pexels API Key
+IRONCLAD__FACeless_YT__PEXELS_API_KEY="YOUR_KEY"
+
+# Subtitle Options
+IRONCLAD__FACeless_YT__GENERATE_SUBTITLES=true
+IRONCLAD__FACeless_YT__BURN_SUBTITLES=true
+
+# TTS Voices
+IRONCLAD__FACeless_YT__TTS_VOICE_EN="en-US-JennyNeural"
+IRONCLAD__FACeless_YT__TTS_VOICE_FR="fr-FR-DeniseNeural"
+
+# Search Improvement
+IRONCLAD__FACeless_YT__EXAMPLE_TOPIC="artificial intelligence"
+```
+
+See [Faceless YouTube Documentation](faceless_youtube.md) for full details.
+
 ### `[integrations.remote_agents]`
 
 HTTP bridge to external agent endpoints (LangGraph, DeepAgents, or any OpenAI-compatible server).

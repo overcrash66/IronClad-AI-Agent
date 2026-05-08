@@ -17,14 +17,18 @@ username = ""
 [faceless_yt]
 background_music_dir = "./assets/music"
 default_format = "16:9"
+default_model = ""  # Override LLM model for video generation (uses [llm] model if empty)
 enabled = true
+example_topic = ""  # Topic to search for example videos on Pexels
+generate_subtitles = true  # Generate .vtt subtitle files
+burn_subtitles = true  # Burn subtitles into video (requires generate_subtitles=true)
 languages = "en"
 max_video_duration_secs = 300
 niche = "world news"
 output_dir = "./workspace/yt_videos"
 pexels_api_key = ""
-tts_voice_en = ""
-tts_voice_fr = ""
+tts_voice_en = ""  # Override TTS voice for English (e.g., en-US-GuyNeural)
+tts_voice_fr = ""  # Override TTS voice for French (e.g., fr-FR-HenriNeural)
 youtube_upload = false
 
 [general]
