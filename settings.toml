@@ -46,10 +46,11 @@ voice_reply = true
 [llm]
 agentic_mode = true
 default_provider = "ollama"
-force_use_default_model = true
+force_use_default_model = false
 loop_timeout_secs = 180
 max_model_size_b = 0
 max_retries = 2
+max_replan_attempts = 3
 max_tool_calls = 30
 orchestrator_enabled = true
 context_compression = true
@@ -60,6 +61,8 @@ local_stt_cmd = "{python} scripts/transcribe_voice.py {input} --model base"
 local_tts_cmd = "{python} scripts/speak.py {text}"
 timeout_secs = 300
 turbo_mode = false
+step_qa_enabled = true
+plan_qa_enabled = true
 
 [llm.anthropic]
 base_url = "https://api.anthropic.com/v1"

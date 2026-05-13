@@ -124,7 +124,9 @@ The `faceless_yt_pipeline` skill acts as an autonomous media company, generating
 | **Native Tool Calling** | OpenAI and Anthropic use structured APIs; others fall back to XML parsing |
 | **Self-Reflection** | After completing a task, the agent critiques its own output and loops back to fix issues |
 | **DAG Planner** | Decomposes complex tasks into a parallel directed acyclic graph |
-| **DAG Re-planning** | When a node fails, the planner LLM generates a revised sub-DAG (max 2 attempts) |
+| **Step-Level QA** | **(New)** `step_qa_enabled` — run QA review after each agentic step for early error detection |
+| **Plan-Level QA** | **(New)** `plan_qa_enabled` — QA review of the full plan before execution begins |
+| **Replanning with QA** | When QA flags ReplanNeeded, the planner generates a revised sub-DAG (max `max_replan_attempts`, default 3) |
 | **Sub-Agent Delegation** | `delegate_task` spawns an isolated sub-agent for a focused sub-task |
 | **Context Compression** | Optionally summarizes dropped messages before applying the sliding window |
 | **Session Budget** | Wall-clock time limit that gracefully stops a runaway session |
@@ -218,8 +220,9 @@ flowchart LR
     subgraph Orchestration
         ORCH[Orchestrator / Router]
         DAG[DAG Planner]
+        QAPLAN[Plan QA Review]
         LOOP[ReAct QA Loop]
-        QA[QA Review]
+        QASTEP[Step QA Review]
     end
 
     subgraph Execution
@@ -229,9 +232,12 @@ flowchart LR
     end
 
     Input --> ORCH
-    ORCH --> DAG --> LOOP
+    ORCH --> DAG --> QAPLAN
+    QAPLAN -->|approved| LOOP
     LOOP --> GOV --> SB
     GOV --> SKILLS
+    LOOP --> QASTEP
+    QASTEP -->|ReplanNeeded| DAG
     LOOP --> QA --> LOOP
 ```
 
@@ -316,6 +322,9 @@ agentic_mode = true           # ReAct loop (recommended)
 max_tool_calls = 30           # tool budget per task
 max_parallel_tools = 4        # concurrent tool calls per turn
 context_compression = false   # summarize dropped messages
+step_qa_enabled = false       # enable QA review after each step (agentic mode)
+plan_qa_enabled = false       # enable QA review of the full plan before execution
+max_replan_attempts = 3       # max replan attempts when QA recommends replanning
 # session_budget_secs = 600   # optional time cap
 
 [llm.ollama]
