@@ -164,7 +164,7 @@ embedding_dimension = 768
 embedding_model = "nomic-embed-text-v1.5"
 embedding_provider = "openai"
 enabled = true
-exclude_patterns = "**/target/**,**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/.venv/**,**/venv/**,**/site-packages/**,**/__pycache__/**,**/yt_env/**,**/logs/**"
+exclude_patterns = "**/venv/**,**/env/**,**/venv_yt/**,**/target/**,**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/.venv/**,**/venv/**,**/site-packages/**,**/__pycache__/**,**/yt_env/**,**/logs/**"
 include_patterns = "**/*.rs,**/*.py,**/*.js,**/*.ts,**/*.jsx,**/*.tsx,**/*.go,**/*.java,**/*.md,**/*.txt"
 max_context_tokens = 2000
 max_file_size_kb = 500
@@ -201,7 +201,7 @@ max_path_length = 4096
 strict_path_validation = true
 
 [subprocess]
-allowed_executables = []
+allowed_executables = ""
 default_driver = "piped"
 default_timeout_secs = 300
 max_concurrent_agents = 5
