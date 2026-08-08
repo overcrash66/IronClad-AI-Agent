@@ -45,10 +45,10 @@ log_level = "info"
 workspace_dir = "./scratchpad"
 
 [integrations.telegram]
-allowed_chat_ids = ""
+allowed_chat_ids = []
 enabled = false
 telegram_key = ""
-trusted_chat_ids = ""
+trusted_chat_ids = []
 voice_reply = true
 
 [llm]
@@ -201,7 +201,7 @@ max_path_length = 4096
 strict_path_validation = true
 
 [subprocess]
-allowed_executables = ""
+allowed_executables = []
 default_driver = "piped"
 default_timeout_secs = 300
 max_concurrent_agents = 5
