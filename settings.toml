@@ -8,6 +8,14 @@ webhook_secret = ""
 [browser]
 headless = true
 
+[continuous_learning]
+auto_store_episodes = true
+episodic_memory_enabled = true
+max_episodes_in_context = 5
+profile_decay_days = 30
+profile_decay_factor = 0.9
+semantic_profiles_enabled = true
+
 [dashboard]
 enabled = true
 password = ""
@@ -16,19 +24,19 @@ username = ""
 
 [faceless_yt]
 background_music_dir = "./assets/music"
+burn_subtitles = true
 default_format = "16:9"
-default_model = ""  # Override LLM model for video generation (uses [llm] model if empty)
+default_model = ""
 enabled = true
-example_topic = ""  # Topic to search for example videos on Pexels
-generate_subtitles = true  # Generate .vtt subtitle files
-burn_subtitles = true  # Burn subtitles into video (requires generate_subtitles=true)
+example_topic = ""
+generate_subtitles = true
 languages = "en"
 max_video_duration_secs = 300
 niche = "world news"
 output_dir = "./workspace/yt_videos"
 pexels_api_key = ""
-tts_voice_en = ""  # Override TTS voice for English (e.g., en-US-GuyNeural)
-tts_voice_fr = ""  # Override TTS voice for French (e.g., fr-FR-HenriNeural)
+tts_voice_en = ""
+tts_voice_fr = ""
 youtube_upload = false
 
 [general]
@@ -37,32 +45,31 @@ log_level = "info"
 workspace_dir = "./scratchpad"
 
 [integrations.telegram]
-allowed_chat_ids = ""
+allowed_chat_ids = []
 enabled = false
 telegram_key = ""
-trusted_chat_ids = ""
+trusted_chat_ids = []
 voice_reply = true
 
 [llm]
 agentic_mode = true
+context_compression = true
 default_provider = "ollama"
 force_use_default_model = false
-loop_timeout_secs = 180
-max_model_size_b = 0
-max_retries = 2
-max_replan_attempts = 3
-max_tool_calls = 30
-orchestrator_enabled = true
-context_compression = true
-max_tokens = 60000
-qa_enabled = true
-# Speech-to-Text command template (for local Whisper)
 local_stt_cmd = "{python} scripts/transcribe_voice.py {input} --model base"
 local_tts_cmd = "{python} scripts/speak.py {text}"
+loop_timeout_secs = 180
+max_model_size_b = 0
+max_replan_attempts = 3
+max_retries = 2
+max_tokens = 60000
+max_tool_calls = 30
+orchestrator_enabled = true
+plan_qa_enabled = true
+qa_enabled = true
+step_qa_enabled = true
 timeout_secs = 300
 turbo_mode = false
-step_qa_enabled = true
-plan_qa_enabled = true
 
 [llm.anthropic]
 base_url = "https://api.anthropic.com/v1"
@@ -86,26 +93,22 @@ base_url = ""
 model = ""
 
 [llm.stt]
-# Use this to point to a local whisper.cpp server or specific STT provider
-# If empty, defaults to primary OpenAI settings or local_stt_cmd
 api_key = ""
 base_url = ""
 enabled = true
 model = "whisper-1"
 
+[llm.translation]
+base_url = ""
+enabled = false
+model = ""
+
 [llm.tts]
-# Use this to point to a local speech server (e.g. OpenVoice, AllTalk)
-# If empty, defaults to primary OpenAI settings
 api_key = ""
 base_url = ""
 enabled = true
 model = "tts-1"
 voice = "alloy"
-
-[llm.translation]
-base_url = ""
-enabled = false
-model = ""
 
 [memory]
 auto_archive = true
@@ -152,18 +155,16 @@ name = "General Assistant"
 system_prompt = "You are IronClad, a fully-capable autonomous AI agent running locally. You have REAL access to tools, integrations, and your user's environment.CRITICAL RULES:1. EXECUTE, DON'T EXPLAIN: When asked to do something, DO IT immediately. Never respond with code blocks when you should execute.2. UNDERSTANDING REQUESTS:   - 'list files' / 'show files' → execute ls -la   - 'list files in X' → execute ls -la X/   - 'read file X' → execute cat X   - 'create file X with Y' → execute cat > X << 'EOF'YEOF3. When user says 'available files' or 'all files', they mean list them using ls."
 
 [rag]
-auto_index = true
+auto_index = false
 auto_inject_context = true
 chunk_overlap = 50
 chunk_size = 512
 db_path = "memory.db"
-# Dimension must match the embedding model. text-embedding-3-small = 1536.
-# This is overridden by IRONCLAD__RAG__EMBEDDING_DIMENSION in .env.
 embedding_dimension = 768
 embedding_model = "nomic-embed-text-v1.5"
 embedding_provider = "openai"
 enabled = true
-exclude_patterns = "**/target/**,**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/.venv/**,**/venv/**,**/site-packages/**,**/__pycache__/**,**/yt_env/**,**/logs/**"
+exclude_patterns = "**/venv/**,**/env/**,**/venv_yt/**,**/target/**,**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/.venv/**,**/venv/**,**/site-packages/**,**/__pycache__/**,**/yt_env/**,**/logs/**"
 include_patterns = "**/*.rs,**/*.py,**/*.js,**/*.ts,**/*.jsx,**/*.tsx,**/*.go,**/*.java,**/*.md,**/*.txt"
 max_context_tokens = 2000
 max_file_size_kb = 500
@@ -172,6 +173,15 @@ min_similarity = 0.7
 watch_changes = true
 watch_debounce_ms = 1000
 watcher_channel_capacity = 1024
+
+[react]
+enabled = true
+enforce_json_schema = true
+inject_stderr_on_failure = true
+max_consecutive_failures = 3
+max_parse_retries = 2
+max_turns = 15
+total_timeout_secs = 600
 
 [sandbox]
 backend = "wsl"
@@ -188,7 +198,13 @@ allowed_path_patterns = "**"
 autonomous_mode = true
 blocked_path_patterns = "**/.env, **/.git/**, **/secrets/**, **/*.pem, **/*.key"
 max_path_length = 4096
-strict_path_validation = false
+strict_path_validation = true
+
+[subprocess]
+allowed_executables = []
+default_driver = "piped"
+default_timeout_secs = 300
+max_concurrent_agents = 5
 
 [tools]
 allow_system_commands = true

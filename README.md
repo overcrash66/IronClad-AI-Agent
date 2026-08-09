@@ -136,7 +136,7 @@ The `faceless_yt_pipeline` skill acts as an autonomous media company, generating
 | Category | Skills |
 |----------|--------|
 | **Files** | `read_file`, `write_file`, `list_directory`, `replace_in_file`, `grep_search` |
-| **Shell** | `shell_execute`, `run_tests`, `system_info` |
+| **Shell** | `shell_execute`, `run_tests`, `system_info`, `subprocess_manager` |
 | **Git** | `git_ops` (status, diff, log, branch, stash — writes are Traffic Light gated) |
 | **Web** | `search_web`, `browser_scrape`, `browser_visit` |
 | **Research** | `deep_research` (GitHub + arXiv + Semantic Scholar) |
