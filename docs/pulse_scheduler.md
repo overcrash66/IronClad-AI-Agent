@@ -109,6 +109,26 @@ Example — schedule a health check every 15 minutes:
 The check uses a 10-second HTTP timeout for GitHub and a 5-second timeout for Ollama
 (`http://localhost:11434/api/tags`).
 
+### `AutonomousWorker` *(new)*
+Runs the default hourly autonomous worker loop. It inspects episodic memory for failed tasks (auto-resuming them with prior context) or executes a backlog evaluation prompt without human intervention.
+
+```toml
+type = "AutonomousWorker"
+max_feedback_retries = 3
+default_task = "Evaluate open backlog tasks, continue pending work, and verify changes autonomously without waiting for approval."
+```
+
+Example:
+> **User:** "Schedule the hourly autonomous worker job."
+
+### `AutonomousMaintenance` *(new)*
+Runs background codebase maintenance loops in `scan`, `fix`, or `full` mode via the PM module.
+
+```toml
+type = "AutonomousMaintenance"
+mode = "scan"
+```
+
 ### `LogWatch` *(new)*
 Watches a log file for lines matching a regex. When a match is found the agent fires an
 alert using the configured template (with `{match}` substituted by the matched lines).
@@ -136,6 +156,10 @@ upload = false
 
 Example:
 > **User:** "Schedule the faceless YouTube pipeline for the generic tech niche every Friday at 5 PM."
+
+## Cron Expression Syntax & Auto-Normalization
+
+IronClad supports both **5-field standard cron** (`Min Hr Day Mth Wk`, e.g. `0 * * * *`) and **6-field cron with seconds** (`Sec Min Hr Day Mth Wk`, e.g. `0 0 * * * *`). 5-field cron strings are automatically normalized with a `0` second prefix so they parse seamlessly in the underlying `tokio-cron-scheduler`.
 
 ## Security & Rate Limiting
 

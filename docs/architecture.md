@@ -177,12 +177,32 @@ Some skills are conditional on configured integrations, but the runtime names be
 | `list_workspaces` | List sibling project directories |
 | `browse_workspace` | Walk a workspace directory tree |
 | `create_tool` | Create new tool scripts at runtime (with force/validate flags) |
+| `subprocess_manager` | Manage background child CLI processes (`spawn`, `send`, `read`, `kill`, `list`) |
 | `query_knowledge_base` | Query the RAG knowledge base when RAG is enabled |
 | `translate` | Translate text between languages |
 | `speak` (tts) | Text-to-speech output |
 | `transcribe` (stt) | Speech-to-text input |
 
 GitHub write skills exist in source but are not currently registered at runtime. They remain disabled until a dedicated approval workflow exists for external repository mutations.
+
+### Subprocess Orchestration Engine (`src/subprocess`)
+
+IronClad provides multi-agent CLI subprocess management via `CliManager` and `PipedDriver`:
+- Spawns background process instances using `tokio::process::Command` with piped `stdin`/`stdout`/`stderr`.
+- Provides async `SubprocessHandle` for sending commands, streaming output via broadcast channels, matching patterns with regex timeouts, and sending kill signals.
+- Exposes `subprocess_manager` skill for LLM control over spawned CLI instances.
+
+### Constrained ReAct Harness (`src/react`)
+
+Implements a typestate ReAct loop (`ReactStep<ThinkState>` → `ReactStep<ActState>` → `ReactStep<ObserveState>`):
+- **Structured Output**: JSON schema validation parsing with `parse_react_response()` and automatic markdown/codeblock un-escaping.
+- **Self-Correction**: Automatically generates reflection prompts when tool calls fail, forcing the LLM to analyze the error before retrying with alternative arguments.
+- **Context Formulation**: Assembles user preferences, project context, and learned corrections into system prompts.
+
+### Episodic Memory & Semantic Profiles (`src/memory`)
+
+- **Episodic Memory**: Stores complete task trajectories (`Episode` and `Vec<TrajectoryStep>`) in the `episodic_memory` SQLite table. Used by the `AutonomousWorker` job to automatically resume failed tasks with historical step context.
+- **Semantic Profiles**: Manages key-value preferences, project context, and learned corrections in the `semantic_profiles` table, auto-injecting relevant entries into system prompts during context formulation.
 
 ### Security Filters on Skills
 
