@@ -44,6 +44,10 @@ audit_db = "ironclad_audit.db"
 log_level = "info"
 workspace_dir = "./scratchpad"
 
+[integrations.remote_agents]
+enabled = false
+endpoints = []
+
 [integrations.telegram]
 allowed_chat_ids = []
 enabled = false
@@ -55,42 +59,67 @@ voice_reply = true
 agentic_mode = true
 context_compression = true
 default_provider = "ollama"
+fallback_models = []
 force_use_default_model = false
 local_stt_cmd = "{python} scripts/transcribe_voice.py {input} --model base"
 local_tts_cmd = "{python} scripts/speak.py {text}"
 loop_timeout_secs = 180
+max_agent_turns = 50
 max_model_size_b = 0
+max_parallel_tools = 4
 max_replan_attempts = 3
 max_retries = 2
 max_tokens = 60000
 max_tool_calls = 30
+max_tool_chain_depth = 5
 orchestrator_enabled = true
 plan_qa_enabled = true
+planner_cache_max_entries = 100
+planner_cache_ttl_secs = 300
+python_path = ""
 qa_enabled = true
+session_budget_secs = 0
 step_qa_enabled = true
 timeout_secs = 300
 turbo_mode = false
 
 [llm.anthropic]
+api_key = ""
 base_url = "https://api.anthropic.com/v1"
 model = "claude-3-5-sonnet-20240620"
+vision = true
+
+[llm.gemini]
+api_key = ""
+base_url = "https://generativelanguage.googleapis.com/v1beta"
+model = "gemini-1.5-pro"
+vision = true
 
 [llm.nvidia]
+api_key = ""
 base_url = "https://integrate.api.nvidia.com/v1"
 model = "meta/llama-3.1-70b-instruct"
+vision = true
 
 [llm.ollama]
+api_token = ""
 base_url = ""
 keep_alive = "10m"
 model = ""
+native_tools = false
 planner_model = ""
 qa_model = ""
+thinking_model_patterns = ["qwen", "qwq", "deepseek-r1", "reasoning"]
 vision = true
 
 [llm.openai]
 api_key = ""
 base_url = ""
 model = ""
+native_tools = false
+reasoning_effort = "high"
+thinking_model_patterns = ["qwen", "qwq", "deepseek-r1", "reasoning"]
+vision = true
 
 [llm.stt]
 api_key = ""
@@ -153,6 +182,12 @@ system_prompt = "You are a Faceless YouTube Content Creator. Your goal is to aut
 description = "A helpful AI assistant."
 name = "General Assistant"
 system_prompt = "You are IronClad, a fully-capable autonomous AI agent running locally. You have REAL access to tools, integrations, and your user's environment.CRITICAL RULES:1. EXECUTE, DON'T EXPLAIN: When asked to do something, DO IT immediately. Never respond with code blocks when you should execute.2. UNDERSTANDING REQUESTS:   - 'list files' / 'show files' → execute ls -la   - 'list files in X' → execute ls -la X/   - 'read file X' → execute cat X   - 'create file X with Y' → execute cat > X << 'EOF'YEOF3. When user says 'available files' or 'all files', they mean list them using ls."
+
+[quality_gate]
+block_on_security_issues = true
+max_clippy_warnings = 0
+min_test_coverage = 80.0
+require_documentation = false
 
 [rag]
 auto_index = false
