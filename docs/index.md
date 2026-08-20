@@ -96,6 +96,16 @@ Low-level design rationale for core systems.
 | [ADR-001 Traffic Light Policy](adr/001-traffic-light-policy.md) | Why and how intent classification works |
 | [ADR-002 Sandbox Backend Abstraction](adr/002-sandbox-backend-abstraction.md) | Pluggable execution backends design |
 | [ADR-003 MCP Integration Pattern](adr/003-mcp-integration-pattern.md) | How MCP tools are discovered and registered |
+| [ADR-004 RAG Implementation](adr/004-rag-implementation.md) | Codebase indexing, Tree-sitter parsing & vector search |
+| [ADR-005 Native Tool Calling](adr/005-native-tool-calling.md) | Provider-level function calling vs XML fallback |
+
+---
+
+## Guides & Tutorials
+
+| Document | Description |
+|----------|-------------|
+| [Pi Agent Setup Guide](guides/pi-agent-setup.md) | Setting up Pi AI coding agent for autonomous task escalation |
 
 ---
 
@@ -107,26 +117,29 @@ Low-level design rationale for core systems.
 |----------|-------------|
 | Files | `read_file` `write_file` `list_directory` `replace_in_file` |
 | Search | `grep_search` `search_web` `deep_research` |
-| Shell | `shell_execute` `run_tests` `system_info` |
+| Shell & Sandbox | `shell_execute` `run_tests` `system_info` `reviewer` `post_mortem` |
 | Git | `git_ops` |
 | Browser | `browser_scrape` `browser_visit` |
 | GitHub | `github_list_issues` `github_list_prs` |
-| Memory | `remember` `search_history` `query_history` `query_logs` |
-| Planning | `delegate_task` `list_tools` `ask_user` `write_todos` |
-| Workspace | `list_workspaces` `browse_workspace` `create_tool` |
+| Memory | `remember` `search_history` `query_history` `query_logs` `core_memory_read` `core_memory_write` `core_memory_append` `core_memory_delete` |
+| Planning & Swarm | `delegate_task` `delegate_to_cli_agent` `subprocess_manager` `agent_coordination` `list_tools` `ask_user` `write_todos` `think` `reflection` `self_improve` `research_plan` |
+| Workspace | `list_workspaces` `browse_workspace` `create_tool` `get_ide_state` |
 | RAG | `query_knowledge_base` |
 | Schedule | `schedule_job` |
+| Autonomous Pipelines | `experiment_loop` `bug_bounty_scan` `faceless_yt_pipeline` |
 | Remote | `remote_agent` |
 | Media | `speak` `transcribe` `translate` |
 
 ### Key Environment Variables
 
 ```bash
-IRONCLAD_OPENAI_KEY        # OpenAI API key
-IRONCLAD_ANTHROPIC_KEY     # Anthropic API key
-IRONCLAD_GITHUB_KEY        # GitHub personal access token
+IRONCLAD_OPENAI_KEY        # OpenAI / GPT API key
+IRONCLAD_ANTHROPIC_KEY     # Anthropic / Claude API key
+IRONCLAD_GEMINI_KEY        # Google Gemini API key
 IRONCLAD_NVIDIA_KEY        # NVIDIA NIM API key
+IRONCLAD_GITHUB_KEY        # GitHub personal access token (deep research & APIs)
 IRONCLAD_TELEGRAM_KEY      # Telegram bot token
+IRONCLAD_PEXELS_KEY        # Pexels API key (faceless video creation)
 ```
 
 ### Key Files
@@ -138,6 +151,7 @@ IRONCLAD_TELEGRAM_KEY      # Telegram bot token
 | `workspace/program.md` | Per-project instructions injected into every task |
 | `memory.db` | Chat history and session storage (SQLite) |
 | `ironclad_audit.db` | Full audit log of all agent actions (SQLite) |
+| `coordination.db` | Multi-agent coordination state & blackboard |
 | `bench_results.json` | Latest benchmark run output |
 
 ### Performance Quick Reference
@@ -150,3 +164,4 @@ IRONCLAD_TELEGRAM_KEY      # Telegram bot token
 | Cap wall-clock time | `session_budget_secs = 300` |
 | Skip model routing | `orchestrator_enabled = false` |
 | Skip quality review | `qa_enabled = false` |
+

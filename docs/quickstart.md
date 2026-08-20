@@ -29,10 +29,10 @@ ollama pull llama3
 
 ## Step 2 — Install IronClad
 
-### Option A — Install via crates.io (Recommended)
+**Install via Cargo (Recommended)**
 
 ```bash
-cargo install ironclad
+cargo install ironclad-ai-agent
 ```
 
 Verify the installation:
@@ -41,74 +41,54 @@ Verify the installation:
 ironclad --version
 ```
 
-### Option B — Download Pre-built Binaries
-
-Go to the [GitHub Releases](https://github.com/overcrash66/IronClad/releases) page and download the latest version for your platform:
-
-| Platform | Artifact |
-|----------|----------|
-| **Windows** | `ironclad-windows-x86_64.zip` |
-| **Linux (x86_64)** | `ironclad-linux-x86_64.tar.gz` |
-| **macOS (Apple Silicon)** | `ironclad-macos-aarch64.tar.gz` |
-| **macOS (Intel)** | `ironclad-macos-x86_64.tar.gz` |
-
-Once downloaded, extract the archive to a folder of your choice.
-
-### Option C — Build from Source (Developers)
-
-```bash
-git clone https://github.com/overcrash66/IronClad.git
-cd IronClad
-cargo build --release
-```
-
 ---
 
-## Step 3 — Configure
+## Step 3 — Configure (`settings.toml` or `.env`)
 
-Open `settings.toml` and set your execution backend.
+Open or create `settings.toml` in your working directory and set your execution backend and LLM provider.
 
-**Windows with WSL (default):**
+**Local Models (Ollama, LM Studio / vLLM):**
 ```toml
 [sandbox]
-backend = "wsl"
-default_image = "Ubuntu"   # name of your WSL distro
+backend = "local"           # Or "wsl", "docker"
 
 [llm]
-default_provider = "ollama"
+default_provider = "ollama" # Or "openai", "anthropic", "gemini", "nvidia"
+agentic_mode = true
 
 [llm.ollama]
 base_url = "http://127.0.0.1:11434"
-model = "llama3"
+model = "llama3"            # Or "qwen2.5-coder:32b", "qwen3.8", "deepseek-r1:32b"
+
+# Local / Custom OpenAI-compatible endpoints:
+[llm.openai]
+base_url = "http://127.0.0.1:1234/v1"
+model = "unsloth/qwen3.8-27b" # Or "meta-muse-glimmer", "gpt-4o"
 ```
 
-**Windows/Linux without a sandbox:**
-```toml
-[sandbox]
-backend = "local"
-
-[llm]
-default_provider = "ollama"
-turbo_mode = true   # fastest possible — skip orchestrator and QA
-```
-
-**Using OpenAI or Anthropic instead of Ollama:**
+**Cloud Providers (Anthropic, OpenAI, Gemini, NVIDIA):**
 ```toml
 [llm]
-default_provider = "anthropic"   # or "openai"
+default_provider = "anthropic"
 
 [llm.anthropic]
-model = "claude-sonnet-4-20250514"
+model = "claude-3-5-sonnet-20240620"
 ```
 
-Set your API key in the environment (never in `settings.toml`):
+Set your API keys via `.env` or environment variables:
 
 ```bash
 # Windows PowerShell
-$env:IRONCLAD_ANTHROPIC_KEY="sk-ant-..."
+$env:ANTHROPIC_API_KEY="sk-ant-..."
+$env:OPENAI_API_KEY="sk-..."
+$env:GEMINI_API_KEY="AIzaSy..."
+$env:NVIDIA_API_KEY="nvapi-..."
 
-# Linux / macOS
-export IRONCLAD_ANTHROPIC_KEY="sk-ant-..."
+# Linux / macOS / Bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+export OPENAI_API_KEY="sk-..."
+export GEMINI_API_KEY="AIzaSy..."
+export NVIDIA_API_KEY="nvapi-..."
 ```
 
 ---
@@ -116,11 +96,16 @@ export IRONCLAD_ANTHROPIC_KEY="sk-ant-..."
 ## Step 4 — Run
 
 ```bash
-# Windows
-.\ironclad.exe
+# Launch interactive mode (installed binary)
+ironclad
 
-# Linux / macOS
-./ironclad
+# Or run directly with cargo in your project directory
+cargo run
+
+# Or execute a one-shot autonomous task
+ironclad orchestrate --task "Analyze codebase and summarize architecture"
+# or
+cargo run -- orchestrate --task "Analyze codebase and summarize architecture"
 ```
 
 IronClad opens the interactive Terminal UI (TUI). You will see:
@@ -146,7 +131,7 @@ To unlock the easiest setup and learning experience, navigate to `http://127.0.0
 
 ---
 
-## Step 5 — Your First Tasks
+## Step 6 — Your First Tasks
 
 Try these to verify everything is working:
 

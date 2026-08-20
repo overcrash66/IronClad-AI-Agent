@@ -24,24 +24,27 @@ Traditional AI agents give LLMs direct access to system tools, creating signific
 
 ### Built-in Skills (Tools)
 - **File Operations**: read, write, list, search, replace files
-- **Shell Commands**: Execute commands, run tests, get system info
-- **Git Operations**: Status, diff, log, branch, stash (with safety controls)
+- **Shell Commands**: Execute commands, run tests, get system info, reviewer, post-mortem
+- **Git Operations**: Status, diff, log, branch, stash (with Traffic Light safety controls)
 - **Web & Research**: Web search, browser automation, deep research (GitHub + arXiv + Semantic Scholar)
 - **GitHub Integration**: List issues and pull requests
-- **Memory**: Remember facts, search history, query logs
-- **Planning & Coordination**: Delegate tasks, list tools, ask user, write todos
-- **Scheduling**: Schedule recurring jobs
-- **Workspace Management**: List workspaces, browse, create tools
-- **Knowledge Base**: Query RAG (Retrieval-Augmented Generation) system
-- **Media**: Text-to-speech, speech-to-text, translation
-- **Remote Agents**: Delegate to external HTTP endpoints
+- **Memory & Database**: Remember facts, search history, query logs, query history, core memory
+- **Planning & Multi-Agent Swarm**: Delegate sub-tasks, delegate to external CLI agents (Pi, Claude Code, Aider, OpenCode), subprocess manager, list tools, ask user, write todos
+- **Autonomous Pipelines**: Karpathy Experiment Loop (iterative metric optimization with git stash rollback), Bug Bounty scanner, Faceless YouTube media pipeline
+- **Scheduling**: Schedule recurring Pulse jobs, hourly autonomous workers, and midnight reviews
+- **Workspace Management**: List workspaces, browse, create and hot-reload custom tools
+- **Knowledge Base**: Query RAG system with Tree-sitter AST parsing (Rust, Python, JS, TS)
+- **Media & Voice**: Text-to-speech, Whisper speech-to-text, translation
+- **Remote Agents**: Delegate to external HTTP endpoints (LangGraph, OpenAI-compatible)
 
 ### Security Features
 - **Three-Ring Architecture**: LLM → Governor → Executor — the LLM never touches the system directly
 - **Traffic Light Policy**: Every action classified: Green (auto), Yellow (notify), Red (confirm), Blocked
-- **Secret Scrubbing**: API keys are redacted from all LLM context
-- **Workspace Boundary**: File and shell skills cannot escape the configured workspace
-- **Git Safety**: Force-push, `--no-verify`, and `../` traversal are hard-blocked
+- **Python Venv Isolation Guard**: Mandatory virtual environment enforcement preventing host dependency corruption
+- **System Command Control**: Global kill-switch for dangerous system commands (`sudo`, `apt`, `rm -rf`)
+- **Secret Scrubbing**: API keys and credentials are automatically redacted from all LLM context
+- **Workspace Boundary**: File and shell skills cannot escape the configured workspace directory
+- **Git Safety**: Force-push, `--no-verify`, and `../` path traversal are hard-blocked
 - **Audit Log**: Every prompt, response, and command recorded in `ironclad_audit.db` (SQLite)
 
 ## Why IronClad is Powerful
@@ -62,30 +65,24 @@ IronClad combines the autonomy of AI agents with enterprise-grade security. Unli
 
 ### Installation
 
-#### Option 1: Download Release (Recommended)
-The fastest way to get started is to download the latest pre-built binary from the [Releases](https://github.com/overcrash66/IronClad/releases) page for your operating system.
-1. Download the archive (`.zip` for Windows, `.tar.gz` for Linux/macOS).
-2. Extract the archive to a folder.
-
-#### Option 2: Build from Source
-If you prefer to build manually or are contributing to development:
+#### Install via Cargo (Recommended)
 ```bash
-git clone https://github.com/overcrash66/IronClad.git
-cd IronClad
-cargo build --release
+cargo install ironclad-ai-agent
 ```
 
 ### Running IronClad
 
-If you downloaded the release:
-- **Windows**: Run `ironclad.exe`
-- **Linux/macOS**: Run `./ironclad`
-
-If you built from source:
 ```bash
+# If installed via cargo:
+ironclad
+
+# Or run directly with cargo in development / workspace:
 cargo run
-# or directly
-./target/release/ironclad
+
+# Or run a one-shot autonomous task:
+ironclad orchestrate --task "Analyze src/ and list all TODO comments"
+# or
+cargo run -- orchestrate --task "Analyze src/ and list all TODO comments"
 ```
 
 ### First Run Experience

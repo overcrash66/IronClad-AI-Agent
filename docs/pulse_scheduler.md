@@ -110,12 +110,13 @@ The check uses a 10-second HTTP timeout for GitHub and a 5-second timeout for Ol
 (`http://localhost:11434/api/tags`).
 
 ### `AutonomousWorker` *(new)*
-Runs the default hourly autonomous worker loop. It inspects episodic memory for failed tasks (auto-resuming them with prior context) or executes a backlog evaluation prompt without human intervention.
+Runs the default hourly autonomous worker loop. It inspects episodic memory for failed tasks (auto-resuming them with prior context) or executes a backlog evaluation prompt without human intervention. When `prefer_cli_delegation` is `true`, it can automatically escalate tasks to external CLI agents (like Pi, Claude Code, Aider).
 
 ```toml
 type = "AutonomousWorker"
 max_feedback_retries = 3
 default_task = "Evaluate open backlog tasks, continue pending work, and verify changes autonomously without waiting for approval."
+prefer_cli_delegation = true
 ```
 
 Example:

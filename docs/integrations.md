@@ -100,7 +100,7 @@ Real-time progress notifications are sent to a Telegram chat when `telegram.enab
 
 ## Faceless YouTube Pipeline
 
-The faceless YouTube pipeline is integrated as a core skill (`faceless_yt_pipeline_py`). 
+The faceless YouTube pipeline is integrated as a core skill (`faceless_yt_pipeline`). 
 
 Configuration is done via `settings.toml` under `[faceless_yt]` section.
 
@@ -113,3 +113,42 @@ Configuration is done via `settings.toml` under `[faceless_yt]` section.
 See [Faceless YouTube Documentation](faceless_youtube.md) for full details.
 
 ---
+
+## External CLI Agents Hub (`delegate_to_cli_agent`)
+
+IronClad includes an auto-detection registry (`CliAgentRegistry`) that scans your system for external AI coding tools and CLI agents. When detected, IronClad can orchestrate and delegate coding tasks directly to them:
+
+| Detected Agent | CLI Command | Purpose |
+|----------------|-------------|---------|
+| **Pi Agent** | `pi` | Specialized autonomous TypeScript/Python/Rust coding agent |
+| **Claude Code** | `claude` | Anthropic's interactive CLI coding assistant |
+| **Aider** | `aider` | AI pair programmer with git tracking |
+| **OpenCode** | `opencode` | Open-source terminal coding assistant |
+| **Gemini CLI** | `gemini` | Google Gemini developer assistant |
+
+### Usage:
+You can invoke or delegate directly from the TUI / chat prompt:
+> "Delegate this refactoring task to Pi Agent."
+> "Run aider to write unit tests for the authentication module."
+
+---
+
+## Subprocess & PTY Manager (`subprocess_manager`)
+
+IronClad includes a background process manager (`src/subprocess`) capable of orchestrating child CLI processes with virtual PTY terminals or piped standard IO:
+- **`spawn`**: Start a background process (e.g. dev server, file watcher, compiler).
+- **`send`**: Send interactive input to stdin.
+- **`read`**: Stream stdout/stderr in real time.
+- **`kill`**: Gracefully terminate background processes.
+- **`list`**: Inspect active agent subprocesses.
+
+---
+
+## Multi-Agent Coordination & Shared Blackboard (`agent_coordination`)
+
+IronClad supports multi-agent coordination backed by a persistent SQLite database (`coordination.db`):
+- **Task Claiming & Locking**: Agents claim sub-tasks with lease timers to prevent race conditions.
+- **Shared Blackboard**: Agents post intermediate artifacts, architectural designs, and review results for other agents to consume.
+- **Actor-Based Swarm**: Coordinates specialized roles (*Architect*, *Coder*, *SecurityReviewer*, *TestEngineer*) in parallel execution pipelines.
+
+---
