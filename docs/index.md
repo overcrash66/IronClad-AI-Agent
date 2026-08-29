@@ -98,6 +98,7 @@ Low-level design rationale for core systems.
 | [ADR-003 MCP Integration Pattern](adr/003-mcp-integration-pattern.md) | How MCP tools are discovered and registered |
 | [ADR-004 RAG Implementation](adr/004-rag-implementation.md) | Codebase indexing, Tree-sitter parsing & vector search |
 | [ADR-005 Native Tool Calling](adr/005-native-tool-calling.md) | Provider-level function calling vs XML fallback |
+| [ADR-006 Dynamic Model Preferences](adr/006-dynamic-model-preferences.md) | Dynamic model preferences registry & 8-pillar benchmark scoring |
 
 ---
 
@@ -106,6 +107,15 @@ Low-level design rationale for core systems.
 | Document | Description |
 |----------|-------------|
 | [Pi Agent Setup Guide](guides/pi-agent-setup.md) | Setting up Pi AI coding agent for autonomous task escalation |
+
+---
+
+## Academic Research & Publications
+
+| Document | Description |
+|----------|-------------|
+| [Architecture & Security White Paper (Zenodo)](https://zenodo.org/records/22069766) | *IronClad AI Agent: A Secure-by-Design, Rust-Native Autonomous AI Agent Orchestration Framework for Consumer Hardware* (DOI: 10.5281/zenodo.22069766) |
+| [Context & Memory White Paper](white_paper_context_memory.md) | *Context Engineering and Multi-Tiered Memory Architectures for Local Large Language Model Agents: Mitigating Token Bloat, Context Degradation, and Trivial Task Overthinking* |
 
 ---
 

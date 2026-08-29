@@ -2,294 +2,218 @@
 
 **The Secure-by-Design, Local-First Autonomous AI Agent Runtime & Multi-Agent Orchestration Harness — Built in Rust.**
 
+[![Crates.io](https://img.shields.io/crates/v/ironclad-ai-agent.svg)](https://crates.io/crates/ironclad-ai-agent)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-overcrash66%2FIronClad--AI--Agent-blue.svg?logo=github)](https://github.com/overcrash66/IronClad-AI-Agent)
+[![GitHub Issues](https://img.shields.io/github/issues/overcrash66/IronClad-AI-Agent.svg)](https://github.com/overcrash66/IronClad-AI-Agent/issues)
+[![White Paper DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.22069766-blue.svg)](https://zenodo.org/records/22069766)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](docs/index.md)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-stable-orange.svg)](https://www.rust-lang.org/)
-[![Crates.io](https://img.shields.io/badge/crates.io-ironclad--ai--agent-red.svg)](https://crates.io/crates/ironclad-ai-agent)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)]()
 [![Privacy: Local-First](https://img.shields.io/badge/privacy-100%25%20local--first-green.svg)]()
 [![Security: Zero--Trust](https://img.shields.io/badge/security-three--ring%20zero--trust-blueviolet.svg)]()
 
 <p align="center">
-  <img src="docs/images/IronClad_Logo.png" alt="IronClad Logo" width="280" />
+  <img src="docs/images/IronClad_Logo.png" alt="IronClad Logo" width="260" />
 </p>
 
 ---
 
-## 🌟 What is IronClad? (In Simple Terms)
+## 🌟 What is IronClad?
 
-Think of IronClad as an **armored operating system for AI agents**.
+IronClad is an **armored, local-first autonomous AI agent runtime**. 
 
-Most traditional AI agents give language models direct, unfettered access to your terminal and files, risking destructive mistakes, data leaks, and sky-high cloud bills.
+Traditional AI coding assistants give large language models unchecked access to your shell and filesystem, creating risks of data loss, prompt injection vulnerabilities, and expensive API bills. 
 
-**IronClad solves this with three foundational pillars:**
+**IronClad solves this with three foundational principles:**
 
-1. 🔒 **100% Private & Local-First**: Run entirely on your own machine using **Ollama, LM Studio, llama.cpp, or vLLM**. Zero subscription costs, zero token bills, and zero data leaving your hardware. *(Cloud LLMs like OpenAI, Claude, Gemini, and NVIDIA NIM are also fully supported when you need massive scale).*
-2. 🛡️ **Zero-Trust Security Governor (Three-Ring Model)**: IronClad treats the AI as an *untrusted component*. Every single file edit, shell execution, or git command is inspected and gated by **The Governor** using a strict Traffic Light policy (Green/Yellow/Red/Blocked), Python venv isolation, and secret scrubbing before executing in sandboxes (Docker, WSL2, or Local host).
-3. ⚡ **Autonomous Multi-Agent & CLI Harness**: IronClad is much more than a single-turn chatbot. It orchestrates background cron jobs (*Pulse*), runs Karpathy-style autonomous optimization loops (*Experiment Loop*), auto-detects and drives external AI CLI agents (*Pi Agent, Claude Code, Aider, OpenCode, Gemini CLI*), performs automated security scanning (*Bug Bounty*), and produces media (*Faceless YouTube Studio*).
-
----
-
-## 🚀 Why IronClad? (The Hidden Superpowers)
-
-| Capability | Traditional AI Agents | 🛡️ IronClad AI Agent |
-|------------|----------------------|------------------------|
-| **Security Architecture** | Direct shell/file access (High risk) | **Zero-Trust Three-Ring Model** (Governor + Sandbox isolation) |
-| **Privacy & Cost** | Requires cloud API keys ($$$) | **100% Local-First** via Ollama / LM Studio ($0 & zero leaks) |
-| **Execution Sandboxes** | Host execution only | Pluggable **Docker**, **WSL2**, or **Local** execution |
-| **External Agent Orchestration** | Siloed / None | Auto-detects & drives **Pi Agent, Claude Code, Aider, OpenCode** via PTY |
-| **Autonomous Optimization** | Manual trial-and-error | **Autonomous Experiment Loop** with automated `git stash` rollbacks |
-| **Code Understanding** | Naive text grep / chunking | **Tree-sitter AST Graph RAG** (Rust, Python, JS, TS) |
-| **Task Quality Control** | Single-shot output | **Two-Tier QA Review** (Plan QA + Step QA with auto-replanning) |
-| **Autonomous Scheduling** | Interactive prompts only | **Pulse Scheduler** (Hourly workers, midnight reviews, memory summarization) |
-| **User Experience** | CLI only | **Real-Time Web Dashboard** (`http://127.0.0.1:8080`) + **Interactive Ratatui TUI** |
+1. 🔒 **100% Private & Local-First**: Run entirely on your local machine using **LM Studio** or **Ollama** with zero token costs and zero telemetry leaving your device. *(Cloud models like Claude, OpenAI, Gemini, and NVIDIA NIM are also fully supported).*
+2. 🛡️ **Zero-Trust Security Governor (Three-Ring Model)**: The LLM is treated as an *untrusted component*. Every shell command, file write, and git action is inspected and gated by the **Governor** using a strict Traffic Light policy before running in sandboxes (Docker, WSL2, or Local host).
+3. ⚡ **Autonomous Multi-Agent Orchestrator**: Automates complex workflows — background cron jobs (*Pulse*), Karpathy-style autonomous optimization loops (*Experiment Loop*), AST codebase search (*Tree-sitter RAG*), and automated delegation to external CLI agents (*Pi Agent, Claude Code, Aider, OpenCode, Gemini CLI*).
 
 ---
 
-## 🏗️ The Three-Ring Zero-Trust Architecture
+## 💡 Recommended Local Setup: LM Studio (v0.6.7 & Future Releases)
 
-IronClad enforces absolute separation of concerns between thinking, permissioning, and execution:
+> **For the best local AI experience in IronClad version 0.6.7 and future releases, we recommend using [LM Studio](https://lmstudio.ai/)** (or [Ollama](https://ollama.com/)).
 
-```
-  ┌────────────────────────────────────────────────────────────┐
-  │  Ring 1 — The Dreamer (LLM)                                │
-  │  Proposes intentions & tool calls. Has ZERO direct access. │
-  └─────────────────────────────┬──────────────────────────────┘
-                                │  proposed actions
-  ┌─────────────────────────────▼──────────────────────────────┐
-  │  Ring 2 — The Governor & Quality Gate (Policy Engine)      │
-  │  Traffic Light (Green/Yellow/Red/Blocked) · Secret Scrub   │
-  │  Python Venv Guard · Workspace Jails · Path Traversal Gate │
-  └─────────────────────────────┬──────────────────────────────┘
-                                │  approved actions
-  ┌─────────────────────────────▼──────────────────────────────┐
-  │  Ring 3 — The Executor (Sandboxed Runtime)                 │
-  │  WSL2 · Docker Container · Local Host Isolation            │
-  └────────────────────────────────────────────────────────────┘
-```
+### Why LM Studio?
+- ⚡ **High Performance & GPU Acceleration**: Fast local inference using Metal (macOS), CUDA (NVIDIA), and ROCm/Vulkan (AMD/Intel).
+- 📦 **1-Click Model Downloads**: Easily search, download, and switch between top coding models (e.g. `Qwen 2.5 Coder 32B`, `Qwen 3.8`, `DeepSeek-R1`, `Llama 3.3`).
+- 🔌 **Standard OpenAI-Compatible API**: Serves a local API endpoint on `http://127.0.0.1:1234/v1`.
+- 🧠 **Dynamic Benchmark Scoring**: Fully integrated with IronClad's 8-pillar benchmark scoring and automated model lifecycle management.
+
+### Quick 3-Step LM Studio Setup:
+1. Download and install **[LM Studio](https://lmstudio.ai/)**.
+2. Search and download a model (recommended: **`qwen2.5-coder-32b-instruct`** or **`deepseek-r1-distill-qwen-32b`**).
+3. Go to the **Developer / Local Server tab** (`<->`), select your model, and click **Start Server** on port `1234`.
 
 ---
 
-## 🎯 Real-World Capabilities & Use Cases
+## ⚡ Quick Start (Up & Running in 3 Steps)
 
-### 1. 💻 Autonomous Software Engineering & Code Review
-Decomposes complex engineering goals into parallel Directed Acyclic Graphs (DAG), executes step-by-step with continuous QA verification, and writes code safely:
-```
-> Refactor the authentication module in src/api/routes.rs to use JWT tokens
-> Review src/governor/policy.rs for security vulnerabilities and race conditions
-> Run cargo test and fix any failing unit tests until 100% pass
-```
+### 1. Install IronClad
 
-### 2. 🔬 Autonomous Experiment Loop (Karpathy Autoresearch Pattern)
-Inspired by Andrej Karpathy's `autoresearch` concept. Proposes code optimizations, runs test/benchmark metric commands, and automatically runs `git stash` to revert failed experiments:
-```
-> Use experiment_loop to optimize the query latency of the API with at most 10 iterations
+Install the released binary directly via Cargo:
+
+```bash
+cargo install ironclad-ai-agent
 ```
 
-### 3. 🤖 External CLI Agent Orchestration Hub
-IronClad auto-detects external AI coding tools installed on your machine and can delegate complex programming tasks directly to them via virtual terminals (PTY):
-```
-> Delegate this refactoring task to Pi Agent
-> Have Claude Code analyze the frontend components and fix CSS layout bugs
-> Run Aider to generate complete integration test coverage
+*(Packages, releases, and crate documentation are available on [crates.io/crates/ironclad-ai-agent](https://crates.io/crates/ironclad-ai-agent)).*
+
+### 2. Configure `settings.toml`
+
+Create or edit `settings.toml` in your working directory:
+
+```toml
+[sandbox]
+backend = "local"           # Options: "local", "wsl", "docker"
+
+[llm]
+default_provider = "openai" # "openai" for LM Studio, "ollama" for Ollama
+agentic_mode = true
+
+# LM Studio (Recommended for v0.6.7+)
+[llm.openai]
+base_url = "http://127.0.0.1:1234/v1"
+model = "qwen2.5-coder-32b-instruct"
+
+# Or Ollama (Local alternative)
+[llm.ollama]
+base_url = "http://127.0.0.1:11434"
+model = "llama3"
 ```
 
-### 4. 🧠 AST-Level Codebase Search & RAG Knowledge Base
-Constructs a semantic knowledge graph using **Tree-sitter AST parsers** for Rust, Python, JavaScript, and TypeScript with local vector embeddings:
-```
-> Query the knowledge base to explain how the Governor evaluates Traffic Light policies
-> Where are all database session connections initialized across the codebase?
-```
+### 3. Launch IronClad
 
-### 5. 🔍 Autonomous Bug Bounty & Reconnaissance
-Monitors bug bounty programs, runs Nmap port discovery, filters false positives with AI verification, and notifies your team via Telegram:
-```
-> Run a quick bug bounty scan on the configured HackerOne targets
-> Schedule a weekly vulnerability reconnaissance scan every Sunday at 2 AM
-```
+```bash
+# Launch interactive Terminal UI (TUI)
+ironclad
 
-### 6. 🎬 Autonomous Faceless YouTube Studio
-An end-to-end autonomous media creation pipeline. Scrapes trending topics, writes hook-heavy scripts, translates into multiple languages, synthesizes Edge-TTS voiceovers, downloads B-roll video clips, and burns subtitles into an exported MP4:
-```
-> Generate a faceless YouTube video about the latest breakthroughs in AI in English and French
-> Schedule the faceless YouTube pipeline to run every morning at 4 AM for the tech niche
-```
+# Or run a single autonomous task from CLI
+ironclad orchestrate --task "Analyze src/ and list all public structs"
 
-### 7. ⏰ Pulse Background Scheduler & Memory Summarization
-Autonomous cron scheduling with natural-language parsing:
-```
-> Schedule a job every day at 9 AM to check disk usage and alert me if above 80%
-> Schedule the hourly autonomous worker to evaluate backlog tasks
+# Or open the Web Dashboard in your browser (Recommended)
+# Navigate to: http://127.0.0.1:8080
 ```
 
 ---
 
 ## 🖥️ Choose Your Interface
 
-IronClad gives you five versatile ways to interact:
-
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
 │                      5 Ways to Experience IronClad                     │
 ├────────────────────┬────────────────────┬──────────────────────────────┤
 │ 🌐 Web Dashboard   │ 💻 Terminal TUI    │ ⚡ CLI One-Shot Orchestrator  │
-│ Control center at  │ Rich interactive   │ Single-command execution:    │
-│ 127.0.0.1:8080     │ terminal with live │ `ironclad orchestrate        │
-│ with visual config │ streaming & slash  │   --task "..."`              │
-│ & guides.          │ commands.          │                              │
+│ Visual control at  │ Interactive text   │ Single command execution:    │
+│ 127.0.0.1:8080     │ UI with live token │ `ironclad orchestrate        │
+│ with live guides.  │ streaming & stats. │   --task "..."`              │
 ├────────────────────┴────────────────────┴──────────────────────────────┤
 │ 🔗 Headless REST API & Webhooks         │ 📱 Telegram Remote Bot       │
 │ Axum API (`POST /api/v1/tasks`) and     │ Control your agent & receive │
-│ GitHub Webhook ingestion.               │ voice/text alerts remotely.  │
+│ GitHub Webhook event ingestion.         │ voice/text alerts anywhere.  │
 └─────────────────────────────────────────┴──────────────────────────────┘
 ```
 
 ---
 
-## ⚡ Quick Start (Up & Running in 3 Minutes)
+## 🤖 Supported LLM Providers
 
-### Step 1 — Prerequisites
-1. **Rust Stable Toolchain**: [rustup.rs](https://rustup.rs/) (if compiling or using `cargo install`)
-2. **LLM Provider (Choose Local or Cloud)**:
-   - **Local (100% Free & Private — Recommended)**: Install [Ollama](https://ollama.com/) and pull a model:
-     ```bash
-     ollama pull llama3
-     ```
-   - **Cloud (Optional)**: Export your OpenAI, Anthropic Claude, Google Gemini, or NVIDIA NIM API key.
-
-### Step 2 — Install IronClad
-
-**Install via Cargo (Recommended)**
-```bash
-cargo install ironclad-ai-agent
-```
-
-### Step 3 — Setup Configuration (`settings.toml` or `.env`)
-
-IronClad works out of the box with zero setup when Ollama is running. You can configure your providers and models using `settings.toml` or environment variables in `.env`:
-
-#### Option 1: Edit `settings.toml`
-Create or edit `settings.toml` in your working directory:
-
-```toml
-[llm]
-default_provider = "ollama"  # Options: "ollama", "openai", "anthropic", "gemini", "nvidia"
-agentic_mode = true
-
-# Local Models (Ollama)
-[llm.ollama]
-base_url = "http://127.0.0.1:11434"
-model = "llama3"             # Or "qwen2.5-coder:32b", "qwen3.8", "deepseek-r1:32b"
-
-# Local / Custom Models via OpenAI-compatible endpoints (LM Studio, vLLM)
-[llm.openai]
-base_url = "http://127.0.0.1:1234/v1"
-model = "unsloth/qwen3.8-27b" # Or "meta-muse-glimmer", "gpt-4o"
-
-# Cloud Providers (Anthropic, Gemini, NVIDIA)
-[llm.anthropic]
-model = "claude-3-5-sonnet-20240620"
-
-[llm.gemini]
-model = "gemini-1.5-pro"
-
-[llm.nvidia]
-model = "meta/llama-3.3-70b-instruct" # Or "meta-muse-glimmer"
-```
-
-#### Option 2: Environment Variables (`.env`)
-You can export API keys in your environment or place them into a `.env` file:
-
-```bash
-# Cloud API Keys
-export OPENAI_API_KEY="sk-..."
-export ANTHROPIC_API_KEY="sk-ant-..."
-export GEMINI_API_KEY="AIzaSy..."
-export NVIDIA_API_KEY="nvapi-..."
-
-# Local Endpoints & Custom Models (e.g. Qwen 3.8 / Meta Muse Glimmer)
-export OPENAI_BASE_URL="http://127.0.0.1:1234/v1"
-export OLLAMA_BASE_URL="http://127.0.0.1:11434"
-
-# Optional Remote Telegram Bot
-export IRONCLAD_TELEGRAM_KEY="123456:ABC-..."
-```
-
-### Step 4 — Launch IronClad
-
-```bash
-# Launch interactive mode (if installed via cargo)
-ironclad
-
-# Or run directly via cargo in your project/workspace
-cargo run
-
-# Or run a one-shot autonomous task
-ironclad orchestrate --task "Analyze src/ and list all TODO comments"
-
-# Or run one-shot task with cargo
-cargo run -- orchestrate --task "Analyze src/ and list all TODO comments"
-```
-
-### Step 5 — Open the Web Dashboard (Recommended)
-Navigate to **`http://127.0.0.1:8080`** in your browser to:
-- ⚙️ **Configure Settings Visually**: Change models, execution backends, and API keys with a single click.
-- 📖 **Follow Interactive Guides**: Step-by-step interactive walkthroughs for multi-agent workflows, RAG indexing, MCP integrations, and Pulse jobs.
-
----
-
-## 🤖 Supported LLM Providers & Extended Models
-
-IronClad is completely provider-agnostic and provides robust XML, JSON, and native tool-calling parsers for next-generation models:
-
-| Provider | Type | Supported Models & Architectures | Native Tool Calling | Configuration Example (`settings.toml`) |
-|----------|------|-----------------------------------|---------------------|-----------------------------------------|
-| **Ollama** *(Default)* | Local | `llama3`, `qwen2.5-coder:32b`, `qwen3.8`, `deepseek-r1:32b` | ✅ XML / Structured | `default_provider = "ollama"`, `model = "llama3"` |
-| **LM Studio / llama.cpp / vLLM** | Local | `unsloth/qwen3.8-27b`, `meta-muse-glimmer`, `qwen2.5-72b` | ✅ Compatible | Set `default_provider = "openai"`, `base_url = "http://127.0.0.1:1234/v1"` |
-| **Anthropic Claude** | Cloud | `claude-3-5-sonnet-20240620`, `claude-3-5-haiku` | ✅ Native `tool_use` | `default_provider = "anthropic"`, `model = "claude-3-5-sonnet-20240620"` |
-| **OpenAI** | Cloud | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini` | ✅ Native Function Calling | `default_provider = "openai"`, `model = "gpt-4o"` |
-| **Google Gemini** | Cloud | `gemini-1.5-pro`, `gemini-1.5-flash`, `gemini-2.0-flash` | ✅ Multimodal Support | `default_provider = "gemini"`, `model = "gemini-1.5-pro"` |
-| **NVIDIA NIM** | Cloud | `meta/llama-3.3-70b-instruct`, `meta-muse-glimmer`, `deepseek-r1` | ✅ High-throughput | `default_provider = "nvidia"`, `model = "meta/llama-3.3-70b-instruct"` |
+| Provider | Type | Recommended Models | Endpoint / Setup |
+|---|---|---|---|
+| **LM Studio** *(Recommended)* | Local | `qwen2.5-coder:32b`, `deepseek-r1:32b`, `llama3.3:70b` | `default_provider = "openai"`, `base_url = "http://127.0.0.1:1234/v1"` |
+| **Ollama** | Local | `llama3`, `qwen2.5-coder:32b`, `deepseek-r1` | `default_provider = "ollama"`, `base_url = "http://127.0.0.1:11434"` |
+| **Anthropic Claude** | Cloud | `claude-3-5-sonnet-20240620`, `claude-3-5-haiku` | `export ANTHROPIC_API_KEY="sk-ant-..."` |
+| **OpenAI** | Cloud | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini` | `export OPENAI_API_KEY="sk-..."` |
+| **Google Gemini** | Cloud | `gemini-1.5-pro`, `gemini-2.0-flash` | `export GEMINI_API_KEY="AIzaSy..."` |
+| **NVIDIA NIM** | Cloud | `meta/llama-3.3-70b-instruct`, `deepseek-r1` | `export NVIDIA_API_KEY="nvapi-..."` |
 
 ---
 
 ## 🧰 Built-in Skills (Tools Matrix)
 
 | Category | Available Skills |
-|----------|------------------|
+|---|---|
 | 📁 **File System** | `read_file`, `write_file`, `list_directory`, `replace_in_file`, `grep_search` |
 | 💻 **Shell & Sandbox** | `shell_execute`, `run_tests`, `system_info`, `reviewer`, `post_mortem` |
-| 🌿 **Git Version Control** | `git_ops` (status, diff, log, branch, stash — write operations Traffic Light gated) |
+| 🌿 **Git Ops** | `git_ops` (status, diff, log, branch, stash — write actions Traffic Light gated) |
 | 🌐 **Web & Browsing** | `search_web`, `browser_scrape`, `browser_visit` (Playwright-powered) |
-| 🔬 **Deep Research** | `deep_research` (Multi-source querying across GitHub, arXiv, and Semantic Scholar) |
+| 🔬 **Deep Research** | `deep_research` (Multi-source search across GitHub, arXiv, and Semantic Scholar) |
 | 🐙 **GitHub Integration** | `github_list_issues`, `github_list_prs` |
-| 🧠 **Memory & Database** | `remember`, `search_history`, `query_history`, `query_logs`, `core_memory_*` |
-| 👥 **Multi-Agent & Swarm** | `delegate_task`, `delegate_to_cli_agent`, `subprocess_manager`, `agent_coordination`, `self_improve` |
+| 🧠 **Memory & Persistence** | `remember`, `search_history`, `query_history`, `query_logs`, `core_memory_*` |
+| 👥 **Multi-Agent Hub** | `delegate_task`, `delegate_to_cli_agent`, `subprocess_manager`, `agent_coordination` |
 | 🧭 **Planning & Reasoning** | `list_tools`, `ask_user`, `write_todos`, `think`, `reflection`, `research_plan` |
-| 📚 **AST Codebase RAG** | `query_knowledge_base` (Tree-sitter AST indexed vector database) |
-| ⏰ **Autonomous Scheduling** | `schedule_job` (Pulse cron engine) |
-| 🎬 **Autonomous Pipelines** | `experiment_loop`, `bug_bounty_scan`, `faceless_yt_pipeline` |
-| 🗣️ **Voice & Translation** | `speak` (TTS), `transcribe` (Whisper STT), `translate` |
-| 🔌 **External Tool Protocol** | Model Context Protocol (**MCP**) server auto-wrapping |
+| 📚 **AST Codebase RAG** | `query_knowledge_base` (Tree-sitter AST indexed vector search) |
+| ⏰ **Scheduler** | `schedule_job` (Pulse cron engine with natural language parsing) |
+| 🎬 **Autonomous Pipelines**| `experiment_loop`, `bug_bounty_scan`, `faceless_yt_pipeline` |
+| 🗣️ **Voice & Media** | `speak` (TTS), `transcribe` (Whisper STT), `translate` |
+| 🔌 **External Tool Protocol** | Model Context Protocol (**MCP**) server auto-discovery |
 
 ---
 
 ## 📖 Documentation Hub
 
-Explore the complete documentation in the [`docs/`](docs/) directory:
+Explore the complete documentation in the [`docs/`](docs/index.md) directory:
 
-- 🚀 **[Quick Start Guide](docs/quickstart.md)** — Step-by-step setup in under 5 minutes.
-- ⚙️ **[Configuration Reference](docs/configuration.md)** — Complete `settings.toml` options and environment variables.
-- 🏛️ **[Architecture Overview](docs/architecture.md)** — Three-Ring security model, DAG planner, and data flow.
-- 📊 **[Web Dashboard Guide](docs/dashboard.md)** — Control center, SSE streaming, and settings editor.
-- 💻 **[TUI Guide](docs/tui.md)** — Keyboard shortcuts, slash commands, and persona management.
-- 🔬 **[Experiment Loop](docs/experiment_loop.md)** — Autonomous code optimization loops.
-- 📚 **[RAG Knowledge Base](docs/rag.md)** — Codebase AST parsing and semantic vector search.
+### 🚀 Getting Started & Interfaces
+- 📘 **[Quick Start Guide](docs/quickstart.md)** — Get up and running in under 5 minutes.
+- 🌐 **[Web Dashboard Guide](docs/dashboard.md)** — Observability control center, settings editor, and interactive tutorials.
+- ⚙️ **[Configuration Reference](docs/configuration.md)** — Comprehensive guide to every `settings.toml` option and environment variable.
+- 💻 **[Terminal UI (TUI) Guide](docs/tui.md)** — Keyboard shortcuts, slash commands, image attachments, and user dialogs.
+- ⚡ **[Local Execution Backend](docs/local_backend.md)** — High-speed host execution without container overhead.
+
+### 🏛️ Architecture & Security
+- 🛡️ **[Architecture Overview](docs/architecture.md)** — Three-Ring zero-trust security model, DAG planner, and data flow.
+- 🚦 **[Autonomy & Traffic Light Policy](docs/autonomy.md)** — Green / Yellow / Red / Blocked intent classification.
+- ⏱️ **[Session Budget](docs/session-budget.md)** — Wall-clock runtime limits for runaway sessions.
+- ⚡ **[Concurrent Tool Dispatch](docs/concurrent-tools.md)** — Parallel tool execution and file-backed outputs.
+- 📝 **[System Prompts](docs/prompts.md)** — Prompt assembly, personas, and execution protocols.
+- 📋 **[program.md Workspace Behaviour](docs/program-md.md)** — Per-workspace persistent instructions injected into prompts.
+- 📐 **[Architecture Decision Records (ADRs)](docs/adr/)** — Engineering design decisions (ADR 001 to ADR 006).
+
+### 🤖 Autonomous Skills & Pipelines
+- 🔬 **[Experiment Loop](docs/experiment_loop.md)** — Autonomous Karpathy-style code optimization with git rollbacks.
+- 📚 **[RAG Knowledge Base](docs/rag.md)** — Tree-sitter AST parsing and semantic vector retrieval for codebases.
 - ⏰ **[Pulse Scheduler](docs/pulse_scheduler.md)** — Natural language cron scheduling and autonomous background workers.
-- 🔌 **[Integrations Guide](docs/integrations.md)** — CLI agents (Pi, Claude, Aider), LangGraph checkpoints, and Telegram.
-- 🛠️ **[Custom Tools Guide](docs/custom_tools.md)** — Write custom Python/Bash/PowerShell tools with hot-reloading.
-- 🛡️ **[Bug Bounty Scanner](docs/bug_bounty.md)** — Automated reconnaissance and AI vulnerability verification.
-- 🎬 **[Faceless YouTube Pipeline](docs/faceless_youtube.md)** — End-to-end automated video production company.
-- 📐 **[Architecture Decision Records (ADRs)](docs/adr/)** — Low-level engineering design decisions.
+- 🔍 **[Deep Research](docs/deep_research.md)** — Autonomous multi-source research across GitHub, arXiv, and Semantic Scholar.
+- 🛡️ **[Bug Bounty Scanner](docs/bug_bounty.md)** — Automated reconnaissance, Nmap scanning, and AI vulnerability verification.
+- 🎬 **[Faceless YouTube Pipeline](docs/faceless_youtube.md)** — Autonomous video production from trend scraping to MP4 export.
+- 📝 **[Write Todos](docs/write-todos.md)** — Persistent structured task tracking across agent turns.
+- 🧠 **[Memory & Session Persistence](docs/memory_management.md)** — SQLite history, context compression, and semantic memory search.
+- 🛠️ **[Custom Tools & Auto-Discovery](docs/custom_tools.md)** — Write custom Python, Bash, or PowerShell tools with hot-reloading.
+
+### 🔌 Integrations & Deployments
+- 🔗 **[Integrations Overview](docs/integrations.md)** — LangGraph checkpoints, external CLI agents, and background subprocesses.
+- 🤖 **[External CLI Agents Hub](docs/integrations.md#external-cli-agents-hub-delegate_to_cli_agent)** — Auto-detect and drive Pi Agent, Claude Code, Aider, OpenCode, and Gemini CLI.
+- 🚀 **[Pi Agent Setup Guide](docs/guides/pi-agent-setup.md)** — Setting up Pi coding agent for autonomous task escalation.
+- 🔌 **[Model Context Protocol (MCP)](docs/mcp_setup.md)** — Connect external MCP servers for extended capabilities.
+- 🌐 **[HTTP API & Webhooks](docs/api_setup.md)** — REST endpoints for submitting tasks and ingesting GitHub webhooks.
+- 🐙 **[GitHub Actions Workflow](docs/github-action.md)** — CI/CD automation template for running IronClad in CI.
+- 📱 **[Telegram Bot Integration](docs/telegram_setup.md)** — Remote control, voice message transcription, and status alerts.
+- 🎭 **[Browser Automation](docs/browser_automation.md)** — Playwright web scraping and visual browser visiting.
+- 🖼️ **[Multimodal Setup](docs/multimodal_setup.md)** — Vision model configuration and image analysis.
+- 🎙️ **[Local STT Setup](docs/local_stt_setup.md)** — Local speech-to-text with Whisper or OpenAI-compatible endpoints.
+- 📊 **[Benchmark & Evaluation Suite](docs/benchmarks.md)** — Deterministic offline benchmarks and multi-model matrix evaluation.
+
+---
+
+## 📄 Research Publications
+
+Read the research publications detailing IronClad's architecture, security proofs, context engineering, and empirical evaluations:
+
+### 1. 📑 System Architecture & Security Foundations
+- **Title**: **[IronClad AI Agent: A Secure-by-Design, Rust-Native Autonomous AI Agent Orchestration Framework for Consumer Hardware](https://zenodo.org/records/22069766)**
+- **Author**: **Wael SAHLI**
+- **DOI**: [`10.5281/zenodo.22069766`](https://doi.org/10.5281/zenodo.22069766) · **PDF**: [Download via Zenodo](https://zenodo.org/records/22069766/files/ironclad_white_paper.pdf)
+- **Key Findings**: Zero-Trust Three-Ring security model, Tokio DAG task planning within 16 GB VRAM budgets, 90.0% AgentBench OS/DB success rate, and 100% Promptfoo red-team defense pass rate.
+
+### 2. 🧠 Context Engineering & Multi-Tier Memory Subsystems
+- **Title**: **[Context Engineering and Multi-Tiered Memory Architectures for Local Large Language Model Agents: Mitigating Token Bloat, Context Degradation, and Trivial Task Overthinking](docs/white_paper_context_memory.md)**
+- **Author**: **Wael SAHLI**
+- **Read Online**: [`docs/white_paper_context_memory.md`](docs/white_paper_context_memory.md)
+- **Key Findings**: Four-Tier Memory Architecture (Working, Core, Episodic, Semantic AST RAG), Input Intent Fast-Bypass (cutting trivial query latency by 91.2% and saving 98.3% tokens on greetings/acknowledgments), file-backed tool output offloading (>8,000 chars), and recursive summarization for multi-turn local LLM stability.
 
 ---
 
@@ -302,12 +226,33 @@ cargo check
 # Run all unit and integration tests
 cargo test
 
-# Run the deterministic offline benchmark suite
+# Run deterministic offline benchmarks
 cargo test --test benchmarks
 
 # Lint with Clippy
 cargo clippy
 ```
+
+---
+
+## 💬 Community, Issues & Feedback
+
+We welcome feedback, bug reports, and community feature requests!
+- 🐛 **Report Issues & Bugs**: [https://github.com/overcrash66/IronClad-AI-Agent/issues](https://github.com/overcrash66/IronClad-AI-Agent/issues)
+- 💡 **Feature Requests & Ideas**: Open an issue on our [Issue Tracker](https://github.com/overcrash66/IronClad-AI-Agent/issues)
+- 🐙 **Public GitHub Repository**: [https://github.com/overcrash66/IronClad-AI-Agent](https://github.com/overcrash66/IronClad-AI-Agent)
+
+---
+
+## 📦 Package & Distribution
+
+- **Crates.io Package**: [https://crates.io/crates/ironclad-ai-agent](https://crates.io/crates/ironclad-ai-agent)
+
+---
+
+## 👤 Author & Maintainer
+
+- **Author**: **Wael SAHLI** ([@overcrash66](https://github.com/overcrash66))
 
 ---
 

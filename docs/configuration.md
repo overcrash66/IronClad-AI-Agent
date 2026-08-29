@@ -204,8 +204,25 @@ LLM provider settings.
 | `session_budget_secs` | integer? | `null` | Wall-clock seconds before the session exits gracefully; `null` = no limit |
 | `max_parallel_tools` | integer | `4` | Maximum number of tool calls dispatched concurrently in a single turn |
 | `context_compression` | boolean | `false` | Summarize dropped messages before applying the sliding window (requires an LLM call) |
+| `dynamic_model_routing` | boolean | `true` | Enable intelligent archetype routing and dynamic model selection |
+| `lm_studio_auto_manage` | boolean | `true` | Automatically manage LM Studio GPU VRAM model lifecycle (single-model invariant) |
 | `local_stt_cmd` | string? | `null` | Local STT command template |
 | `local_tts_cmd` | string? | `null` | Local TTS command template |
+
+### `[llm.model_preferences]`
+
+User-defined model routing preferences per task archetype. These override benchmark leaderboard rankings and hardcoded defaults.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `leaderboard_path` | string? | `"benchmark/model_leaderboard.json"` | Path to machine-readable benchmark leaderboard JSON |
+| `coding` | [string]? | `null` | Ordered model patterns for Coding & Tool Execution tasks |
+| `planning` | [string]? | `null` | Ordered model patterns for Planning & DAG Decomposition tasks |
+| `math_reasoning` | [string]? | `null` | Ordered model patterns for Mathematical Reasoning tasks |
+| `fast_chat` | [string]? | `null` | Ordered model patterns for Fast Interactive Response tasks |
+| `qa_review` | [string]? | `null` | Ordered model patterns for QA & Safety Review tasks |
+| `vision` | [string]? | `null` | Ordered model patterns for Vision & Multimodal tasks |
+| `security` | [string]? | `null` | Ordered model patterns for Security & Offensive Testing tasks |
 
 ### `[llm.ollama]`
 
@@ -763,6 +780,25 @@ exclude_patterns = [
     "**/dist/**", "**/build/**", "**/.venv/**",
     "**/vendor/**", "**/__pycache__/**"
 ]
+```
+
+## `[quality_gate]`
+
+Quality gate settings for automated code review and build validation.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `min_test_coverage` | float | `80.0` | Minimum test coverage percentage required to pass |
+| `max_clippy_warnings` | integer | `0` | Maximum number of clippy linter warnings allowed |
+| `block_on_security_issues` | boolean | `true` | Whether to block execution if security vulnerabilities are found |
+| `require_documentation` | boolean | `false` | Whether to require docstrings/comments for all public items |
+
+```toml
+[quality_gate]
+min_test_coverage = 80.0
+max_clippy_warnings = 0
+block_on_security_issues = true
+require_documentation = false
 ```
 
 ## Environment Variables

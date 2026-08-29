@@ -9,7 +9,8 @@ Get IronClad running and completing your first task in under 5 minutes.
 | Tool | How to install |
 |------|----------------|
 | **Rust** (stable) | [rustup.rs](https://rustup.rs/) — required for building from source |
-| **Ollama** | [ollama.com](https://ollama.com/) |
+| **LM Studio** *(Recommended)* | [lmstudio.ai](https://lmstudio.ai/) — fast GPU local inference with 1-click model downloads |
+| **Ollama** | [ollama.com](https://ollama.com/) — CLI-first local model runtime |
 | **WSL2** *(Windows only)* | `wsl --install` in PowerShell as Administrator |
 
 > **Platform Notes for Rust:**
@@ -17,13 +18,11 @@ Get IronClad running and completing your first task in under 5 minutes.
 > - **macOS**: Run `xcode-select --install` first
 > - **Windows**: Install [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/) with "Desktop development with C++"
 
-After installing Ollama, pull a model:
+**Local Model Setup (Choose LM Studio or Ollama):**
+- **LM Studio (Recommended for v0.6.7+)**: Download a model (e.g. `Qwen 2.5 Coder 32B`, `DeepSeek-R1`, `Llama 3`), click **Start Server** on port `1234`.
+- **Ollama**: Run `ollama pull llama3` in your terminal.
 
-```bash
-ollama pull llama3
-```
-
-> **No cloud API key needed.** IronClad works entirely offline with Ollama.
+> **No cloud API key needed.** IronClad works entirely offline with LM Studio or Ollama.
 
 ---
 
