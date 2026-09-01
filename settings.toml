@@ -140,6 +140,7 @@ enabled = true
 model = "whisper-1"
 
 [llm.translation]
+api_key = ""
 base_url = ""
 enabled = false
 model = ""
