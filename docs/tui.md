@@ -10,7 +10,7 @@ To launch the TUI, run IronClad without any subcommand:
 cargo run
 ```
 
-The current CLI does not expose a separate `tui` subcommand. The other top-level entry points are `ironclad sessions` and `ironclad orchestrate --task "..."`.
+The current CLI does not expose a separate `tui` subcommand. The other top-level entry points are `ironclad sessions`, `ironclad orchestrate --task "..."`, `ironclad pulse --mode ...`, `ironclad serve --port ...`, and `ironclad benchmark --mode ...`.
 
 ## Interface Layout
 

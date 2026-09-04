@@ -91,8 +91,20 @@ model = "llama3"
 # Launch interactive Terminal UI (TUI)
 ironclad
 
-# Or run a single autonomous task from CLI
+# Run a single autonomous task from CLI
 ironclad orchestrate --task "Analyze src/ and list all public structs"
+
+# List past sessions
+ironclad sessions
+
+# Run an autonomous maintenance pulse job
+ironclad pulse --mode full
+
+# Launch headless REST API server
+ironclad serve --port 3000
+
+# Run 8-pillar benchmark evaluation
+ironclad benchmark --mode comparative
 
 # Or open the Web Dashboard in your browser (Recommended)
 # Navigate to: http://127.0.0.1:8080
@@ -147,7 +159,7 @@ ironclad orchestrate --task "Analyze src/ and list all public structs"
 | 🧭 **Planning & Reasoning** | `list_tools`, `ask_user`, `write_todos`, `think`, `reflection`, `research_plan` |
 | 📚 **AST Codebase RAG** | `query_knowledge_base` (Tree-sitter AST indexed vector search) |
 | ⏰ **Scheduler** | `schedule_job` (Pulse cron engine with natural language parsing) |
-| 🎬 **Autonomous Pipelines**| `experiment_loop`, `bug_bounty_scan`, `faceless_yt_pipeline` |
+| 🎬 **Autonomous Pipelines**| `experiment_loop`, `bug_bounty_scan_py`, `faceless_yt_pipeline` |
 | 🗣️ **Voice & Media** | `speak` (TTS), `transcribe` (Whisper STT), `translate` |
 | 🔌 **External Tool Protocol** | Model Context Protocol (**MCP**) server auto-discovery |
 
@@ -178,7 +190,7 @@ Explore the complete documentation in the [`docs/`](docs/index.md) directory:
 - 📚 **[RAG Knowledge Base](docs/rag.md)** — Tree-sitter AST parsing and semantic vector retrieval for codebases.
 - ⏰ **[Pulse Scheduler](docs/pulse_scheduler.md)** — Natural language cron scheduling and autonomous background workers.
 - 🔍 **[Deep Research](docs/deep_research.md)** — Autonomous multi-source research across GitHub, arXiv, and Semantic Scholar.
-- 🛡️ **[Bug Bounty Scanner](docs/bug_bounty.md)** — Automated reconnaissance, Nmap scanning, and AI vulnerability verification.
+- 🛡️ **[Bug Bounty Scanner](docs/bug_bounty.md)** — Blue team host OS security hardening, open-source repository SAST auditing, and ethical reconnaissance.
 - 🎬 **[Faceless YouTube Pipeline](docs/faceless_youtube.md)** — Autonomous video production from trend scraping to MP4 export.
 - 📝 **[Write Todos](docs/write-todos.md)** — Persistent structured task tracking across agent turns.
 - 🧠 **[Memory & Session Persistence](docs/memory_management.md)** — SQLite history, context compression, and semantic memory search.
@@ -196,6 +208,7 @@ Explore the complete documentation in the [`docs/`](docs/index.md) directory:
 - 🖼️ **[Multimodal Setup](docs/multimodal_setup.md)** — Vision model configuration and image analysis.
 - 🎙️ **[Local STT Setup](docs/local_stt_setup.md)** — Local speech-to-text with Whisper or OpenAI-compatible endpoints.
 - 📊 **[Benchmark & Evaluation Suite](docs/benchmarks.md)** — Deterministic offline benchmarks and multi-model matrix evaluation.
+- 🧪 **[Master Test Plan & Verification Guide](docs/master_test_plan.md)** — 7-pillar master test plan for swarms, webhooks, MCP, external agents, and cluster federation.
 
 ---
 

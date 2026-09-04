@@ -32,20 +32,22 @@ The matrix evaluator (`benchmark/run_model_matrix.py`) interfaces with LM Studio
 
 ### CLI Usage
 
+IronClad provides a built-in Rust CLI subcommand that automatically locates your virtual environment and forwards parameters:
+
 ```bash
-# 1. Run all 6 pillars against the currently loaded LM Studio model
+# 1. Run comparative benchmark evaluation across models
+ironclad benchmark --mode comparative
+
+# 2. Evaluate specific models and pillars
+ironclad benchmark --models "qwen2.5-coder:32b,deepseek-r1:32b" --pillars "pillar1_tool_use,pillar3_safety"
+
+# 3. Force re-testing without using cached results
+ironclad benchmark --force-retest
+
+# 4. Or invoke the Python runner directly inside your virtual environment
 .\venv\Scripts\python.exe benchmark/run_model_matrix.py --current-model
-
-# 2. Run dry-run validation (checks discovery, suites, and prompt schemas without LLM inference)
 .\venv\Scripts\python.exe benchmark/run_model_matrix.py --dry-run
-
-# 3. Evaluate specific models by name/pattern
 .\venv\Scripts\python.exe benchmark/run_model_matrix.py --models "qwen,gemma,deepseek"
-
-# 4. Filter by specific test pillars (e.g. Tool Calling & Safety only)
-.\venv\Scripts\python.exe benchmark/run_model_matrix.py --models "qwen3.8-27b" --pillars "pillar1_tool_use,pillar3_safety"
-
-# 5. Route through IronClad Protected Gateway (:3000) for Three-Ring Governor validation
 .\venv\Scripts\python.exe benchmark/run_model_matrix.py --current-model --gateway
 ```
 

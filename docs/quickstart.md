@@ -168,15 +168,80 @@ Each task follows the **Think → Act → Observe** cycle. You will see the agen
 
 ---
 
-## Running a One-Shot Task
+## CLI Subcommands Reference
+
+In addition to the interactive TUI, IronClad provides specialized CLI subcommands for automation, headless environments, maintenance, and benchmarking:
+
+### 1. `orchestrate` — One-Shot Autonomous Task
+Runs a single task to completion without interactive prompts.
 
 ```bash
-# Run a task directly from the command line
-./ironclad orchestrate --task "Write a summary of all Rust source files in src/"
+# Execute a task directly
+ironclad orchestrate --task "Write a summary of all Rust source files in src/"
 
-# With a specific persona
-./ironclad orchestrate --task "Review src/api/routes.rs for security issues" --persona coder
+# Use a specific persona (e.g. coder, analyst, bug_bounty_assistant)
+ironclad orchestrate --task "Review src/api/routes.rs for security issues" --persona coder
+
+# Stream progress updates to a Telegram chat ID
+ironclad orchestrate --task "Run full test suite and fix failing tests" --chat-id 123456789
 ```
+
+### 2. `sessions` — List Stored Sessions
+Inspects `memory.db` and displays past session IDs, timestamps, and active personas.
+
+```bash
+ironclad sessions
+```
+
+### 3. `pulse` — Autonomous Maintenance Run
+Executes an immediate maintenance run via the autonomous maintenance engine without waiting for cron triggers.
+
+```bash
+# Full maintenance (analysis, testing, and proactive improvements)
+ironclad pulse --mode full
+
+# Fast scanning only
+ironclad pulse --mode scan
+
+# Targeted automated repair
+ironclad pulse --mode fix --chat-id 123456789
+```
+
+### 4. `serve` — Headless REST API Server
+Runs IronClad as a headless background daemon exposing REST API endpoints and GitHub webhook handlers without launching the TUI.
+
+```bash
+# Run server on default port (from settings.toml or 3000)
+ironclad serve
+
+# Override port
+ironclad serve --port 8080
+```
+
+### 5. `benchmark` — 8-Pillar LLM Evaluation
+Runs deterministic evaluation tasks against local or remote models and updates the dynamic model preferences registry.
+
+```bash
+# Comparative benchmark across loaded models
+ironclad benchmark --mode comparative
+
+# Evaluate specific models and pillars
+ironclad benchmark --models "qwen2.5-coder:32b" --pillars "pillar1_tool_use,pillar6_security"
+
+# Force re-testing without relying on cached scores
+ironclad benchmark --force-retest
+```
+
+### Global CLI Flags
+These flags apply to `ironclad` and all subcommands:
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `-c, --config <PATH>` | Path to configuration file | `settings.toml` |
+| `-w, --workspace <PATH>` | Override workspace root directory | `workspace_dir` in config |
+| `-p, --provider <NAME>` | Override LLM provider (`ollama`, `openai`, `anthropic`, `gemini`, `nvidia`) | `default_provider` in config |
+| `--session <ID>` | Resume a specific session by ID | Last active session |
+| `--new-session` | Force creation of a fresh session instead of auto-resuming | `false` |
 
 ---
 

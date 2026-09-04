@@ -79,6 +79,10 @@ model = ""
 enabled = false
 allowed_chat_ids = []
 trusted_chat_ids = []
+# verbosity = "quiet"        # "quiet" | "compact" | "verbose"
+# send_typing_action = true  # send typing status during execution
+# show_tool_progress = false # stream tool invocations to chat
+# voice_reply = false        # send voice replies using TTS
 
 [integrations.remote_agents]
 enabled = false
@@ -525,7 +529,34 @@ IRONCLAD__FACeless_YT__TTS_VOICE_FR="fr-FR-DeniseNeural"
 IRONCLAD__FACeless_YT__EXAMPLE_TOPIC="artificial intelligence"
 ```
 
-See [Faceless YouTube Documentation](faceless_youtube.md) for full details.
+### `[integrations.telegram]`
+
+Telegram bot integration for remote conversational control, autonomous task execution, and progress alerts.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | boolean | `false` | Enable the Telegram bot integration |
+| `allowed_chat_ids` | [integer] | `[]` | List of allowed user IDs (positive) or group/channel IDs (negative) |
+| `trusted_chat_ids` | [integer] | `[]` | List of chat IDs with elevated bypass permissions (skips interactive Governor approval) |
+| `verbosity` | string | `"quiet"` | Notification verbosity: `"quiet"`, `"compact"`, or `"verbose"` |
+| `send_typing_action` | boolean | `true` | Send the Telegram "typing" chat action while reasoning and running tools |
+| `show_tool_progress` | boolean | `false` | Explicitly toggle intermediate tool execution progress messages (defaults to `true` when `verbosity = "verbose"`) |
+| `voice_reply` | boolean | `false` | Send audio voice replies using TTS (requires TTS configured) |
+
+Example:
+
+```toml
+[integrations.telegram]
+enabled = true
+allowed_chat_ids = [123456789, -100987654321]
+trusted_chat_ids = [123456789]
+verbosity = "compact"
+send_typing_action = true
+show_tool_progress = false
+voice_reply = false
+```
+
+See [Telegram Setup Guide](telegram_setup.md) for step-by-step bot creation and setup.
 
 ### `[integrations.remote_agents]`
 
@@ -854,24 +885,36 @@ system_prompt = """You are a data analysis expert..."""
 Override configuration via command line:
 
 ```bash
+# Launch interactive TUI
+ironclad
+
 # Use specific config file
 ironclad --config custom-settings.toml
 
-# Override workspace
-ironclad --workspace /path/to/workspace
+# Override workspace or provider
+ironclad --workspace /path/to/workspace --provider openai
 
-# Override provider
-ironclad --provider openai
-
-# Resume session
+# Resume session or force fresh session
 ironclad --session <session-id>
+ironclad --new-session
 
-# List sessions
+# List past stored sessions
 ironclad sessions
 
-# Orchestration mode
+# Autonomous task execution (Orchestrator mode)
 ironclad orchestrate --task "Write a hello world program"
-ironclad orchestrate --task "Analyze data" --persona analyst
+ironclad orchestrate --task "Analyze data" --persona analyst --chat-id 123456789
+
+# Autonomous maintenance run (Pulse)
+ironclad pulse --mode full
+ironclad pulse --mode scan
+
+# Headless REST API server
+ironclad serve --port 3000
+
+# Run automated 8-pillar LLM benchmarks
+ironclad benchmark --mode comparative
+ironclad benchmark --models "qwen2.5-coder:32b" --pillars "pillar1_tool_use"
 ```
 
 ## Validation

@@ -45,7 +45,7 @@ Built-in capabilities and how to use them.
 | [program.md](program-md.md) | Per-workspace instructions injected into every task's system prompt |
 | [Benchmark Suite](benchmarks.md) | Deterministic offline tests, TOML task format, `bench_results.json` |
 | [Faceless YouTube](faceless_youtube.md) | Automated media company pipeline for generating videos via AI |
-| [Bug Bounty Scanning](bug_bounty.md) | Automated reconnaissance and vulnerability verification using AI |
+| [Bug Bounty Scanning](bug_bounty.md) | Host OS defense, repository SAST auditing, and ethical bug bounty reconnaissance |
 | [Telegram Integration](telegram_setup.md) | Full setup for bots, channels, and authorized chat IDs |
 | [Custom Tools & Scripts](custom_tools.md) | Extend the agent with native Python/PowerShell/Shell scripts |
 | [Memory & Session Persistence](memory_management.md) | SQLite history, context compression, and semantic memory search |
@@ -106,6 +106,7 @@ Low-level design rationale for core systems.
 
 | Document | Description |
 |----------|-------------|
+| [Master Test Plan & Verification Guide](master_test_plan.md) | 7-pillar master test plan for swarms, webhooks, MCP, external agents, and federation |
 | [Pi Agent Setup Guide](guides/pi-agent-setup.md) | Setting up Pi AI coding agent for autonomous task escalation |
 
 ---
@@ -136,9 +137,20 @@ Low-level design rationale for core systems.
 | Workspace | `list_workspaces` `browse_workspace` `create_tool` `get_ide_state` |
 | RAG | `query_knowledge_base` |
 | Schedule | `schedule_job` |
-| Autonomous Pipelines | `experiment_loop` `bug_bounty_scan` `faceless_yt_pipeline` |
+| Autonomous Pipelines | `experiment_loop` `bug_bounty_scan_py` `faceless_yt_pipeline` |
 | Remote | `remote_agent` |
 | Media | `speak` `transcribe` `translate` |
+
+### CLI Subcommands
+
+| Subcommand | Syntax Example | Description |
+|------------|----------------|-------------|
+| *(default)* | `ironclad` | Launches interactive Terminal UI (TUI) with dashboard/chat |
+| `orchestrate` | `ironclad orchestrate --task "..."` | Runs a one-shot autonomous task to completion |
+| `sessions` | `ironclad sessions` | Lists all past interactive and autonomous sessions from database |
+| `pulse` | `ironclad pulse --mode full` | Runs an immediate autonomous Pulse maintenance job (`full`, `scan`, `fix`) |
+| `serve` | `ironclad serve --port 3000` | Runs headless REST API server for integrations and background tasks |
+| `benchmark` | `ironclad benchmark --mode comparative` | Runs 8-pillar LLM benchmark suite and updates model preferences registry |
 
 ### Key Environment Variables
 

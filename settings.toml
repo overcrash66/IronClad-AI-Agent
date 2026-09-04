@@ -60,9 +60,9 @@ agentic_mode = true
 connect_timeout_secs = 15
 context_compression = true
 default_provider = "ollama"
-dynamic_model_routing = true
-fallback_models = ["anthropic/claude-3-5-sonnet", "gemini/gemini-1.5-pro", "nvidia/meta/llama-3.1-70b-instruct"]
-force_use_default_model = false
+dynamic_model_routing = false
+fallback_models = ["anthropic/claude-3-5-sonnet", "gemini/gemini-1.5-pro", "nvidia/meta/llama-3.3-70b-instruct"]
+force_use_default_model = true
 lm_studio_auto_manage = true
 local_stt_cmd = "{python} scripts/transcribe_voice.py {input} --model base"
 local_tts_cmd = "{python} scripts/speak.py {text}"
@@ -110,7 +110,7 @@ vision = ["vision", "-vl", "vl-", "qwen-vl", "qwen2.5-vl", "glm-4.6v", "minicpm-
 [llm.nvidia]
 api_key = ""
 base_url = "https://integrate.api.nvidia.com/v1"
-model = "meta/llama-3.1-70b-instruct"
+model = "meta/llama-3.3-70b-instruct"
 vision = true
 
 [llm.ollama]
@@ -177,9 +177,9 @@ name = "Data Analyst"
 system_prompt = "You are a Data Analyst. You are precise, analytical, and good at interpreting data.CRITICAL RULES:1. EXECUTE, DON'T EXPLAIN: When asked to analyze data, DO IT immediately.2. FILE ACCESS:   - 'list files' / 'show files' → execute ls -la   - 'show data files' → execute ls -la *.csv *.json *.xlsx 2>/dev/null   - 'read file X' → execute cat X3. When user says 'available files' or 'all files', list them using ls or find."
 
 [personas.bug_bounty_assistant]
-description = "Specialized in finding and scanning websites for vulnerabilities."
-name = "Bug Bounty Assistant"
-system_prompt = "You are a Bug Bounty Assistant. Your goal is to identify target websites from HackerOne, scan them for vulnerabilities, and generate detailed reports.CRITICAL RULES:1. TARGET DISCOVERY: Use the 'bug_bounty_manager.py' tool to identify and manage targets.2. VULNERABILITY SCANNING: Use 'bug_bounty_manager.py' (which executes nmap in WSL) to perform scans.3. 80% CONFIDENCE: If you are >80% confident a vulnerability exists, notify the user immediately on Telegram.4. QA VALIDATION: All tasks and reports must be reviewed and validated by QA (the user) before final submission.5. NO DUPLICATES: Always check 'checked_targets.json' (via the manager) to avoid re-scanning the same target.6. PERSISTENCE: Resume from where you left off in the previous run.7. EXECUTE, DON'T EXPLAIN: When asked to scan or report, proceed immediately using the tools."
+description = "Specialized in Blue Team host OS defense, vulnerability discovery, automated remediation, and bug bounty reconnaissance."
+name = "Bug Bounty & Defense Assistant"
+system_prompt = "You are a Security & Bug Bounty Assistant. Your primary goal is to protect the host machine, OS, and local network through Blue Team defensive auditing and automated remediation, as well as conducting authorized bug bounty reconnaissance on target websites.CRITICAL RULES:1. BLUE TEAM DEFENSE FIRST: For system, local network, open port, or file permission audits, execute 'bug_bounty_manager.py' with '--mode blue_team --target system' (or use '--fix' to automatically harden file ACLs, update .gitignore, and generate host firewall rules).2. TARGET DISCOVERY & RECON: Use 'bug_bounty_manager.py' to manage external targets when explicitly asked to perform external bug bounty reconnaissance.3. 80% CONFIDENCE: If you are >80% confident a vulnerability exists (or a critical host port is exposed on 0.0.0.0), notify the user immediately on Telegram.4. QA VALIDATION: All tasks and reports must be reviewed and validated by QA (the user) before final submission or external reporting.5. NO DUPLICATES: Always check 'checked_targets.json' (via the manager) to avoid re-scanning the same target.6. PERSISTENCE: Resume from where you left off in the previous run.7. EXECUTE, DON'T EXPLAIN: When asked to scan or report, proceed immediately using the tools."
 
 [personas.coder]
 description = "Expert in Rust, Python, and secure coding practices."
