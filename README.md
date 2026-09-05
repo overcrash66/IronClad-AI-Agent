@@ -225,7 +225,6 @@ Read the research publications detailing IronClad's architecture, security proof
 ### 2. 🧠 Context Engineering & Multi-Tier Memory Subsystems
 - **Title**: **[Context Engineering and Multi-Tiered Memory Architectures for Local Large Language Model Agents: Mitigating Token Bloat, Context Degradation, and Trivial Task Overthinking](docs/white_paper_context_memory.md)**
 - **Author**: **Wael SAHLI**
-- **Read Online**: [`docs/white_paper_context_memory.md`](docs/white_paper_context_memory.md)
 - **Key Findings**: Four-Tier Memory Architecture (Working, Core, Episodic, Semantic AST RAG), Input Intent Fast-Bypass (cutting trivial query latency by 91.2% and saving 98.3% tokens on greetings/acknowledgments), file-backed tool output offloading (>8,000 chars), and recursive summarization for multi-turn local LLM stability.
 
 ---
