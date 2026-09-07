@@ -111,16 +111,6 @@ Low-level design rationale for core systems.
 
 ---
 
-## Academic Research & Publications
-
-| Document | Description |
-|----------|-------------|
-| [Architecture & Security White Paper (Zenodo)](https://zenodo.org/records/22069766) | *IronClad AI Agent: A Secure-by-Design, Rust-Native Autonomous AI Agent Orchestration Framework for Consumer Hardware* (DOI: 10.5281/zenodo.22069766) |
-| [Context & Memory White Paper](white_paper_context_memory.md) | *Context Engineering and Multi-Tiered Memory Architectures for Local Large Language Model Agents: Mitigating Token Bloat, Context Degradation, and Trivial Task Overthinking* |
-| [Mathematical Foundations White Paper](white_paper_mathematical_foundations.md) | *Mathematical Foundations of Autonomous Local Agent Systems: Formalizing Model Routing, Tree Search Rewards, Vector Gating, Temporal Decay, and Security Lattices in IronClad AI Agent* |
-
----
-
 ## Quick Reference
 
 ### Skill Categories
