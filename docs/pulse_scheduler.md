@@ -158,6 +158,23 @@ upload = false
 Example:
 > **User:** "Schedule the faceless YouTube pipeline for the generic tech niche every Friday at 5 PM."
 
+## Running Pulse Maintenance from the CLI
+
+You can trigger an immediate maintenance run directly from your terminal without waiting for a scheduled cron job:
+
+```bash
+# Run a full autonomous maintenance cycle (scan, test, and repair)
+ironclad pulse --mode full
+
+# Run a read-only health and diagnostic scan
+ironclad pulse --mode scan
+
+# Run targeted automated fixes and stream updates to Telegram
+ironclad pulse --mode fix --chat-id 123456789
+```
+
+This is ideal for pre-commit checks, CI/CD pipelines, or ad-hoc system maintenance.
+
 ## Cron Expression Syntax & Auto-Normalization
 
 IronClad supports both **5-field standard cron** (`Min Hr Day Mth Wk`, e.g. `0 * * * *`) and **6-field cron with seconds** (`Sec Min Hr Day Mth Wk`, e.g. `0 0 * * * *`). 5-field cron strings are automatically normalized with a `0` second prefix so they parse seamlessly in the underlying `tokio-cron-scheduler`.

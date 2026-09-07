@@ -57,21 +57,25 @@ voice_reply = true
 
 [llm]
 agentic_mode = true
+connect_timeout_secs = 15
 context_compression = true
 default_provider = "ollama"
-fallback_models = []
-force_use_default_model = false
+dynamic_model_routing = false
+fallback_models = ["anthropic/claude-3-5-sonnet", "gemini/gemini-1.5-pro", "nvidia/meta/llama-3.3-70b-instruct"]
+force_use_default_model = true
+lm_studio_auto_manage = true
 local_stt_cmd = "{python} scripts/transcribe_voice.py {input} --model base"
 local_tts_cmd = "{python} scripts/speak.py {text}"
-loop_timeout_secs = 180
+loop_timeout_secs = 600
 max_agent_turns = 50
 max_model_size_b = 0
 max_parallel_tools = 4
 max_replan_attempts = 3
 max_retries = 2
-max_tokens = 60000
+max_tokens = 32000
+max_context = 256000
 max_tool_calls = 30
-max_tool_chain_depth = 5
+max_tool_chain_depth = 10
 orchestrator_enabled = true
 plan_qa_enabled = true
 planner_cache_max_entries = 100
@@ -80,7 +84,7 @@ python_path = ""
 qa_enabled = true
 session_budget_secs = 0
 step_qa_enabled = true
-timeout_secs = 300
+timeout_secs = 600
 turbo_mode = false
 
 [llm.anthropic]
@@ -95,18 +99,28 @@ base_url = "https://generativelanguage.googleapis.com/v1beta"
 model = "gemini-1.5-pro"
 vision = true
 
+[llm.model_preferences]
+coding = ["qwen3.6-27b", "qwen3.6", "qwen3.8-27b", "qwen3.8", "deepseek-r1", "gemma-4-31b", "gpt-oss"]
+fast_chat = ["gemma-4-e4b", "e4b", "qwen3.5-9b", "glm-4.6v-flash", "glm-4.7-flash", "4b", "9b", "7b", "8b"]
+math_reasoning = ["deepseek-r1", "gpt-oss", "qwen3.8", "gemma-4-31b", "qwen3.6", "qwen3.5-9b"]
+planning = ["gpt-oss", "claude-opus-reasoning", "reasoning-distilled", "qwen3.8", "deepseek-r1", "qwen3.6"]
+qa_review = ["qwen3.8", "gemma-4-31b", "qwen3.6", "deepseek-r1", "muse-glimmer"]
+security = ["dolphin", "abliterated", "uncensored", "nous-hermes", "wizard-vicuna", "openhermes", "deepseek-r1", "qwen3.8", "qwen3.6"]
+vision = ["vision", "-vl", "vl-", "qwen-vl", "qwen2.5-vl", "glm-4.6v", "minicpm-v", "pixtral", "llava"]
+
 [llm.nvidia]
 api_key = ""
 base_url = "https://integrate.api.nvidia.com/v1"
-model = "meta/llama-3.1-70b-instruct"
+model = "meta/llama-3.3-70b-instruct"
 vision = true
 
 [llm.ollama]
 api_token = ""
 base_url = ""
 keep_alive = "10m"
+max_context = 256000
 model = ""
-native_tools = false
+native_tools = true
 planner_model = ""
 qa_model = ""
 thinking_model_patterns = ["qwen", "qwq", "deepseek-r1", "reasoning"]
@@ -115,8 +129,9 @@ vision = true
 [llm.openai]
 api_key = ""
 base_url = ""
+max_context = 256000
 model = ""
-native_tools = false
+native_tools = true
 reasoning_effort = "high"
 thinking_model_patterns = ["qwen", "qwq", "deepseek-r1", "reasoning"]
 vision = true
@@ -128,6 +143,7 @@ enabled = true
 model = "whisper-1"
 
 [llm.translation]
+api_key = ""
 base_url = ""
 enabled = false
 model = ""
@@ -144,16 +160,16 @@ auto_archive = true
 cleanup_interval_hours = 24
 connect_timeout_secs = 30
 idle_timeout_secs = 600
-max_connections = 10
+max_connections = 4
 max_lifetime_secs = 1800
-max_messages_per_session = 50
+max_messages_per_session = 200
 max_session_age_days = 30
 min_connections = 1
 
 [memory.summarization]
 delete_after_summarization = true
 enabled = true
-max_learnings_in_context = 20
+max_learnings_in_context = 10
 max_sessions_per_run = 10
 min_session_age_days = 7
 schedule = "0 0 3 * * *"
@@ -164,9 +180,9 @@ name = "Data Analyst"
 system_prompt = "You are a Data Analyst. You are precise, analytical, and good at interpreting data.CRITICAL RULES:1. EXECUTE, DON'T EXPLAIN: When asked to analyze data, DO IT immediately.2. FILE ACCESS:   - 'list files' / 'show files' → execute ls -la   - 'show data files' → execute ls -la *.csv *.json *.xlsx 2>/dev/null   - 'read file X' → execute cat X3. When user says 'available files' or 'all files', list them using ls or find."
 
 [personas.bug_bounty_assistant]
-description = "Specialized in finding and scanning websites for vulnerabilities."
-name = "Bug Bounty Assistant"
-system_prompt = "You are a Bug Bounty Assistant. Your goal is to identify target websites from HackerOne, scan them for vulnerabilities, and generate detailed reports.CRITICAL RULES:1. TARGET DISCOVERY: Use the 'bug_bounty_manager.py' tool to identify and manage targets.2. VULNERABILITY SCANNING: Use 'bug_bounty_manager.py' (which executes nmap in WSL) to perform scans.3. 80% CONFIDENCE: If you are >80% confident a vulnerability exists, notify the user immediately on Telegram.4. QA VALIDATION: All tasks and reports must be reviewed and validated by QA (the user) before final submission.5. NO DUPLICATES: Always check 'checked_targets.json' (via the manager) to avoid re-scanning the same target.6. PERSISTENCE: Resume from where you left off in the previous run.7. EXECUTE, DON'T EXPLAIN: When asked to scan or report, proceed immediately using the tools."
+description = "Specialized in Blue Team host OS defense, vulnerability discovery, automated remediation, and bug bounty reconnaissance."
+name = "Bug Bounty & Defense Assistant"
+system_prompt = "You are a Security & Bug Bounty Assistant. Your primary goal is to protect the host machine, OS, and local network through Blue Team defensive auditing and automated remediation, as well as conducting authorized bug bounty reconnaissance on target websites.CRITICAL RULES:1. BLUE TEAM DEFENSE FIRST: For system, local network, open port, or file permission audits, execute 'bug_bounty_manager.py' with '--mode blue_team --target system' (or use '--fix' to automatically harden file ACLs, update .gitignore, and generate host firewall rules).2. TARGET DISCOVERY & RECON: Use 'bug_bounty_manager.py' to manage external targets when explicitly asked to perform external bug bounty reconnaissance.3. 80% CONFIDENCE: If you are >80% confident a vulnerability exists (or a critical host port is exposed on 0.0.0.0), notify the user immediately on Telegram.4. QA VALIDATION: All tasks and reports must be reviewed and validated by QA (the user) before final submission or external reporting.5. NO DUPLICATES: Always check 'checked_targets.json' (via the manager) to avoid re-scanning the same target.6. PERSISTENCE: Resume from where you left off in the previous run.7. EXECUTE, DON'T EXPLAIN: When asked to scan or report, proceed immediately using the tools."
 
 [personas.coder]
 description = "Expert in Rust, Python, and secure coding practices."
@@ -201,7 +217,8 @@ embedding_provider = "openai"
 enabled = true
 exclude_patterns = "**/venv/**,**/env/**,**/venv_yt/**,**/target/**,**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/.venv/**,**/venv/**,**/site-packages/**,**/__pycache__/**,**/yt_env/**,**/logs/**"
 include_patterns = "**/*.rs,**/*.py,**/*.js,**/*.ts,**/*.jsx,**/*.tsx,**/*.go,**/*.java,**/*.md,**/*.txt"
-max_context_tokens = 2000
+max_chunks_in_memory = 5000
+max_context_tokens = 1000
 max_file_size_kb = 500
 max_results = 10
 min_similarity = 0.7
@@ -215,8 +232,8 @@ enforce_json_schema = true
 inject_stderr_on_failure = true
 max_consecutive_failures = 3
 max_parse_retries = 2
-max_turns = 15
-total_timeout_secs = 600
+max_turns = 50
+total_timeout_secs = 3600
 
 [sandbox]
 backend = "wsl"
@@ -225,7 +242,7 @@ default_image = "Ubuntu"
 memory_limit_mb = 4096
 network_enabled = true
 socket = ""
-timeout_secs = 60
+timeout_secs = 120
 wsl_distro = "Ubuntu-22.04"
 
 [security]

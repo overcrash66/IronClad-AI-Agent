@@ -19,6 +19,25 @@ port = 3000
 api_key = "optional-secret-key"
 ```
 
+## Running the Server
+
+You can run the HTTP API server in two ways:
+
+### 1. Headless Daemon (`ironclad serve`)
+Run IronClad as a dedicated headless background server without launching the interactive Terminal UI:
+
+```bash
+# Start on default port configured in settings.toml (or 3000)
+ironclad serve
+
+# Override port from CLI
+ironclad serve --port 8080
+```
+
+### 2. Automatic Background Service
+When `enabled = true` is set in `settings.toml` under `[api]`, the HTTP server starts automatically as a background Tokio task whenever you launch the interactive TUI (`ironclad`).
+
+
 ## API Endpoints
 
 ### `POST /api/v1/tasks`

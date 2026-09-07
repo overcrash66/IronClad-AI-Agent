@@ -94,7 +94,14 @@ IronClad exposes `POST /api/v1/webhooks/github` for GitHub event handling. See `
 
 ## Telegram
 
-Real-time progress notifications are sent to a Telegram chat when `telegram.enabled = true` in `settings.toml`. See `settings.toml` for the full configuration reference.
+IronClad includes a bidirectional Telegram bot integration (`[integrations.telegram]`) for remote conversational control, audio voice replies, and live streaming of autonomous background processes:
+- **Conversational Task Submission**: Send commands or voice notes to your agent directly from any mobile or desktop Telegram client.
+- **Configurable Verbosity**: Set `verbosity` to `"quiet"` (results/alerts only), `"compact"` (milestone updates), or `"verbose"` (streaming each tool invocation).
+- **Typing Indicator**: Automatically sends Telegram's "typing" chat status while thinking or running tools (`send_typing_action = true`).
+- **Granular Tool Progress**: Stream intermediate tool executions (`show_tool_progress = true`) directly into your chat.
+- **Two-Tier Security**: Whitelist authorized users (`allowed_chat_ids`) and grant trusted operators auto-approval bypass (`trusted_chat_ids`).
+
+See [Telegram Setup Guide](telegram_setup.md) and [Configuration Reference](configuration.md#integrationstelegram) for full setup instructions.
 
 ---
 

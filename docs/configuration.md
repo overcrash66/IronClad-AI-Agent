@@ -79,6 +79,10 @@ model = ""
 enabled = false
 allowed_chat_ids = []
 trusted_chat_ids = []
+# verbosity = "quiet"        # "quiet" | "compact" | "verbose"
+# send_typing_action = true  # send typing status during execution
+# show_tool_progress = false # stream tool invocations to chat
+# voice_reply = false        # send voice replies using TTS
 
 [integrations.remote_agents]
 enabled = false
@@ -204,8 +208,25 @@ LLM provider settings.
 | `session_budget_secs` | integer? | `null` | Wall-clock seconds before the session exits gracefully; `null` = no limit |
 | `max_parallel_tools` | integer | `4` | Maximum number of tool calls dispatched concurrently in a single turn |
 | `context_compression` | boolean | `false` | Summarize dropped messages before applying the sliding window (requires an LLM call) |
+| `dynamic_model_routing` | boolean | `true` | Enable intelligent archetype routing and dynamic model selection |
+| `lm_studio_auto_manage` | boolean | `true` | Automatically manage LM Studio GPU VRAM model lifecycle (single-model invariant) |
 | `local_stt_cmd` | string? | `null` | Local STT command template |
 | `local_tts_cmd` | string? | `null` | Local TTS command template |
+
+### `[llm.model_preferences]`
+
+User-defined model routing preferences per task archetype. These override benchmark leaderboard rankings and hardcoded defaults.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `leaderboard_path` | string? | `"benchmark/model_leaderboard.json"` | Path to machine-readable benchmark leaderboard JSON |
+| `coding` | [string]? | `null` | Ordered model patterns for Coding & Tool Execution tasks |
+| `planning` | [string]? | `null` | Ordered model patterns for Planning & DAG Decomposition tasks |
+| `math_reasoning` | [string]? | `null` | Ordered model patterns for Mathematical Reasoning tasks |
+| `fast_chat` | [string]? | `null` | Ordered model patterns for Fast Interactive Response tasks |
+| `qa_review` | [string]? | `null` | Ordered model patterns for QA & Safety Review tasks |
+| `vision` | [string]? | `null` | Ordered model patterns for Vision & Multimodal tasks |
+| `security` | [string]? | `null` | Ordered model patterns for Security & Offensive Testing tasks |
 
 ### `[llm.ollama]`
 
@@ -508,7 +529,34 @@ IRONCLAD__FACeless_YT__TTS_VOICE_FR="fr-FR-DeniseNeural"
 IRONCLAD__FACeless_YT__EXAMPLE_TOPIC="artificial intelligence"
 ```
 
-See [Faceless YouTube Documentation](faceless_youtube.md) for full details.
+### `[integrations.telegram]`
+
+Telegram bot integration for remote conversational control, autonomous task execution, and progress alerts.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | boolean | `false` | Enable the Telegram bot integration |
+| `allowed_chat_ids` | [integer] | `[]` | List of allowed user IDs (positive) or group/channel IDs (negative) |
+| `trusted_chat_ids` | [integer] | `[]` | List of chat IDs with elevated bypass permissions (skips interactive Governor approval) |
+| `verbosity` | string | `"quiet"` | Notification verbosity: `"quiet"`, `"compact"`, or `"verbose"` |
+| `send_typing_action` | boolean | `true` | Send the Telegram "typing" chat action while reasoning and running tools |
+| `show_tool_progress` | boolean | `false` | Explicitly toggle intermediate tool execution progress messages (defaults to `true` when `verbosity = "verbose"`) |
+| `voice_reply` | boolean | `false` | Send audio voice replies using TTS (requires TTS configured) |
+
+Example:
+
+```toml
+[integrations.telegram]
+enabled = true
+allowed_chat_ids = [123456789, -100987654321]
+trusted_chat_ids = [123456789]
+verbosity = "compact"
+send_typing_action = true
+show_tool_progress = false
+voice_reply = false
+```
+
+See [Telegram Setup Guide](telegram_setup.md) for step-by-step bot creation and setup.
 
 ### `[integrations.remote_agents]`
 
@@ -765,6 +813,25 @@ exclude_patterns = [
 ]
 ```
 
+## `[quality_gate]`
+
+Quality gate settings for automated code review and build validation.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `min_test_coverage` | float | `80.0` | Minimum test coverage percentage required to pass |
+| `max_clippy_warnings` | integer | `0` | Maximum number of clippy linter warnings allowed |
+| `block_on_security_issues` | boolean | `true` | Whether to block execution if security vulnerabilities are found |
+| `require_documentation` | boolean | `false` | Whether to require docstrings/comments for all public items |
+
+```toml
+[quality_gate]
+min_test_coverage = 80.0
+max_clippy_warnings = 0
+block_on_security_issues = true
+require_documentation = false
+```
+
 ## Environment Variables
 
 Environment variables override configuration file settings. Use the prefix `IRONCLAD_` and double underscores for nested keys.
@@ -818,24 +885,36 @@ system_prompt = """You are a data analysis expert..."""
 Override configuration via command line:
 
 ```bash
+# Launch interactive TUI
+ironclad
+
 # Use specific config file
 ironclad --config custom-settings.toml
 
-# Override workspace
-ironclad --workspace /path/to/workspace
+# Override workspace or provider
+ironclad --workspace /path/to/workspace --provider openai
 
-# Override provider
-ironclad --provider openai
-
-# Resume session
+# Resume session or force fresh session
 ironclad --session <session-id>
+ironclad --new-session
 
-# List sessions
+# List past stored sessions
 ironclad sessions
 
-# Orchestration mode
+# Autonomous task execution (Orchestrator mode)
 ironclad orchestrate --task "Write a hello world program"
-ironclad orchestrate --task "Analyze data" --persona analyst
+ironclad orchestrate --task "Analyze data" --persona analyst --chat-id 123456789
+
+# Autonomous maintenance run (Pulse)
+ironclad pulse --mode full
+ironclad pulse --mode scan
+
+# Headless REST API server
+ironclad serve --port 3000
+
+# Run automated 8-pillar LLM benchmarks
+ironclad benchmark --mode comparative
+ironclad benchmark --models "qwen2.5-coder:32b" --pillars "pillar1_tool_use"
 ```
 
 ## Validation

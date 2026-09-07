@@ -22,10 +22,15 @@ Add your token and authorized IDs to `settings.toml` or set them as environment 
 ```toml
 [integrations.telegram]
 enabled = true
-# Use environment variables for secrets (recommended)
-# token = "YOUR_BOT_TOKEN_FROM_BOTFATHER" 
-allowed_chat_ids = [123456789, -100987654321] # Positive IDs for users, negative for groups/channels
+allowed_chat_ids = [123456789, -100987654321] # Whitelisted users/groups
+trusted_chat_ids = [123456789]                # Elevated operators (Governor bypass)
+verbosity = "compact"                          # "quiet" | "compact" | "verbose"
+send_typing_action = true                      # Send "typing" action while working
+show_tool_progress = false                     # Broadcast individual tool invocations
+voice_reply = false                            # Return audio replies via TTS
 ```
+
+> **Security Note on Tokens:** Store your bot token in the `.env` file or environment variable as `IRONCLAD_TELEGRAM_KEY="123456:ABC-..."` rather than committing it to version control.
 
 ### 4. Authorize Groups or Channels
 To use IronClad in a group or channel:
@@ -38,6 +43,16 @@ To use IronClad in a group or channel:
 ### Conversational Tasks
 Message your bot directly with any task:
 > "Check the status of the bug bounty scans."
+> "Run cargo test and let me know if everything passes."
+
+### Verbosity & Progress Streaming
+Control how much information IronClad sends during task execution:
+
+- **`verbosity = "quiet"`** (Default): Sends only task receipts, final completions, and errors. Minimal message volume.
+- **`verbosity = "compact"`**: Sends concise milestone progress messages.
+- **`verbosity = "verbose"`**: Automatically broadcasts every intermediate tool execution (`🌐 Browsing...`, `💻 Running command...`, `🔬 Researching...`).
+- **`send_typing_action = true`**: Sends Telegram's native "typing" status while the agent is reasoning or waiting for tool execution, giving visual feedback that work is in progress.
+- **`show_tool_progress = true/false`**: Explicitly override whether intermediate tool progress notices are sent as chat messages regardless of verbosity setting.
 
 ### Autonomous Notifications
 Various background skills use Telegram to notify you upon completion:
@@ -47,8 +62,8 @@ Various background skills use Telegram to notify you upon completion:
 
 ### Voice Support
 IronClad can process voice messages sent via Telegram. 
-1.  **Transcription**: Requires STT to be configured (see [STT Setup](local_stt_setup.md)).
-2.  **Voice Reply**: Enable `voice_reply = true` under `[integrations.telegram]` to receive audio responses (requires TTS).
+1. **Transcription**: Requires STT to be configured (see [STT Setup](local_stt_setup.md)).
+2. **Voice Reply**: Enable `voice_reply = true` under `[integrations.telegram]` to receive audio responses (requires TTS).
 
 **Example Configuration:**
 ```toml
@@ -57,12 +72,17 @@ local_stt_cmd = "python3 scripts/stt_whisper.py {input} tiny"
 
 [integrations.telegram]
 enabled = true
+allowed_chat_ids = [123456789]
+trusted_chat_ids = [123456789]
+verbosity = "compact"
+send_typing_action = true
 voice_reply = true
 ```
 
 ## Security & Privacy
 
-- **Whitelist Only**: IronClad will ignore any message from a Chat ID not in `allowed_chat_ids`.
+- **Whitelist Only (`allowed_chat_ids`)**: IronClad strictly ignores any message or command from a Chat ID not explicitly listed in `allowed_chat_ids`.
+- **Operator Bypass (`trusted_chat_ids`)**: Users listed in `trusted_chat_ids` are recognized as trusted operators; commands initiated by these IDs automatically pass the Governor's confirmation gate for Yellow/Red operations.
 - **Data Privacy**: IronClad does not log or store messages from unauthorized users.
 - **Rate Limiting**: Bot API rate limits apply (approx. 30 messages/second). For large reports, IronClad automatically splits long messages into chunks.
 - **Confidence Filtering**: To prevent noise, the bug bounty scanner only triggers Telegram alerts for findings that meet your security threshold.

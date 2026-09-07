@@ -178,6 +178,13 @@ Some skills are conditional on configured integrations, but the runtime names be
 | `browse_workspace` | Walk a workspace directory tree |
 | `create_tool` | Create new tool scripts at runtime (with force/validate flags) |
 | `subprocess_manager` | Manage background child CLI processes (`spawn`, `send`, `read`, `kill`, `list`) |
+| `write_todos` | Persistent JSON task tracking across agent turns |
+| `experiment_loop` | Autonomous iterative metric-driven code optimization loop |
+| `bug_bounty_scan_py` | Blue team host OS security hardening, open-source repo SAST, and ethical bug bounty recon |
+| `faceless_yt_pipeline` | Autonomous video production pipeline with TTS and subtitles |
+| `delegate_to_cli_agent` | Orchestrate and delegate to external CLI coding agents (Pi, Claude Code, Aider, OpenCode, Gemini) |
+| `agent_coordination` | Multi-agent coordination with task locking and shared blackboard |
+| `core_memory_read`, `core_memory_write`, `core_memory_append`, `core_memory_delete` | Structured core persona and user memory block management |
 | `query_knowledge_base` | Query the RAG knowledge base when RAG is enabled |
 | `translate` | Translate text between languages |
 | `speak` (tts) | Text-to-speech output |
@@ -208,7 +215,7 @@ Implements a typestate ReAct loop (`ReactStep<ThinkState>` → `ReactStep<ActSta
 
 - **shell_execute**: Strictly enforces the `ALLOW_SYSTEM_COMMANDS` flag. Commands are classified via the Governor; **RED** commands are blocked unless explicitly permitted in configuration.
 - **git_ops**: `is_blocked_git_command` rejects force-push, `--no-verify`, and `../` path traversal. Write operations are classified Red by the Governor.
-- **bug_bounty_scan**: Respects both `PYTHON_VENV_ENFORCED` for isolation and `ALLOW_SYSTEM_COMMANDS` for external scanning tools.
+- **bug_bounty_scan_py**: Respects both `PYTHON_VENV_ENFORCED` for virtual environment isolation and `ALLOW_SYSTEM_COMMANDS` for host tools (e.g. `nmap`). Enforces strict scope verification (`scope.allowed_domains`), authorization confirmations, and non-destructive policies across Blue Team host defense, repository SAST, and ethical recon modes.
 - **browse_workspace**: Hard-blocks access to `/etc`, `/proc`, `.ssh`, `C:\Windows`, and prevents `..` path traversal.
 - **delegate_task**: Cannot call itself recursively (filtered from the sub-agent's tool list).
 - **create_tool**: Python tools are syntax-validated via `ast.parse` before writing; invalid files are auto-removed.
