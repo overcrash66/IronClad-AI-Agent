@@ -6,7 +6,8 @@
 [![GitHub Repository](https://img.shields.io/badge/GitHub-overcrash66%2FIronClad--AI--Agent-blue.svg?logo=github)](https://github.com/overcrash66/IronClad-AI-Agent)
 [![GitHub Issues](https://img.shields.io/github/issues/overcrash66/IronClad-AI-Agent.svg)](https://github.com/overcrash66/IronClad-AI-Agent/issues)
 [![White Paper DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.22069766-blue.svg)](https://zenodo.org/records/22069766)
-[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](docs/index.md)
+[![Documentation](https://docs.rs/ironclad-ai-agent/badge.svg)](https://docs.rs/ironclad-ai-agent)
+[![Website](https://img.shields.io/badge/website-online-brightgreen.svg)](https://overcrash66.github.io/IronClad-AI-Agent/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-stable-orange.svg)](https://www.rust-lang.org/)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)]()
@@ -167,7 +168,7 @@ ironclad benchmark --mode comparative
 
 ## 📖 Documentation Hub
 
-Explore the complete documentation in the [`docs/`](docs/index.md) directory:
+Explore the complete documentation in the [`docs/`](https://github.com/overcrash66/IronClad-AI-Agent/tree/main/docs) directory or on the [Online Documentation Hub](https://overcrash66.github.io/IronClad-AI-Agent/):
 
 ### 🚀 Getting Started & Interfaces
 - 📘 **[Quick Start Guide](docs/quickstart.md)** — Get up and running in under 5 minutes.
@@ -178,12 +179,13 @@ Explore the complete documentation in the [`docs/`](docs/index.md) directory:
 
 ### 🏛️ Architecture & Security
 - 🛡️ **[Architecture Overview](docs/architecture.md)** — Three-Ring zero-trust security model, DAG planner, and data flow.
+- 📐 **[Mathematical Foundations White Paper](docs/white_paper_mathematical_foundations.md)** — Formal mathematical proofs for model routing, MCTS Pareto rewards, abstract interpretation security lattices, and deadlock freedom.
 - 🚦 **[Autonomy & Traffic Light Policy](docs/autonomy.md)** — Green / Yellow / Red / Blocked intent classification.
 - ⏱️ **[Session Budget](docs/session-budget.md)** — Wall-clock runtime limits for runaway sessions.
 - ⚡ **[Concurrent Tool Dispatch](docs/concurrent-tools.md)** — Parallel tool execution and file-backed outputs.
 - 📝 **[System Prompts](docs/prompts.md)** — Prompt assembly, personas, and execution protocols.
 - 📋 **[program.md Workspace Behaviour](docs/program-md.md)** — Per-workspace persistent instructions injected into prompts.
-- 📐 **[Architecture Decision Records (ADRs)](docs/adr/)** — Engineering design decisions (ADR 001 to ADR 006).
+- 📐 **[Architecture Decision Records (ADRs)](docs/adr/README.md)** — Engineering design decisions (ADR 001 to ADR 006).
 
 ### 🤖 Autonomous Skills & Pipelines
 - 🔬 **[Experiment Loop](docs/experiment_loop.md)** — Autonomous Karpathy-style code optimization with git rollbacks.
@@ -212,20 +214,6 @@ Explore the complete documentation in the [`docs/`](docs/index.md) directory:
 
 ---
 
-## 📄 Research Publications
-
-Read the research publications detailing IronClad's architecture, security proofs, context engineering, and empirical evaluations:
-
-### 1. 📑 System Architecture & Security Foundations
-- **Title**: **[IronClad AI Agent: A Secure-by-Design, Rust-Native Autonomous AI Agent Orchestration Framework for Consumer Hardware](https://zenodo.org/records/22069766)**
-- **Author**: **Wael SAHLI**
-- **DOI**: [`10.5281/zenodo.22069766`](https://doi.org/10.5281/zenodo.22069766) · **PDF**: [Download via Zenodo](https://zenodo.org/records/22069766/files/ironclad_white_paper.pdf)
-- **Key Findings**: Zero-Trust Three-Ring security model, Tokio DAG task planning within 16 GB VRAM budgets, 90.0% AgentBench OS/DB success rate, and 100% Promptfoo red-team defense pass rate.
-
-### 2. 🧠 Context Engineering & Multi-Tier Memory Subsystems
-- **Title**: **[Context Engineering and Multi-Tiered Memory Architectures for Local Large Language Model Agents: Mitigating Token Bloat, Context Degradation, and Trivial Task Overthinking](docs/white_paper_context_memory.md)**
-- **Author**: **Wael SAHLI**
-- **Key Findings**: Four-Tier Memory Architecture (Working, Core, Episodic, Semantic AST RAG), Input Intent Fast-Bypass (cutting trivial query latency by 91.2% and saving 98.3% tokens on greetings/acknowledgments), file-backed tool output offloading (>8,000 chars), and recursive summarization for multi-turn local LLM stability.
 
 ---
 
@@ -250,6 +238,7 @@ cargo clippy
 ## 💬 Community, Issues & Feedback
 
 We welcome feedback, bug reports, and community feature requests!
+- 🌐 **Official Website**: [https://overcrash66.github.io/IronClad-AI-Agent/](https://overcrash66.github.io/IronClad-AI-Agent/)
 - 🐛 **Report Issues & Bugs**: [https://github.com/overcrash66/IronClad-AI-Agent/issues](https://github.com/overcrash66/IronClad-AI-Agent/issues)
 - 💡 **Feature Requests & Ideas**: Open an issue on our [Issue Tracker](https://github.com/overcrash66/IronClad-AI-Agent/issues)
 - 🐙 **Public GitHub Repository**: [https://github.com/overcrash66/IronClad-AI-Agent](https://github.com/overcrash66/IronClad-AI-Agent)
@@ -258,6 +247,7 @@ We welcome feedback, bug reports, and community feature requests!
 
 ## 📦 Package & Distribution
 
+- **Official Website**: [https://overcrash66.github.io/IronClad-AI-Agent/](https://overcrash66.github.io/IronClad-AI-Agent/)
 - **Crates.io Package**: [https://crates.io/crates/ironclad-ai-agent](https://crates.io/crates/ironclad-ai-agent)
 
 ---
