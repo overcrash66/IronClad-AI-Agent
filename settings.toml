@@ -48,6 +48,18 @@ workspace_dir = "./scratchpad"
 enabled = false
 endpoints = []
 
+[integrations.collab]
+enabled = false
+# Peers are other IronClad instances reachable over HTTP. url is the peer's
+# API server base URL, key is the peer's IRONCLAD__API__API_KEY, and
+# timeout_secs is the per-node budget (set generously: node runs take
+# minutes, not seconds).
+# [[integrations.collab.peers]]
+# name = "ubuntu-worker"
+# url = "http://192.168.1.20:3000"
+# key = "shared-secret"
+# timeout_secs = 1800
+
 [integrations.telegram]
 allowed_chat_ids = []
 enabled = false
@@ -68,12 +80,14 @@ local_stt_cmd = "{python} scripts/transcribe_voice.py {input} --model base"
 local_tts_cmd = "{python} scripts/speak.py {text}"
 loop_timeout_secs = 600
 max_agent_turns = 50
+max_context = 256000
 max_model_size_b = 0
 max_parallel_tools = 4
 max_replan_attempts = 3
 max_retries = 2
+max_task_turns = 60
+max_task_wallclock_secs = 5400
 max_tokens = 32000
-max_context = 256000
 max_tool_calls = 30
 max_tool_chain_depth = 10
 orchestrator_enabled = true
@@ -217,7 +231,7 @@ embedding_provider = "openai"
 enabled = true
 exclude_patterns = "**/venv/**,**/env/**,**/venv_yt/**,**/target/**,**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/.venv/**,**/venv/**,**/site-packages/**,**/__pycache__/**,**/yt_env/**,**/logs/**"
 include_patterns = "**/*.rs,**/*.py,**/*.js,**/*.ts,**/*.jsx,**/*.tsx,**/*.go,**/*.java,**/*.md,**/*.txt"
-max_chunks_in_memory = 5000
+max_chunks_in_memory = 20000
 max_context_tokens = 1000
 max_file_size_kb = 500
 max_results = 10

@@ -204,6 +204,8 @@ LLM provider settings.
 | `max_tool_chain_depth` | number | `150` | Maximum autonomous tool-chain depth |
 | `turbo_mode` | boolean | `false`| Disable orchestrator routing and QA for maximum speed |
 | `max_tool_calls` | number | `30` | Maximum tool calls allowed per task |
+| `max_task_turns` | number | `60` | Watchdog: max LLM turns per user task before tool execution halts and a partial status report is forced (`0` = unlimited; env `IRONCLAD__LLM__MAX_TASK_TURNS`) |
+| `max_task_wallclock_secs` | number | `5400` | Watchdog: max wall-clock seconds per user task before tool execution halts (`0` = unlimited; env `IRONCLAD__LLM__MAX_TASK_WALLCLOCK_SECS`) |
 | `agentic_mode` | boolean | `true` | Enable ReAct-style reasoning and multi-step autonomous execution |
 | `session_budget_secs` | integer? | `null` | Wall-clock seconds before the session exits gracefully; `null` = no limit |
 | `max_parallel_tools` | integer | `4` | Maximum number of tool calls dispatched concurrently in a single turn |

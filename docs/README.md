@@ -48,6 +48,7 @@ Built-in capabilities and how to use them.
 | [Bug Bounty Scanning](bug_bounty.md) | Host OS defense, repository SAST auditing, and ethical bug bounty reconnaissance |
 | [Telegram Integration](telegram_setup.md) | Full setup for bots, channels, and authorized chat IDs |
 | [Custom Tools & Scripts](custom_tools.md) | Extend the agent with native Python/PowerShell/Shell scripts |
+| [Dynamic Plugins](plugins.md) | High-performance native dynamic libraries (`.dll`, `.so`, `.dylib`) with cryptographic integrity |
 | [Memory & Session Persistence](memory_management.md) | SQLite history, context compression, and semantic memory search |
 
 ---

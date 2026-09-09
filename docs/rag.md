@@ -111,6 +111,7 @@ min_similarity = 0.7
 | `max_file_size_kb` | number | `500` | Maximum file size to index |
 | `auto_inject_context` | boolean | `true` | Auto-inject context into prompts |
 | `max_context_tokens` | number | `2000` | Maximum tokens of context to inject |
+| `max_chunks_in_memory` | number | `20000` | In-memory chunk cap; oldest evicted past it (evicted files re-embed on restart) |
 
 ### Environment Variables
 

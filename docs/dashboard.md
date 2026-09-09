@@ -185,6 +185,43 @@ Server-Sent Events stream for real-time log output.
 **Event Format:**
 Plain text log lines.
 
+### Missions (`Missions` tab)
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/missions?limit=20` | List missions with milestone/step progress counts |
+| `GET /api/missions/:id` | Full mission tree (milestones + steps) |
+| `POST /api/missions` | Create (`title`, `goal` required; optional `milestones[]`, `executor`) → `201` |
+| `PATCH /api/missions/:id` | Edit `title`/`goal`/`status` (incl. `skipped`)/`executor` |
+| `DELETE /api/missions/:id[?force=true]` | Delete with cascade; active missions need `force` (`409` otherwise) |
+| `POST /api/missions/:id/steps/:step` | Set step status (`{"status": "skipped"}`); step matched by id or description |
+| `POST /api/missions/:id/dispatch` | Start a one-shot worker run (`{"executor": "auto"\|"local"\|"cli:<name>"}`) → `202 Accepted`; `409` when no pending steps |
+
+Executors: `auto` (CLI-first with backoff, LLM fallback), `local` (LLM only),
+`cli:<name>` (that agent only; fails loudly if not installed).
+
+### Git branches (`Branches` tab, `agent/*` scope)
+
+`main`/`master` are protected (never deleted via dashboard). Only `agent/*`
+branches can be created, switched, deleted, or exported.
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/git/branches` | List `{name, current, is_agent, protected}` |
+| `POST /api/git/branches` | Create (`{"name"}`; bare names auto-prefixed `agent/`) → `201` (`409` if exists) |
+| `POST /api/git/checkout` | Switch (`{"branch", "force?"}`); dirty tree → `409` with `dirty_files` unless `force` |
+| `POST /api/git/branches/delete?branch=&force=` | Delete; `403` for protected/out-of-scope, `409` for checked-out/unmerged |
+| `GET /api/git/branch.zip?branch=` | Download branch as zip (`application/zip`, 256 MiB cap) |
+
+### Experiments (`Experiments` tab)
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/experiments?limit=50` | List runs with status/iteration progress |
+| `POST /api/experiments` | Launch (`objective`, `metric_command`, `direction: higher\|lower`, `max_iters`) |
+| `GET /api/experiments/:id` | Single run with log tail and verdict |
+| `DELETE /api/experiments/:id` | Cancel a running experiment and delete its record |
+
 ## Architecture
 
 ```
