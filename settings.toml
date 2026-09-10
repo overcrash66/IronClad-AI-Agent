@@ -229,7 +229,7 @@ embedding_dimension = 768
 embedding_model = "nomic-embed-text-v1.5"
 embedding_provider = "openai"
 enabled = true
-exclude_patterns = "**/venv/**,**/env/**,**/venv_yt/**,**/target/**,**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/.venv/**,**/venv/**,**/site-packages/**,**/__pycache__/**,**/yt_env/**,**/logs/**"
+exclude_patterns = "**/venv/**,**/env/**,**/venv_yt/**,**/target/**,**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/.venv/**,**/venv/**,**/site-packages/**,**/__pycache__/**,**/yt_env/**,**/logs/**,**/scratchpad/**,**/scratch/**,**/data/**,**/benchmark/**,**/benchmarks/**,**/datasets/**,**/dataset/**,**/test_data/**,**/releases/**,**/unpacked/**"
 include_patterns = "**/*.rs,**/*.py,**/*.js,**/*.ts,**/*.jsx,**/*.tsx,**/*.go,**/*.java,**/*.md,**/*.txt"
 max_chunks_in_memory = 20000
 max_context_tokens = 1000
@@ -239,6 +239,7 @@ min_similarity = 0.7
 watch_changes = true
 watch_debounce_ms = 1000
 watcher_channel_capacity = 1024
+reconcile_interval_secs = 3600
 
 [react]
 enabled = true
