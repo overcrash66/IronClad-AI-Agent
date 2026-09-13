@@ -94,7 +94,14 @@ IronClad exposes `POST /api/v1/webhooks/github` for GitHub event handling. See `
 
 ## Telegram
 
-Real-time progress notifications are sent to a Telegram chat when `telegram.enabled = true` in `settings.toml`. See `settings.toml` for the full configuration reference.
+IronClad includes a bidirectional Telegram bot integration (`[integrations.telegram]`) for remote conversational control, audio voice replies, and live streaming of autonomous background processes:
+- **Conversational Task Submission**: Send commands or voice notes to your agent directly from any mobile or desktop Telegram client.
+- **Configurable Verbosity**: Set `verbosity` to `"quiet"` (results/alerts only), `"compact"` (milestone updates), or `"verbose"` (streaming each tool invocation).
+- **Typing Indicator**: Automatically sends Telegram's "typing" chat status while thinking or running tools (`send_typing_action = true`).
+- **Granular Tool Progress**: Stream intermediate tool executions (`show_tool_progress = true`) directly into your chat.
+- **Two-Tier Security**: Whitelist authorized users (`allowed_chat_ids`) and grant trusted operators auto-approval bypass (`trusted_chat_ids`).
+
+See [Telegram Setup Guide](telegram_setup.md) and [Configuration Reference](configuration.md#integrationstelegram) for full setup instructions.
 
 ---
 
@@ -151,4 +158,23 @@ IronClad supports multi-agent coordination backed by a persistent SQLite databas
 - **Shared Blackboard**: Agents post intermediate artifacts, architectural designs, and review results for other agents to consume.
 - **Actor-Based Swarm**: Coordinates specialized roles (*Architect*, *Coder*, *SecurityReviewer*, *TestEngineer*) in parallel execution pipelines.
 
----
+---
+
+## Multi-Instance Swarm Collaboration (`collab_workspace`)
+
+Distribute long-running engineering tasks across a LAN swarm of independent IronClad instances over HTTP:
+- **DAG Decomposition**: Breaks parent goals into independent nodes executed concurrently by peer instances.
+- **Deterministic Diff Aggregation**: Subordinates produce capped git unified diffs (up to 512 KiB) applied sequentially to local `agent/collab/*` branches.
+- **Conflict Prevention**: Pre-apply conflict detection (`git apply --check`) with automatic context-aware retries.
+- **Advisory Path Locking**: Register, heartbeat, and release path claims across instances to prevent overlapping edits.
+- **Strict Bearer Authentication**: Every peer endpoint requires mutual API key authentication.
+
+See [Collab Documentation](collab.md) for full setup instructions and topology diagrams.
+
+---
+
+## Secrets Vault & SSRF Security
+
+- **Encrypted Secrets Vault**: AES-256-GCM authenticated storage for API tokens, database passwords, and webhook secrets. Managed securely via the Dashboard, REST API, or CLI. See [Secrets Vault Documentation](secrets_vault.md).
+- **Outbound SSRF Protection**: Automated DNS pre-flight checking preventing skills and remote agents from reaching internal networks or cloud metadata services (`169.254.169.254`).
+

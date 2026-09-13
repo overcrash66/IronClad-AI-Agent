@@ -84,7 +84,18 @@ The agent will use `experiment_loop` with:
 
 ## How the Metric Command Works
 
-The `metric_command` must print a number somewhere in its output. The skill uses a flexible parser that handles all of these formats:
+The `metric_command` must print a number to STDOUT **and exit with code 0**.
+A reading is accepted only when all of these hold:
+
+- exit code is 0 (crashed scripts and `grep`-with-no-match pipelines are
+  rejections, never scores);
+- a float parses from **STDOUT alone** (stderr numbers — traceback line
+  numbers, `0 failed` tallies — never score);
+- the value is finite;
+- the jump versus the current best is plausible (an exact collapse to zero
+  or a >10x swing is re-measured once; only a confirmed reading is kept).
+
+The skill uses a flexible parser that handles all of these formats:
 
 | Output | Parsed value |
 |---|---|
@@ -92,36 +103,44 @@ The `metric_command` must print a number somewhere in its output. The skill uses
 | `val_bpb=0.8542` | `0.8542` |
 | `Score: 93.2%` | `93.2` |
 | `loss=1.2 acc=0.85` | `0.85` (last float wins) |
-| `42 passed; 0 failed` | `0.0` (last float) |
+| `42 passed; 0 failed` | `0.0` (last float — make sure this is really your metric!) |
 
-The **last float** in the combined stdout+stderr is used as the score. Design your metric script to print the score as the final value on the last line.
+The **last float** in STDOUT is used as the score. Design your metric script to print the score as the final value on the last line.
+
+The delegate sub-agent MUST finish with exactly one summary line
+(`CHANGE_APPLIED: …` or `NO_CHANGE: …`). Iterations without it are
+reverted unscored and logged as errors — an unscored change is never kept.
 
 ---
 
 ## Iteration Flow
 
-Each iteration follows this exact sequence:
+Each run executes in full isolation -- iterations never touch the live
+checkout (see "Safety & Limitations" below):
 
 ```
-┌─── Iteration N ──────────────────────────────────────────────┐
-│                                                               │
-│  1. git stash push "experiment_loop_pre_iter_N"              │
-│     (checkpoint; detects if workspace was clean or dirty)    │
-│                                                               │
-│  2. delegate_task sub-agent runs:                            │
-│     - reads current codebase                                 │
-│     - proposes and applies ONE targeted change               │
-│     - outputs: CHANGE_APPLIED: <description>                 │
-│                  or NO_CHANGE: <reason>                       │
-│                                                               │
-│  3. metric_command is evaluated → new_score                  │
-│                                                               │
-│  4a. improved?  → git stash drop   (keep change)             │
-│  4b. regressed? → git stash pop    (restore checkpoint)      │
-│      (clean workspace fallback: git checkout -- . + clean)   │
-│                                                               │
-│  5. Result logged to ironclad_audit.db                       │
-└───────────────────────────────────────────────────────────────┘
++--- Run setup ------------------------------------------------------+
+|  1. require git repo; prune stale worktree metadata                |
+|  2. stash pre-existing user dirt aside (tracked AND untracked)     |
+|  3. create scratch branch + disposable worktree on it              |
+|  4. measure baseline metric INSIDE the pristine worktree           |
++--- Iteration N ----------------------------------------------------+
+|  1. verify live tree is still clean (abort run if foreign work     |
+|     appeared -- never touch what this loop did not create)         |
+|  2. delegate_task sub-agent runs, confined to the worktree         |
+|  3. require CHANGE_APPLIED:/NO_CHANGE: summary (else error)        |
+|  4. verify the delegate did not touch the live tree (restore +     |
+|     fail the iteration if it escaped containment)                  |
+|  5. metric_command evaluated in the worktree (validated reading)   |
+|  6a. improved? -> commit on the scratch branch (keep)              |
+|  6b. else?      -> reset --hard + clean the WORKTREE (revert)      |
++--- Teardown -------------------------------------------------------+
+|  1. fast-forward merge scratch branch into live tree (kept work);  |
+|     on conflict the branch is KEPT for manual merge, never forced  |
+|  2. pop the baseline stash (restores pre-run user dirt)            |
+|  3. remove the disposable worktree + prune metadata                |
+|  4. Result logged to ironclad_audit.db                             |
++--------------------------------------------------------------------+
 ```
 
 ---
@@ -211,8 +230,33 @@ LIMIT 50;
 ### What the sub-agent can and cannot do
 The delegate sub-agent has access to all registered skills (`file_system`, `shell_execute`, `git_ops`, etc.) but is subject to the same **Governor policy** (Traffic Light) as any other agent action. Red-classified operations (e.g., `git push`, destructive commands outside the workspace) are blocked.
 
+### Metric and test commands go through the Governor
+The model-supplied `metric_command` is classified with the exact same
+policy matrix as `shell_execute` before every run (and likewise a custom
+`run_tests` `test_command`). Blocked commands are refused in all modes;
+Red commands require system commands or autonomous mode — identical to
+running them via `shell_execute` directly. There is no policy bypass
+through these skills.
+
 ### Workspace scope
 The experiment loop operates within `workspace_dir` (default: `./scratchpad` or the project root if it contains `.git`). It will not read or write outside this boundary.
+
+### Isolation guarantees
+- Iterations run in a disposable git worktree under
+  `<workspace>/.ironclad/worktrees/` (RAG-excluded and git-ignored), on a
+  scratch branch. The live checkout is never mutated mid-run.
+- Pre-existing user changes are stashed aside (tracked and untracked)
+  before the run and restored afterwards; `stash pop` only drops the stash
+  on success, so user work is never silently lost.
+- If the delegate touches the live tree, the iteration fails and the live
+  tree is restored (it was verified clean, so everything present is
+  delegate-caused). If the live tree changes from any other cause mid-run,
+  the run aborts rather than risk foreign work.
+- Kept iterations are committed per-iteration on the scratch branch and
+  fast-forward merged at the end. A failed merge keeps the branch and names
+  it in the report for manual merging — history is never rewritten.
+- Worktree checkouts are always removed at teardown (including abort
+  paths); stale leftovers of crashed runs are pruned at the next setup.
 
 ### Cost awareness
 Each iteration makes one or more LLM calls via the delegate sub-agent. With `max_iterations=10` and a paid provider (OpenAI, Anthropic), this can use significant tokens. For long overnight runs, prefer a local provider (`ollama`) or set an explicit `time_budget_secs`.
