@@ -123,10 +123,14 @@ Type a task and press Enter. Type /help for commands.
 
 ## Step 5 — Web Dashboard & Interactive Guides (Recommended)
 
-To unlock the easiest setup and learning experience, navigate to `http://127.0.0.1:8080` in your browser while the application is running.
+To unlock the web dashboard, run `ironclad serve` (or set `[dashboard] enabled = true` in `settings.toml`) and navigate to `http://127.0.0.1:8080` in your browser.
 
-- **⚙ Settings Tab**: Configure all settings, switch LLM providers, and safely manage API Keys visually without directly editing `settings.toml`.
-- **📖 Guides Tab**: Follow 9 step-by-step interactive guides to learn how to test multi-agent research, RAG indexing, MCP integrations, Telegram, and background Scheduled jobs. You can click "Copy & Open Chat" to seamlessly deploy example prompts right to the dashboard Chat.
+> **First Run Note:** If neither `username`/`password` nor an existing session is set, IronClad generates a secure **Setup Token** printed in your terminal upon launch. Enter this token at `/setup` to create your master dashboard credentials.
+
+- **🔐 Secrets Vault**: Securely view, add, and test encrypted credentials (API keys, databases, webhooks) without plaintext exposure.
+- **⚙ Settings Tab**: Configure all system settings, switch LLM providers, and customize execution sandboxes visually.
+- **📖 Guides Tab**: Follow 9 step-by-step interactive guides to learn how to test multi-agent research, RAG indexing, MCP integrations, Telegram, and background Scheduled jobs.
+- **🚀 Mission Control & Collab Swarm**: Monitor autonomous parent-child missions and distribute tasks across local or remote agent swarms.
 
 ---
 

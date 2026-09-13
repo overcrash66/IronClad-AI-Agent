@@ -13,23 +13,27 @@ Add the following to `settings.toml`:
 enabled = true
 
 [[integrations.remote_agents.endpoints]]
-name    = "my-langgraph"
-url     = "http://localhost:8123/invoke"
-key     = ""           # optional bearer token
-timeout_secs = 30
+name            = "my-langgraph"
+url             = "http://localhost:8123/invoke"
+key             = ""                 # optional plaintext fallback token
+vault_secret_id = "langgraph_token"  # recommended: resolve bearer token from Secrets Vault
+tls_pin         = ""                 # optional SHA-256 fingerprint or CA cert path
+timeout_secs    = 120                # default: 120
 ```
 
-Multiple endpoints can be declared but **only the first** endpoint is registered as the `remote_agent` skill at startup.
+Multiple endpoints can be declared; each registered endpoint is securely bound to its designated name and target URL.
 
 ### Field Reference
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `enabled` | boolean | `false` | Enable the remote agent integration |
-| `endpoints[].name` | string | — | Friendly name (used in log output) |
-| `endpoints[].url` | string | — | Full URL of the `/invoke` endpoint |
-| `endpoints[].key` | string | `""` | Bearer token sent as `Authorization: Bearer <key>` |
-| `endpoints[].timeout_secs` | number | `30` | Per-request timeout |
+| `endpoints[].name` | string | — | Friendly name (used in log output and telemetry) |
+| `endpoints[].url` | string | — | Full URL of the `/invoke` or OpenAI-compatible endpoint |
+| `endpoints[].key` | string | `""` | Bearer token sent as `Authorization: Bearer <key>` (plaintext fallback) |
+| `endpoints[].vault_secret_id` | string | `""` | ID of secret in Secrets Vault (`vault_secret_id` takes precedence over `key`) |
+| `endpoints[].tls_pin` | string | `""` | Optional SHA-256 certificate fingerprint or CA bundle path for certificate pinning |
+| `endpoints[].timeout_secs` | number | `120` | Per-request timeout in seconds (default: 120s) |
 
 ## Runtime Usage
 
@@ -84,12 +88,17 @@ All remote agent calls are classified **Yellow** by the Governor — they requir
 
 ## Security Considerations
 
-- Only HTTPS endpoints should be used in production.  HTTP is accepted for local development (`localhost`, `127.0.0.1`).
-- The bearer key is stored in `settings.toml` in plaintext.  Prefer using an environment variable override:
+- **SSRF & Target Hijack Prevention**: The endpoint URL is strictly fixed at startup via configuration. The LLM agent cannot override the target URL via runtime arguments (`endpoint`, `url`, etc.) — any attempt to redirect the invocation to arbitrary internal or external targets is immediately rejected with a permission error.
+- **Credential Protection**: Never store bearer keys in plaintext in `settings.toml`. Instead, store the token in the encrypted [Secrets Vault](secrets_vault.md) and reference it via `vault_secret_id = "my-secret-id"`, or provide it via environment variables:
   ```bash
   export IRONCLAD__INTEGRATIONS__REMOTE_AGENTS__ENDPOINTS__0__KEY="my-secret"
   ```
-- The remote agent can return arbitrary text that will be injected into the conversation context.  Only connect to trusted endpoints.
+- **TLS Certificate Pinning (`tls_pin`)**: When connecting to remote agents over public networks, configure `tls_pin` with a SHA-256 fingerprint or trusted CA bundle to guard against MITM interception.
+- **Output Sanitization & Isolation**: The remote agent output is treated as untrusted external data:
+  - Wrapped in an untrusted instruction envelope to prevent prompt injection.
+  - Sanitized of control and execution tokens (`<execute>`, `</execute>`, `[Tool Output]`).
+  - Strict payload limit capped at 50 KB to prevent context denial-of-service.
+- **Traffic Light Telemetry**: Each remote agent invocation broadcasts a Yellow status event to the live dashboard for transparent auditability.
 
 ## Example: LangGraph Server
 

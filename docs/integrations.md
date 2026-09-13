@@ -158,4 +158,23 @@ IronClad supports multi-agent coordination backed by a persistent SQLite databas
 - **Shared Blackboard**: Agents post intermediate artifacts, architectural designs, and review results for other agents to consume.
 - **Actor-Based Swarm**: Coordinates specialized roles (*Architect*, *Coder*, *SecurityReviewer*, *TestEngineer*) in parallel execution pipelines.
 
----
+---
+
+## Multi-Instance Swarm Collaboration (`collab_workspace`)
+
+Distribute long-running engineering tasks across a LAN swarm of independent IronClad instances over HTTP:
+- **DAG Decomposition**: Breaks parent goals into independent nodes executed concurrently by peer instances.
+- **Deterministic Diff Aggregation**: Subordinates produce capped git unified diffs (up to 512 KiB) applied sequentially to local `agent/collab/*` branches.
+- **Conflict Prevention**: Pre-apply conflict detection (`git apply --check`) with automatic context-aware retries.
+- **Advisory Path Locking**: Register, heartbeat, and release path claims across instances to prevent overlapping edits.
+- **Strict Bearer Authentication**: Every peer endpoint requires mutual API key authentication.
+
+See [Collab Documentation](collab.md) for full setup instructions and topology diagrams.
+
+---
+
+## Secrets Vault & SSRF Security
+
+- **Encrypted Secrets Vault**: AES-256-GCM authenticated storage for API tokens, database passwords, and webhook secrets. Managed securely via the Dashboard, REST API, or CLI. See [Secrets Vault Documentation](secrets_vault.md).
+- **Outbound SSRF Protection**: Automated DNS pre-flight checking preventing skills and remote agents from reaching internal networks or cloud metadata services (`169.254.169.254`).
+

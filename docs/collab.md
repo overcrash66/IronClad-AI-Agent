@@ -11,9 +11,8 @@ into a `[collab]` parent mission.
 - **Separate checkouts, LAN HTTP.** Each instance owns its working tree.
   The coordinator is the only writer of its own tree; subordinates work in
   place and return diffs — they never touch branches remotely.
-- **Transport:** bearer auth with each peer's `IRONCLAD__API__API_KEY`.
-  Set a strong key on every instance; an empty key leaves collab endpoints
-  open (same rule as the rest of the machine API).
+- **Transport:** Bearer authentication using each peer's configured `api_key` (or `IRONCLAD__API__API_KEY` / `api_key` in Secrets Vault).
+  Non-loopback bindings strictly require an `api_key` at startup (IronClad refuses to start on `0.0.0.0` without an explicit key). Collab endpoints (`/api/collab/*`) strictly reject unauthenticated requests with `401 Unauthorized`.
 
 ## Setup (example: Windows coordinator + Ubuntu worker)
 

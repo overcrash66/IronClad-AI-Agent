@@ -38,15 +38,16 @@ Built-in capabilities and how to use them.
 
 | Document | Description |
 |----------|-------------|
+| [Secrets Vault](secrets_vault.md) | AES-256-GCM encrypted credential storage, database probing, SSRF defense, and Aho-Corasick scrubbing |
 | [Deep Research](deep_research.md) | Multi-source research across GitHub, arXiv, and Semantic Scholar |
 | [Experiment Loop](experiment_loop.md) | Autonomous iterative improvement with metric-driven git checkpointing |
 | [RAG Knowledge Base](rag.md) | Local codebase indexing and similarity search |
 | [Write Todos](write-todos.md) | Persistent JSON task lists across agent turns |
 | [program.md](program-md.md) | Per-workspace instructions injected into every task's system prompt |
-| [Benchmark Suite](benchmarks.md) | Deterministic offline tests, TOML task format, `bench_results.json` |
+| [Benchmark Suite](benchmarks.md) | Deterministic offline tests, 8-pillar capability evaluations, `bench_results.json` |
 | [Faceless YouTube](faceless_youtube.md) | Automated media company pipeline for generating videos via AI |
 | [Bug Bounty Scanning](bug_bounty.md) | Host OS defense, repository SAST auditing, and ethical bug bounty reconnaissance |
-| [Telegram Integration](telegram_setup.md) | Full setup for bots, channels, and authorized chat IDs |
+| [Telegram Integration](telegram_setup.md) | Full setup for bots, channels, authorized chat IDs, and 24/7 daemon |
 | [Custom Tools & Scripts](custom_tools.md) | Extend the agent with native Python/PowerShell/Shell scripts |
 | [Dynamic Plugins](plugins.md) | High-performance native dynamic libraries (`.dll`, `.so`, `.dylib`) with cryptographic integrity |
 | [Memory & Session Persistence](memory_management.md) | SQLite history, context compression, and semantic memory search |
@@ -62,8 +63,9 @@ Connect IronClad to external services and automate workflows.
 | [HTTP API Setup](api_setup.md) | REST endpoints: submit tasks, poll session status, GitHub webhooks |
 | [GitHub Action](github-action.md) | CI/CD workflow template — run IronClad as a CI agent |
 | [Integrations](integrations.md) | LangGraph checkpoints, Remote Agents, Telegram, GitHub events |
+| [Multi-Instance Collab](collab.md) | Distribute DAG sub-tasks across peer nodes with advisory path claims and unified diff merging |
 | [Remote Agent Bridge](remote-agent.md) | Delegate tasks to external HTTP agents (LangGraph, custom) |
-| [Web Dashboard](dashboard.md) | Localhost observability UI — audit log, live status, sessions |
+| [Web Dashboard](dashboard.md) | Localhost observability UI — setup token, audit log, live status, sessions |
 | [Pulse Scheduler](pulse_scheduler.md) | Cron background jobs with natural-language scheduling |
 | [MCP Setup](mcp_setup.md) | Add tools via Model Context Protocol servers |
 | [Browser Automation](browser_automation.md) | Playwright web scraping and visual browsing |
@@ -121,11 +123,14 @@ Low-level design rationale for core systems.
 | Files | `read_file` `write_file` `list_directory` `replace_in_file` |
 | Search | `grep_search` `search_web` `deep_research` |
 | Shell & Sandbox | `shell_execute` `run_tests` `system_info` `reviewer` `post_mortem` |
+| Secrets Vault | `list_vault_secrets` `http_request` `web_scrape` |
 | Git | `git_ops` |
 | Browser | `browser_scrape` `browser_visit` |
 | GitHub | `github_list_issues` `github_list_prs` |
 | Memory | `remember` `search_history` `query_history` `query_logs` `core_memory_read` `core_memory_write` `core_memory_append` `core_memory_delete` |
-| Planning & Swarm | `delegate_task` `delegate_to_cli_agent` `subprocess_manager` `agent_coordination` `list_tools` `ask_user` `write_todos` `think` `reflection` `self_improve` `research_plan` |
+| Database | `sqlite_read` |
+| Mission Control | `mission_control` |
+| Planning & Swarm | `delegate_task` `delegate_to_cli_agent` `subprocess_manager` `agent_coordination` `collab` `list_tools` `ask_user` `write_todos` `think` `reflection` `self_improve` `research_plan` |
 | Workspace | `list_workspaces` `browse_workspace` `create_tool` `get_ide_state` |
 | RAG | `query_knowledge_base` |
 | Schedule | `schedule_job` |
@@ -141,12 +146,13 @@ Low-level design rationale for core systems.
 | `orchestrate` | `ironclad orchestrate --task "..."` | Runs a one-shot autonomous task to completion |
 | `sessions` | `ironclad sessions` | Lists all past interactive and autonomous sessions from database |
 | `pulse` | `ironclad pulse --mode full` | Runs an immediate autonomous Pulse maintenance job (`full`, `scan`, `fix`) |
-| `serve` | `ironclad serve --port 3000` | Runs headless REST API server for integrations and background tasks |
+| `serve` | `ironclad serve --port 3000` | Runs headless REST API server, Telegram daemon, and webhooks |
 | `benchmark` | `ironclad benchmark --mode comparative` | Runs 8-pillar LLM benchmark suite and updates model preferences registry |
 
 ### Key Environment Variables
 
 ```bash
+IRONCLAD_MASTER_KEY        # Secrets Vault master encryption key (AES-256-GCM)
 IRONCLAD_OPENAI_KEY        # OpenAI / GPT API key
 IRONCLAD_ANTHROPIC_KEY     # Anthropic / Claude API key
 IRONCLAD_GEMINI_KEY        # Google Gemini API key
@@ -163,9 +169,11 @@ IRONCLAD_PEXELS_KEY        # Pexels API key (faceless video creation)
 | `settings.toml` | Main runtime configuration |
 | `personas.toml` | Persona definitions and system prompts |
 | `workspace/program.md` | Per-project instructions injected into every task |
-| `memory.db` | Chat history and session storage (SQLite) |
-| `ironclad_audit.db` | Full audit log of all agent actions (SQLite) |
-| `coordination.db` | Multi-agent coordination state & blackboard |
+| `memory.db` | Chat history, missions, and session storage (SQLite) |
+| `ironclad_vault.db` | Encrypted storage for Secrets Vault credentials & DSNs (SQLite) |
+| `ironclad_audit.db` | Full immutable audit log of all agent actions (SQLite) |
+| `coordination.db` | Multi-agent coordination state & blackboard (SQLite) |
+| `.ironclad/vault.key` | Auto-generated 256-bit CSPRNG master encryption key file |
 | `bench_results.json` | Latest benchmark run output |
 
 ### Performance Quick Reference

@@ -26,11 +26,12 @@ IronClad is an **armored, local-first autonomous AI agent runtime**.
 
 Traditional AI coding assistants give large language models unchecked access to your shell and filesystem, creating risks of data loss, prompt injection vulnerabilities, and expensive API bills. 
 
-**IronClad solves this with three foundational principles:**
+**IronClad solves this with four foundational principles:**
 
 1. 🔒 **100% Private & Local-First**: Run entirely on your local machine using **LM Studio** or **Ollama** with zero token costs and zero telemetry leaving your device. *(Cloud models like Claude, OpenAI, Gemini, and NVIDIA NIM are also fully supported).*
 2. 🛡️ **Zero-Trust Security Governor (Three-Ring Model)**: The LLM is treated as an *untrusted component*. Every shell command, file write, and git action is inspected and gated by the **Governor** using a strict Traffic Light policy before running in sandboxes (Docker, WSL2, or Local host).
-3. ⚡ **Autonomous Multi-Agent Orchestrator**: Automates complex workflows — background cron jobs (*Pulse*), Karpathy-style autonomous optimization loops (*Experiment Loop*), AST codebase search (*Tree-sitter RAG*), and automated delegation to external CLI agents (*Pi Agent, Claude Code, Aider, OpenCode, Gemini CLI*).
+3. 🔐 **AES-256-GCM Secrets Vault & Scrubber**: Protect credentials at rest (`ironclad_vault.db`) with PBKDF2/HKDF key derivation, zeroized memory, dynamic Aho-Corasick secret redaction, and strict outbound SSRF network validation.
+4. ⚡ **Autonomous Multi-Agent Orchestrator**: Automates complex workflows — background cron jobs (*Pulse*), Karpathy-style autonomous optimization loops (*Experiment Loop*), AST codebase search (*Tree-sitter RAG*), and automated delegation to external CLI agents (*Pi Agent, Claude Code, Aider, OpenCode, Gemini CLI*).
 
 ---
 
@@ -151,12 +152,15 @@ ironclad benchmark --mode comparative
 |---|---|
 | 📁 **File System** | `read_file`, `write_file`, `list_directory`, `replace_in_file`, `grep_search` |
 | 💻 **Shell & Sandbox** | `shell_execute`, `run_tests`, `system_info`, `reviewer`, `post_mortem` |
+| 🔐 **Secrets Vault** | `list_vault_secrets`, `http_request` (authenticated), `web_scrape` (authenticated) |
 | 🌿 **Git Ops** | `git_ops` (status, diff, log, branch, stash — write actions Traffic Light gated) |
 | 🌐 **Web & Browsing** | `search_web`, `browser_scrape`, `browser_visit` (Playwright-powered) |
 | 🔬 **Deep Research** | `deep_research` (Multi-source search across GitHub, arXiv, and Semantic Scholar) |
-| 🐙 **GitHub Integration** | `github_list_issues`, `github_list_prs` |
+| 🐙 **GitHub Integration** | `github_list_issues`, `github_list_prs` (with repository allowlist enforcement) |
 | 🧠 **Memory & Persistence** | `remember`, `search_history`, `query_history`, `query_logs`, `core_memory_*` |
-| 👥 **Multi-Agent Hub** | `delegate_task`, `delegate_to_cli_agent`, `subprocess_manager`, `agent_coordination` |
+| 🗄️ **Database** | `sqlite_read` (read-only analytical SQL with schema inspection) |
+| 🎯 **Mission Control** | `mission_control` (persistent milestones, step tracking, strict completion gate) |
+| 👥 **Multi-Agent Hub** | `delegate_task`, `delegate_to_cli_agent`, `subprocess_manager`, `agent_coordination`, `collab` |
 | 🧭 **Planning & Reasoning** | `list_tools`, `ask_user`, `write_todos`, `think`, `reflection`, `research_plan` |
 | 📚 **AST Codebase RAG** | `query_knowledge_base` (Tree-sitter AST indexed vector search) |
 | ⏰ **Scheduler** | `schedule_job` (Pulse cron engine with natural language parsing) |
@@ -172,13 +176,14 @@ Explore the complete documentation in the [`docs/`](https://github.com/overcrash
 
 ### 🚀 Getting Started & Interfaces
 - 📘 **[Quick Start Guide](docs/quickstart.md)** — Get up and running in under 5 minutes.
-- 🌐 **[Web Dashboard Guide](docs/dashboard.md)** — Observability control center, settings editor, and interactive tutorials.
+- 🌐 **[Web Dashboard Guide](docs/dashboard.md)** — Observability control center, setup token, settings editor, and interactive tutorials.
 - ⚙️ **[Configuration Reference](docs/configuration.md)** — Comprehensive guide to every `settings.toml` option and environment variable.
 - 💻 **[Terminal UI (TUI) Guide](docs/tui.md)** — Keyboard shortcuts, slash commands, image attachments, and user dialogs.
 - ⚡ **[Local Execution Backend](docs/local_backend.md)** — High-speed host execution without container overhead.
 
 ### 🏛️ Architecture & Security
 - 🛡️ **[Architecture Overview](docs/architecture.md)** — Three-Ring zero-trust security model, DAG planner, and data flow.
+- 🔐 **[Secrets Vault & Credentials](docs/secrets_vault.md)** — AES-256-GCM encrypted credential storage, database probing, SSRF defense, and Aho-Corasick scrubbing.
 - 📐 **[Mathematical Foundations White Paper](docs/white_paper_mathematical_foundations.md)** — Formal mathematical proofs for model routing, MCTS Pareto rewards, abstract interpretation security lattices, and deadlock freedom.
 - 🚦 **[Autonomy & Traffic Light Policy](docs/autonomy.md)** — Green / Yellow / Red / Blocked intent classification.
 - ⏱️ **[Session Budget](docs/session-budget.md)** — Wall-clock runtime limits for runaway sessions.
@@ -200,16 +205,17 @@ Explore the complete documentation in the [`docs/`](https://github.com/overcrash
 
 ### 🔌 Integrations & Deployments
 - 🔗 **[Integrations Overview](docs/integrations.md)** — LangGraph checkpoints, external CLI agents, and background subprocesses.
+- 🤝 **[Multi-Instance Collab](docs/collab.md)** — Distribute tasks across peer IronClad nodes with advisory path claims and unified diff merging.
 - 🤖 **[External CLI Agents Hub](docs/integrations.md#external-cli-agents-hub-delegate_to_cli_agent)** — Auto-detect and drive Pi Agent, Claude Code, Aider, OpenCode, and Gemini CLI.
 - 🚀 **[Pi Agent Setup Guide](docs/guides/pi-agent-setup.md)** — Setting up Pi coding agent for autonomous task escalation.
 - 🔌 **[Model Context Protocol (MCP)](docs/mcp_setup.md)** — Connect external MCP servers for extended capabilities.
-- 🌐 **[HTTP API & Webhooks](docs/api_setup.md)** — REST endpoints for submitting tasks and ingesting GitHub webhooks.
+- 🌐 **[HTTP API & Webhooks](docs/api_setup.md)** — REST endpoints for submitting tasks, chat completions, and HMAC-verified GitHub webhooks.
 - 🐙 **[GitHub Actions Workflow](docs/github-action.md)** — CI/CD automation template for running IronClad in CI.
-- 📱 **[Telegram Bot Integration](docs/telegram_setup.md)** — Remote control, voice message transcription, and status alerts.
+- 📱 **[Telegram Bot Integration](docs/telegram_setup.md)** — Remote control, 24/7 headless daemon, voice message transcription, and status alerts.
 - 🎭 **[Browser Automation](docs/browser_automation.md)** — Playwright web scraping and visual browser visiting.
 - 🖼️ **[Multimodal Setup](docs/multimodal_setup.md)** — Vision model configuration and image analysis.
 - 🎙️ **[Local STT Setup](docs/local_stt_setup.md)** — Local speech-to-text with Whisper or OpenAI-compatible endpoints.
-- 📊 **[Benchmark & Evaluation Suite](docs/benchmarks.md)** — Deterministic offline benchmarks and multi-model matrix evaluation.
+- 📊 **[Benchmark & Evaluation Suite](docs/benchmarks.md)** — Deterministic offline benchmarks and 8-pillar multi-model matrix evaluation.
 - 🧪 **[Master Test Plan & Verification Guide](docs/master_test_plan.md)** — 7-pillar master test plan for swarms, webhooks, MCP, external agents, and cluster federation.
 
 ---

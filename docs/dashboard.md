@@ -1,290 +1,154 @@
-# IronClad Dashboard - Control Center
+# IronClad Web Dashboard — Observability & Control Center
 
-The IronClad Dashboard provides a secure, lightweight web interface for real-time visibility into the agent's operations. It serves as the "Control Center" for monitoring and managing IronClad.
+The IronClad Dashboard is a secure, lightweight single-page web interface (`http://127.0.0.1:8080`) providing full real-time visibility, mission control, secrets management, and system administration.
 
-## Quick Start
+---
 
-1. Add to your `.env` file:
-   ```bash
-   IRONCLAD__DASHBOARD__ENABLED=true
-   IRONCLAD__DASHBOARD__USERNAME=admin
-   IRONCLAD__DASHBOARD__PASSWORD=your_password
-   ```
+## Quick Start & First-Run Setup
 
-2. Run IronClad:
-   ```bash
-   cargo run
-   ```
-
-3. Open `http://127.0.0.1:8080` in your browser
-
-If port `8080` is already in use, IronClad will try the next three ports automatically. Check the startup logs for the final bound port.
-
-## Features
-
-- **⚙️ Settings Management**: Visually edit your `settings.toml`, securely manage API keys, and gracefully restart the platform directly from the UI.
-- **📖 Interactive Guides**: Step-by-step interactive tutorials for Webhooks, APIs, Agent building, RAG indexing, MCP tools, Telegram bots, Pulse jobs, and Sandbox execution.
-- **Task Visualization**: View Audit Log history and the Scheduler's upcoming cron jobs
-- **Recent Sessions**: Inspect recent session IDs, personas, and creation timestamps
-- **Live Monitoring**: Real-time feed via Server-Sent Events (SSE) displaying current execution steps and Traffic Light status
-- **Raw Logs**: Streaming log output from the application
-
-## Security
-
-The dashboard enforces strict security constraints:
-
-1. **Local Access Only**: The server binds exclusively to `127.0.0.1`, preventing any external network access
-2. **Basic Authentication**: Username/password protection to restrict access to authorized users only
-
-## Configuration
-
-### Option 1: Environment Variables (.env file) - Recommended
-
-Using environment variables keeps sensitive credentials out of your config file. Add these to your `.env` file:
-
-```bash
-# Enable the dashboard
-IRONCLAD__DASHBOARD__ENABLED=true
-
-# Set the port (defaults to 8080 if not specified)
-IRONCLAD__DASHBOARD__PORT=8080
-
-# Configure Basic Auth (highly recommended)
-IRONCLAD__DASHBOARD__USERNAME=admin
-IRONCLAD__DASHBOARD__PASSWORD=your_secure_password
-```
-
-### Option 2: settings.toml
-
-Alternatively, enable the dashboard in your `settings.toml`:
+### 1. Enable in `settings.toml` or `.env`
 
 ```toml
 [dashboard]
 enabled = true
 port = 8080
+# Optional: pre-configure credentials, or set them interactively via First-Run Setup
 username = "admin"
 password = "your-secure-password"
 ```
 
-### Configuration Options
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `enabled` | bool | `false` | Enable/disable the dashboard server |
-| `port` | u16 | `8080` | Preferred port for the dashboard (bound to 127.0.0.1 only; runtime retries up to `port + 3`) |
-| `username` | string | `None` | Username for Basic Auth (optional) |
-| `password` | string | `None` | Password for Basic Auth (optional) |
-
-### Security Recommendations
-
-- Always set a strong `username` and `password` when enabling the dashboard
-- Use environment variables for sensitive credentials:
-  ```bash
-  export IRONCLAD__DASHBOARD__USERNAME="admin"
-  export IRONCLAD__DASHBOARD__PASSWORD="your-secure-password"
-  ```
-
-## Accessing the Dashboard
-
-Once enabled, access the dashboard at:
-
-```
-http://127.0.0.1:8080
+Or via environment variables:
+```bash
+IRONCLAD__DASHBOARD__ENABLED=true
+IRONCLAD__DASHBOARD__PORT=8080
+IRONCLAD__DASHBOARD__USERNAME=admin
+IRONCLAD__DASHBOARD__PASSWORD=your-secure-password
 ```
 
-You will be prompted for credentials if authentication is configured.
+### 2. Launch IronClad
 
-If the configured port is unavailable, look for the actual bound port in the startup logs.
-
-## API Endpoints
-
-The dashboard exposes the following REST API endpoints:
-
-### `GET /api/config`
-Returns the current `settings.toml` configuration as JSON, with sensitive fields masked securely.
-
-### `POST /api/config`
-Accepts a JSON payload to overwrite `settings.toml`. Unmodified sensitive fields are automatically restored from the existing config to prevent data loss.
-
-### `POST /api/config/restart`
-Initiates a graceful restart of the IronClad process to quickly apply configuration changes.
-
-### `GET /api/config/env-check`
-Returns a list of configuration keys currently overridden by environment variables (e.g., `IRONCLAD__LLM__OLLAMA__MODEL`).
-
-### `GET /api/audit`
-
-Returns the most recent audit log entries.
-
-**Query Parameters:**
-- `limit` (optional): Number of entries to return (default: 50)
-
-**Response:**
-```json
-[
-  {
-    "id": "uuid",
-    "timestamp": "2024-01-01T00:00:00Z",
-    "actor": "user",
-    "action_type": "prompt",
-    "payload": "...",
-    "status": "allowed"
-  }
-]
+```bash
+cargo run
+# or
+ironclad
 ```
 
-### `GET /api/jobs`
+### 3. First-Run Setup Token (Initial Admin Claim)
 
-Returns all scheduled Pulse jobs.
-
-**Response:**
-```json
-[
-  {
-    "id": "uuid",
-    "name": "Daily Summary",
-    "schedule": "0 0 9 * * *",
-    "job_type": { "LlmTask": "Summarize activity" },
-    "enabled": true
-  }
-]
-```
-
-### `GET /api/sessions`
-
-Returns recent session metadata.
-
-**Response:**
-```json
-[
-  {
-    "id": "uuid",
-    "persona": "default",
-    "created_at": "2024-01-01T00:00:00Z"
-  }
-]
-```
-
-### `GET /api/status` (SSE)
-
-Server-Sent Events stream for real-time status updates.
-
-**Event Format:**
-```json
-{
-  "step": "Executing command",
-  "traffic_light": "Green",
-  "timestamp": "2024-01-01T00:00:00Z"
-}
-```
-
-### `GET /api/logs` (SSE)
-
-Server-Sent Events stream for real-time log output.
-
-**Event Format:**
-Plain text log lines.
-
-### Missions (`Missions` tab)
-
-| Endpoint | Description |
-|---|---|
-| `GET /api/missions?limit=20` | List missions with milestone/step progress counts |
-| `GET /api/missions/:id` | Full mission tree (milestones + steps) |
-| `POST /api/missions` | Create (`title`, `goal` required; optional `milestones[]`, `executor`) → `201` |
-| `PATCH /api/missions/:id` | Edit `title`/`goal`/`status` (incl. `skipped`)/`executor` |
-| `DELETE /api/missions/:id[?force=true]` | Delete with cascade; active missions need `force` (`409` otherwise) |
-| `POST /api/missions/:id/steps/:step` | Set step status (`{"status": "skipped"}`); step matched by id or description |
-| `POST /api/missions/:id/dispatch` | Start a one-shot worker run (`{"executor": "auto"\|"local"\|"cli:<name>"}`) → `202 Accepted`; `409` when no pending steps |
-
-Executors: `auto` (CLI-first with backoff, LLM fallback), `local` (LLM only),
-`cli:<name>` (that agent only; fails loudly if not installed).
-
-### Git branches (`Branches` tab, `agent/*` scope)
-
-`main`/`master` are protected (never deleted via dashboard). Only `agent/*`
-branches can be created, switched, deleted, or exported.
-
-| Endpoint | Description |
-|---|---|
-| `GET /api/git/branches` | List `{name, current, is_agent, protected}` |
-| `POST /api/git/branches` | Create (`{"name"}`; bare names auto-prefixed `agent/`) → `201` (`409` if exists) |
-| `POST /api/git/checkout` | Switch (`{"branch", "force?"}`); dirty tree → `409` with `dirty_files` unless `force` |
-| `POST /api/git/branches/delete?branch=&force=` | Delete; `403` for protected/out-of-scope, `409` for checked-out/unmerged |
-| `GET /api/git/branch.zip?branch=` | Download branch as zip (`application/zip`, 256 MiB cap) |
-
-### Experiments (`Experiments` tab)
-
-| Endpoint | Description |
-|---|---|
-| `GET /api/experiments?limit=50` | List runs with status/iteration progress |
-| `POST /api/experiments` | Launch (`objective`, `metric_command`, `direction: higher\|lower`, `max_iters`) |
-| `GET /api/experiments/:id` | Single run with log tail and verdict |
-| `DELETE /api/experiments/:id` | Cancel a running experiment and delete its record |
-
-## Architecture
+If no username/password is pre-configured, IronClad enters **First-Run Setup Mode** for security. On startup, a high-entropy one-time setup token is printed in a console banner:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     IronClad Dashboard                       │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │   Audit Log │  │  Job List   │  │   Live Status       │  │
-│  │   (Table)   │  │   (Table)   │  │   (SSE Stream)      │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │               Raw Logs (SSE Stream)                  │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      IronClad Core                           │
-│  ┌────────────┐ ┌────────────┐ ┌────────────┐              │
-│  │   Audit    │ │   Pulse    │ │ Orchestrator│              │
-│  │  Logger    │ │  Scheduler │ │             │              │
-│  └────────────┘ └────────────┘ └────────────┘              │
-└─────────────────────────────────────────────────────────────┘
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                    🛡️ IRONCLAD DASHBOARD FIRST-RUN SETUP                      ║
+╠════════════════════════════════════════════════════════════════════════════════╣
+║ Setup Token:  a1b2c3d4e5f67890abcdef1234567890                                ║
+║ Enter this token on the dashboard or pass 'setup_token' in POST /api/setup     ║
+╚════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-## Traffic Light Status
+1. Open `http://127.0.0.1:8080` in your browser.
+2. Enter the **Setup Token** printed in your terminal.
+3. Choose your administrator username and password.
+4. Once submitted, the setup token is immediately cleared and invalidated.
 
-The dashboard displays the current Traffic Light classification:
+> [!NOTE]
+> If port `8080` is already in use, IronClad automatically tries the next three ports (`8081`–`8083`). Check the startup logs for the bound port.
 
-| Status | Color | Description |
-|--------|-------|-------------|
-| Green | 🟢 | Safe, read-only operations - auto-approved |
-| Yellow | 🟡 | Potentially impactful operations - user notified |
-| Red | 🔴 | Dangerous operations - requires explicit confirmation |
-| Blocked | 🚫 | Strictly forbidden operations - cannot be bypassed |
+---
 
-## Troubleshooting
+## 🛡️ Security Architecture & Hardening
 
-### Dashboard not accessible
+The dashboard enforces strict defense-in-depth measures:
 
-1. Verify `enabled = true` in `[dashboard]` section
-2. Check the logs for the actual bound port; IronClad may have fallen back from the configured port to one of the next three ports
-3. Ensure you're accessing via `127.0.0.1` (not `localhost` if there are DNS issues)
+1. **Loopback Exclusive (`127.0.0.1`)**: The HTTP listener binds strictly to the loopback interface, preventing external network access.
+2. **Terminal Setup Token**: First-time admin creation requires proof of local console access, eliminating unauthenticated takeover risks.
+3. **Session Cookies & Sliding Refresh**: Successful authentication issues a cryptographically secure HTTP-only cookie (`ironclad_session`) with constant-time token comparison and a 24-hour sliding inactivity expiration (`SESSION_TTL_SECS = 86400`).
+4. **Per-IP Lockout Throttling**: Repeated authentication failures result in progressive per-IP lockout delays.
+5. **Dangerous Config Modification Gating**: Dangerous options (e.g. relaxing security policies or escaping directory bounds) cannot be modified via the `/api/config` web API.
+6. **Chat Rate Limiting**: Interactive web chat enforces per-session rate limits (10 requests/minute, 4096-character max message length).
 
-### Authentication fails
+---
 
-1. Verify credentials in `settings.toml` or environment variables
-2. Ensure the Authorization header is being sent correctly
-3. Check browser console for any 401 errors
+## 🌟 Dashboard Tabs & Features
 
-### No live updates
+### 1. ⚙️ Settings Management
+- Visually configure LLM providers, model preferences, sandboxes, and integrations without touching TOML syntax.
+- View active environment variable overrides (`GET /api/config/env-check`).
+- Trigger a graceful runtime restart (`POST /api/config/restart`) to reload configuration seamlessly.
 
-1. Check browser console for SSE connection errors
-2. Verify the IronClad application is running and logging
-3. SSE connections may timeout after extended idle periods - refresh the page
+### 2. 🔐 Secrets Vault Tab
+- Manage API keys, bearer tokens, HTTP basic credentials, and database connection strings.
+- Enforce strict per-secret `allowed_domains` to govern outbound network egress.
+- **Database Probing**: Test database connectivity with non-destructive TCP handshake probes (`POST /api/vault/probe-db`) for PostgreSQL, MySQL, SQLite, MongoDB, and Redis.
+- Inspect an immutable audit log of all vault operations (`GET /api/vault/audit`).
 
-## Development
+### 3. 🎯 Mission Control Tab
+- Create, track, checkpoint, and manage long-running multi-hour or multi-day missions.
+- Inspect milestone breakdown, step progress, and hierarchical checklists.
+- Enforces strict mission gates: missions cannot be marked complete until all milestones and steps succeed (or explicit forced overrides are logged).
 
-The dashboard UI is a single HTML file with inline CSS and JavaScript, embedded directly into the binary via `include_str!()`. This approach:
+### 4. 🤝 Multi-Instance Collab Tab
+- Inspect connected peer IronClad nodes and their real-time health (`GET /api/collab/health`).
+- Distribute DAG sub-tasks across peers with automatic unified diff collection.
+- Monitor active advisory path claims and conflict-avoidance locks.
 
-- Eliminates the need for a separate build process
-- Reduces binary dependencies
-- Ensures the UI is always available with the binary
+### 5. 🤖 CLI Agents Tab
+- Displays live status of auto-detected external CLI AI tools (*Pi Agent*, *Claude Code*, *Aider*, *OpenCode*, *Gemini CLI*).
+- Enable or disable specific agents on the fly; choices persist across sessions.
 
-To modify the UI, edit `src/dashboard/index.html` and rebuild the project.
+### 6. 🧹 Project Maintenance Tab
+- Inspect database storage metrics and file sizes.
+- **Vacuum Databases**: Run SQLite `VACUUM` and optimize `memory.db`, `ironclad_vault.db`, and `ironclad_audit.db`.
+- **Prune Old Sessions & Logs**: Clean up stale interactive sessions, old audit records, log files, and temporary scratch files.
+
+### 7. 🌿 Workspace & Git Branch Management
+- **Visual Diff Viewer**: Inspect modified files and view unified side-by-side git diffs before approving changes.
+- **Agent Branch Isolation**: Safe git branch creation (`agent/*` scope), branch switching, and downloading zipped branch snapshots.
+
+### 8. 📖 Interactive Learning Guides
+- 9 step-by-step interactive tutorials covering APIs, Webhooks, RAG indexing, MCP tool integration, Telegram bots, Pulse jobs, and Sandboxes.
+- Click "Copy & Open Chat" to load guided prompt examples directly into the dashboard chat interface.
+
+### 9. 📊 Real-Time Observability
+- **Live Step Feed**: Server-Sent Events (SSE) stream displaying current reasoning steps and Traffic Light status (🟢 Green, 🟡 Yellow, 🔴 Red, 🚫 Blocked).
+- **Log Viewer**: Live streaming logs with search, filtering, and export capabilities.
+
+---
+
+## REST API Reference
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/api/setup/status` | `GET` | Returns whether dashboard is in first-run setup mode |
+| `/api/setup` | `POST` | Sets initial admin credentials (requires `setup_token`) |
+| `/api/config` | `GET` | Returns `settings.toml` with sensitive credentials masked |
+| `/api/config` | `POST` | Updates `settings.toml` safely preserving masked values |
+| `/api/config/restart` | `POST` | Initiates graceful process restart |
+| `/api/config/env-check` | `GET` | Lists keys overridden by environment variables |
+| `/api/audit` | `GET` | Returns recent audit log entries (supports `?limit=N`) |
+| `/api/audit/export` | `GET` | Exports audit log as downloadable JSON |
+| `/api/jobs` | `GET` | Lists all scheduled Pulse cron jobs |
+| `/api/jobs/:id/toggle` | `POST` | Toggles job active state |
+| `/api/sessions` | `GET` | Lists recent interactive and autonomous sessions |
+| `/api/sessions/:id/messages` | `GET` | Fetches conversation messages for a session |
+| `/api/status` | `GET` | SSE stream of real-time execution steps and Traffic Light status |
+| `/api/logs` | `GET` | SSE stream of live log lines |
+| `/api/vault/secrets` | `GET` / `POST` | List or create Secrets Vault credentials |
+| `/api/vault/secrets/:id` | `PUT` / `DELETE`| Update or delete a secret |
+| `/api/vault/probe-db` | `POST` | TCP connectivity probe on database DSN |
+| `/api/vault/audit` | `GET` | View Vault access audit events |
+| `/api/missions` | `GET` / `POST` | List or create persistent missions |
+| `/api/missions/:id` | `GET` / `PATCH` / `DELETE` | View, update, or delete a mission |
+| `/api/missions/:id/steps/:step` | `POST` | Update mission step status |
+| `/api/collab/peers` | `GET` | Lists configured multi-instance collab peers |
+| `/api/collab/claims` | `GET` | Lists active advisory path claims |
+| `/api/cli-agents` | `GET` | Lists detected external CLI agents and enabled status |
+| `/api/cli-agents/:name/enable` | `POST` | Enables an external CLI agent |
+| `/api/cli-agents/:name/disable` | `POST` | Disables an external CLI agent |
+| `/api/workspace/changes` | `GET` | Lists uncommitted file modifications in workspace |
+| `/api/workspace/diff` | `GET` | Returns unified diff for a modified workspace file |
+| `/api/git/branches` | `GET` / `POST` | List or create git branches |
+| `/api/maintenance/stats` | `GET` | Storage usage statistics across databases and logs |
+| `/api/maintenance/vacuum` | `POST` | Runs SQLite VACUUM on databases |
+| `/api/maintenance/prune-sessions` | `POST` | Prunes sessions older than configured retention |
+| `/api/maintenance/prune-audit` | `POST` | Prunes audit records older than configured retention |
