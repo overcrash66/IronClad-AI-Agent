@@ -62,10 +62,14 @@ See [ADR-001](adr/001-traffic-light-policy.md) for details.
 
 ### Systemic Guardrails
 
-In addition to the per-command classification, IronClad provides global security toggles:
+In addition to the per-command classification, IronClad provides defense-in-depth security layers:
 
 - **ALLOW_SYSTEM_COMMANDS**: A global filter that must be `true` to permit any command classified as **RED** (e.g., `sudo`, `apt`) or **BLOCKED**. If `false` (default), these commands are denied even if a skill attempts to run them.
 - **PYTHON_VENV_ENFORCED**: Ensures all Python-based tool execution is isolated within a virtual environment, protecting the host system from dependency corruption.
+- **Encrypted Secrets Vault**: Hardened AES-256-GCM authenticated encryption for all API keys, database credentials, and webhook tokens. Master keys are resolved securely via `IRONCLAD_MASTER_KEY` environment variable, OS Keyring, or local keyfile (`.ironclad/vault.key`). In-memory secrets are wrapped in zeroizing memory containers (`secrecy` / `zeroize`).
+- **Dynamic In-Memory Scrubber**: An Aho-Corasick multi-pattern scrubber actively redacts known secrets from LLM prompt histories, raw tool outputs, audit logs, and dashboard streams before they can leak.
+- **SSRF Prevention Engine (`src/security/ssrf.rs`)**: Performs pre-flight DNS resolution and IP address inspection on all outbound network operations (`http_request`, `web_scrape`, Playwright, remote agent calls). Strictly blocks loopback (`127.0.0.0/8`, `::1`), private RFC 1918 subnets (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), link-local/multicast, and cloud metadata services (IMDS `169.254.169.254`).
+- **Strict API & Webhook Security**: Rejects unauthenticated non-loopback bindings (`0.0.0.0`) at startup, generates cryptographic ephemeral keys for loopback development, and enforces HMAC-SHA256 signature verification (`X-Hub-Signature-256`) on incoming webhooks.
 
 ## LLM Integration
 
@@ -162,6 +166,10 @@ Some skills are conditional on configured integrations, but the runtime names be
 | `git_ops` | Git operations with safety filters and Traffic Light policy |
 | `browser_scrape` | Web scraping with Playwright |
 | `browser_visit` | Open URLs visually |
+| `web_scrape` | Fast HTML/text extraction with CSS selectors and SSRF protection |
+| `http_request` | SSRF-filtered HTTP requests with automatic Vault secret Bearer injection |
+| `list_vault_secrets` | List names and descriptions of configured secrets (zero secret exposure) |
+| `sqlite_read` | Safe read-only SQL queries against SQLite databases |
 | `query_history` | Query chat history |
 | `query_logs` | Query audit logs (read-only SQL) |
 | `remember` | Store long-term learnings or user preferences |
@@ -178,6 +186,16 @@ Some skills are conditional on configured integrations, but the runtime names be
 | `browse_workspace` | Walk a workspace directory tree |
 | `create_tool` | Create new tool scripts at runtime (with force/validate flags) |
 | `subprocess_manager` | Manage background child CLI processes (`spawn`, `send`, `read`, `kill`, `list`) |
+| `write_todos` | Persistent JSON task tracking across agent turns |
+| `mission_control` | Decomposition, milestone management, and sub-task coordination |
+| `collab` | Multi-instance distributed swarm coordination (`peers`, `claims`, `status`) |
+| `remote_agent` | Delegate tasks to external HTTP agents (DeepAgents, LangGraph) |
+| `experiment_loop` | Autonomous iterative metric-driven code optimization loop |
+| `bug_bounty_scan_py` | Blue team host OS security hardening, open-source repo SAST, and ethical bug bounty recon |
+| `faceless_yt_pipeline` | Autonomous video production pipeline with TTS and subtitles |
+| `delegate_to_cli_agent` | Orchestrate and delegate to external CLI coding agents (Pi, Claude Code, Aider, OpenCode, Gemini) |
+| `agent_coordination` | Multi-agent coordination with task locking and shared blackboard |
+| `core_memory_read`, `core_memory_write`, `core_memory_append`, `core_memory_delete` | Structured core persona and user memory block management |
 | `query_knowledge_base` | Query the RAG knowledge base when RAG is enabled |
 | `translate` | Translate text between languages |
 | `speak` (tts) | Text-to-speech output |
@@ -208,7 +226,7 @@ Implements a typestate ReAct loop (`ReactStep<ThinkState>` → `ReactStep<ActSta
 
 - **shell_execute**: Strictly enforces the `ALLOW_SYSTEM_COMMANDS` flag. Commands are classified via the Governor; **RED** commands are blocked unless explicitly permitted in configuration.
 - **git_ops**: `is_blocked_git_command` rejects force-push, `--no-verify`, and `../` path traversal. Write operations are classified Red by the Governor.
-- **bug_bounty_scan**: Respects both `PYTHON_VENV_ENFORCED` for isolation and `ALLOW_SYSTEM_COMMANDS` for external scanning tools.
+- **bug_bounty_scan_py**: Respects both `PYTHON_VENV_ENFORCED` for virtual environment isolation and `ALLOW_SYSTEM_COMMANDS` for host tools (e.g. `nmap`). Enforces strict scope verification (`scope.allowed_domains`), authorization confirmations, and non-destructive policies across Blue Team host defense, repository SAST, and ethical recon modes.
 - **browse_workspace**: Hard-blocks access to `/etc`, `/proc`, `.ssh`, `C:\Windows`, and prevents `..` path traversal.
 - **delegate_task**: Cannot call itself recursively (filtered from the sub-agent's tool list).
 - **create_tool**: Python tools are syntax-validated via `ast.parse` before writing; invalid files are auto-removed.
@@ -229,13 +247,33 @@ See [ADR-003](adr/003-mcp-integration-pattern.md) for details.
 
 ### SQLite Databases
 
-- `memory.db`: Chat history and sessions
-- `ironclad_audit.db`: Audit log of all actions
+IronClad utilizes isolated SQLite databases with WAL mode and connection pooling for security and state durability:
 
-### Schema
+- **`ironclad_vault.db`**: Authenticated encrypted secrets storage (AES-256-GCM ciphertext blobs, nonces, and metadata). Master encryption keys are never stored in this database.
+- **`ironclad_memory.db`**: Conversational chat history, multi-turn sessions, episodic memory trajectories (`episodic_memory`), and learned semantic profiles (`semantic_profiles`).
+- **`ironclad_audit.db`**: Append-only tamper-evident audit log recording every user prompt, tool execution, Governor decision, and security event.
+- **`ironclad_pulse.db`**: Scheduled recurring background tasks, autonomous worker state, and pulse monitors.
+
+### Schema Highlights
 
 ```sql
--- Memory
+-- Encrypted Secrets Vault (ironclad_vault.db)
+CREATE TABLE vault_secrets (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    service TEXT NOT NULL,
+    secret_type TEXT NOT NULL,
+    encrypted_value BLOB NOT NULL,
+    nonce BLOB NOT NULL,
+    target_domains TEXT NOT NULL,
+    description TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    last_used_at TEXT,
+    is_active INTEGER NOT NULL DEFAULT 1
+);
+
+-- Chat Memory & Sessions (ironclad_memory.db)
 CREATE TABLE sessions (
     id TEXT PRIMARY KEY,
     persona TEXT,
@@ -250,7 +288,7 @@ CREATE TABLE messages (
     timestamp TEXT
 );
 
--- Audit
+-- Audit Events (ironclad_audit.db)
 CREATE TABLE audit_events (
     id TEXT PRIMARY KEY,
     timestamp TEXT,
@@ -395,8 +433,10 @@ See [RAG Documentation](rag.md) for configuration and usage details.
 
 ## Security Considerations
 
-- **Secret Scrubbing**: API keys redacted before LLM context
-- **Audit Logging**: All actions logged to SQLite
-- **Workspace Boundary**: Commands cannot escape workspace
-- **Trusted Users**: Telegram users can be pre-authorized
-- **RAG Privacy**: All indexing and retrieval happens locally
+- **Secrets Vault & Encryption at Rest**: Sensitive credentials encrypted with AES-256-GCM authenticated ciphertexts; master keys stored outside DB.
+- **Dynamic Aho-Corasick Scrubbing**: All known secret strings actively redacted in-memory before reaching LLM context, logs, or telemetry.
+- **SSRF Prevention Engine**: Pre-flight DNS and IP validation blocking loopback, RFC 1918 private subnets, link-local, and cloud IMDS (169.254.169.254) on outbound requests.
+- **Audit Logging**: Append-only tamper-evident logs recorded in `ironclad_audit.db` for all user prompts, tool calls, and security evaluations.
+- **Workspace Boundary Enforcement**: Shell commands, file reads/writes, and workspace traversals cannot escape the configured project workspace.
+- **Fail-Closed Integrations**: Non-loopback HTTP API bindings require an explicit API key; webhooks require HMAC-SHA256 signatures; Telegram daemon ignores and logs unauthorized chat IDs without metadata disclosure.
+- **RAG Privacy**: All code parsing, chunking, embedding generation, and vector retrieval occur locally or through explicitly chosen LLM endpoints.

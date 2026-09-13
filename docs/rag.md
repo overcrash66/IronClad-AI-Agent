@@ -16,6 +16,19 @@ RAG combines the power of large language models with a retrieval system that can
 - **Configurable**: Enable/disable and tune to your needs
 - **Automatic Updates**: File watcher keeps the index in sync with code changes
 
+### Change detection and self-heal
+
+- Files are re-embedded only when their **bytes** change (SHA-256 content
+  hash), not on every mtime bump — report rewrites, `git checkout`, and
+  `touch` no longer burn embedding calls.
+- Watcher events are reconciled against filesystem truth at flush time, so
+  atomic saves and rapid delete/recreate sequences cannot desync the index.
+- Every `reconcile_interval_secs` (default: hourly) the watcher runs an
+  incremental reindex plus an orphan prune (index entries for files gone
+  from disk) and persists the store — bounding the damage window of any
+  missed event. The prune refuses to run on empty or capped walks, so a
+  transiently unreachable workspace can never wipe the index.
+
 ### How It Works
 
 ```
@@ -108,9 +121,11 @@ min_similarity = 0.7
 | `auto_index` | boolean | `true` | Auto-index workspace on startup |
 | `watch_changes` | boolean | `true` | Watch for file changes |
 | `watch_debounce_ms` | number | `1000` | Debounce interval for file changes |
+| `reconcile_interval_secs` | number | `3600` | Hourly self-heal: incremental reindex + orphan prune + persist (`0` disables; live events still process) |
 | `max_file_size_kb` | number | `500` | Maximum file size to index |
 | `auto_inject_context` | boolean | `true` | Auto-inject context into prompts |
 | `max_context_tokens` | number | `2000` | Maximum tokens of context to inject |
+| `max_chunks_in_memory` | number | `20000` | In-memory chunk cap; oldest evicted past it (evicted files re-embed on restart) |
 
 ### Environment Variables
 

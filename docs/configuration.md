@@ -79,6 +79,10 @@ model = ""
 enabled = false
 allowed_chat_ids = []
 trusted_chat_ids = []
+# verbosity = "quiet"        # "quiet" | "compact" | "verbose"
+# send_typing_action = true  # send typing status during execution
+# show_tool_progress = false # stream tool invocations to chat
+# voice_reply = false        # send voice replies using TTS
 
 [integrations.remote_agents]
 enabled = false
@@ -137,10 +141,11 @@ HTTP interface and webhook configuration.
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `enabled` | boolean | `false` | Enable the HTTP API and Webhook server |
+| `enabled` | boolean | `false` | Enable the HTTP API, chat completion gateway, and Webhook server |
 | `host` | string | `"127.0.0.1"` | Host IP to bind the server to |
 | `port` | number | `3000` | Port to listen on |
-| `api_key` | string? | `null` | Optional API key for authenticating tasks |
+| `api_key` | string? | `null` | API key for authentication. **Mandatory** when binding to non-loopback hosts (`0.0.0.0`); ephemeral key auto-generated if omitted on loopback |
+| `webhook_secret` | string? | `null` | Secret token for validating inbound GitHub webhooks via HMAC-SHA256 signature verification |
 
 ### `[dashboard]`
 
@@ -150,10 +155,10 @@ Web dashboard for observability and management.
 |--------|------|---------|-------------|
 | `enabled` | boolean | `false` | Enable the web dashboard |
 | `port` | number | `8080` | Port to listen on (bound to 127.0.0.1 only) |
-| `username` | string? | `null` | Username for Basic Auth |
-| `password` | string? | `null` | Password for Basic Auth |
+| `username` | string? | `null` | Username for dashboard administrator account |
+| `password` | string? | `null` | Password for dashboard administrator account |
 
-**Security Note:** The dashboard binds exclusively to `127.0.0.1` and cannot be accessed from external networks. Always set credentials when enabling the dashboard.
+**Security Note:** The dashboard binds exclusively to `127.0.0.1` and cannot be accessed from external networks. On first run without credentials, a one-time terminal setup token is required to claim the administrator account.
 
 If the configured dashboard port is unavailable, IronClad will try the next three ports automatically before giving up.
 
@@ -176,6 +181,7 @@ Sandbox execution settings.
 | `backend` | string | `"docker"` | Backend: "docker", "wsl", or "local" |
 | `socket` | string | `""` | Docker socket path (auto-detected if empty) |
 | `default_image` | string | `"alpine:latest"` | Default container image or WSL distro |
+| `wsl_distro` | string | `"Ubuntu-22.04"` | WSL2 distribution name when `backend = "wsl"` |
 | `timeout_secs` | number | `60` | Command timeout in seconds |
 | `memory_limit_mb` | number | `128` | Memory limit in MB (Docker only) |
 | `cpu_limit` | number | `0.5` | CPU limit (Docker only) |
@@ -200,12 +206,31 @@ LLM provider settings.
 | `max_tool_chain_depth` | number | `150` | Maximum autonomous tool-chain depth |
 | `turbo_mode` | boolean | `false`| Disable orchestrator routing and QA for maximum speed |
 | `max_tool_calls` | number | `30` | Maximum tool calls allowed per task |
+| `max_task_turns` | number | `60` | Watchdog: max LLM turns per user task before tool execution halts and a partial status report is forced (`0` = unlimited; env `IRONCLAD__LLM__MAX_TASK_TURNS`) |
+| `max_task_wallclock_secs` | number | `5400` | Watchdog: max wall-clock seconds per user task before tool execution halts (`0` = unlimited; env `IRONCLAD__LLM__MAX_TASK_WALLCLOCK_SECS`) |
 | `agentic_mode` | boolean | `true` | Enable ReAct-style reasoning and multi-step autonomous execution |
 | `session_budget_secs` | integer? | `null` | Wall-clock seconds before the session exits gracefully; `null` = no limit |
 | `max_parallel_tools` | integer | `4` | Maximum number of tool calls dispatched concurrently in a single turn |
 | `context_compression` | boolean | `false` | Summarize dropped messages before applying the sliding window (requires an LLM call) |
+| `dynamic_model_routing` | boolean | `true` | Enable intelligent archetype routing and dynamic model selection |
+| `lm_studio_auto_manage` | boolean | `true` | Automatically manage LM Studio GPU VRAM model lifecycle (single-model invariant) |
 | `local_stt_cmd` | string? | `null` | Local STT command template |
 | `local_tts_cmd` | string? | `null` | Local TTS command template |
+
+### `[llm.model_preferences]`
+
+User-defined model routing preferences per task archetype. These override benchmark leaderboard rankings and hardcoded defaults.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `leaderboard_path` | string? | `"benchmark/model_leaderboard.json"` | Path to machine-readable benchmark leaderboard JSON |
+| `coding` | [string]? | `null` | Ordered model patterns for Coding & Tool Execution tasks |
+| `planning` | [string]? | `null` | Ordered model patterns for Planning & DAG Decomposition tasks |
+| `math_reasoning` | [string]? | `null` | Ordered model patterns for Mathematical Reasoning tasks |
+| `fast_chat` | [string]? | `null` | Ordered model patterns for Fast Interactive Response tasks |
+| `qa_review` | [string]? | `null` | Ordered model patterns for QA & Safety Review tasks |
+| `vision` | [string]? | `null` | Ordered model patterns for Vision & Multimodal tasks |
+| `security` | [string]? | `null` | Ordered model patterns for Security & Offensive Testing tasks |
 
 ### `[llm.ollama]`
 
@@ -508,7 +533,36 @@ IRONCLAD__FACeless_YT__TTS_VOICE_FR="fr-FR-DeniseNeural"
 IRONCLAD__FACeless_YT__EXAMPLE_TOPIC="artificial intelligence"
 ```
 
-See [Faceless YouTube Documentation](faceless_youtube.md) for full details.
+### `[integrations.telegram]`
+
+Telegram bot integration for remote conversational control, autonomous task execution, and progress alerts.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | boolean | `false` | Enable the Telegram bot integration |
+| `allowed_chat_ids` | [integer] | `[]` | List of allowed user IDs (positive) or group/channel IDs (negative). Fail-closed: unlisted IDs are ignored |
+| `trusted_chat_ids` | [integer] | `[]` | List of chat IDs with elevated bypass permissions (skips interactive Governor approval) |
+| `verbosity` | string | `"quiet"` | Notification verbosity: `"quiet"`, `"compact"`, or `"verbose"` |
+| `send_typing_action` | boolean | `true` | Send the Telegram "typing" chat action while reasoning and running tools |
+| `show_tool_progress` | boolean | `false` | Explicitly toggle intermediate tool execution progress messages (defaults to `true` when `verbosity = "verbose"`) |
+| `voice_reply` | boolean | `false` | Send audio voice replies using TTS (requires TTS configured) |
+
+*Headless 24/7 Daemon Note:* When running `ironclad serve`, if `[integrations.telegram]` is enabled and a bot token is provided via `settings.toml` or `IRONCLAD_TELEGRAM_KEY`, IronClad automatically spawns a background daemon that listens 24/7 for messages, voice audio (STT), and photos/multimodal tasks.
+
+Example:
+
+```toml
+[integrations.telegram]
+enabled = true
+allowed_chat_ids = [123456789, -100987654321]
+trusted_chat_ids = [123456789]
+verbosity = "compact"
+send_typing_action = true
+show_tool_progress = false
+voice_reply = false
+```
+
+See [Telegram Setup Guide](telegram_setup.md) for step-by-step bot creation and setup.
 
 ### `[integrations.remote_agents]`
 
@@ -519,8 +573,10 @@ HTTP bridge to external agent endpoints (LangGraph, DeepAgents, or any OpenAI-co
 | `enabled` | boolean | `false` | Enable the remote agent integration |
 | `endpoints[].name` | string | — | Friendly endpoint name |
 | `endpoints[].url` | string | — | Full URL of the `/invoke` endpoint |
-| `endpoints[].key` | string | `""` | Optional bearer token |
-| `endpoints[].timeout_secs` | number | `30` | Per-request timeout |
+| `endpoints[].key` | string | `""` | Optional plaintext bearer token |
+| `endpoints[].vault_secret_id` | string? | `null` | Optional secret ID reference stored in Secrets Vault (recommended over plaintext key) |
+| `endpoints[].tls_pin` | string? | `null` | Optional certificate pin or custom CA bundle |
+| `endpoints[].timeout_secs` | number | `120` | Per-request timeout in seconds |
 
 Example:
 
@@ -529,17 +585,51 @@ Example:
 enabled = true
 
 [[integrations.remote_agents.endpoints]]
-name         = "my-langgraph"
-url          = "http://localhost:8123/invoke"
-key          = ""
-timeout_secs = 30
+name            = "my-langgraph"
+url             = "http://localhost:8123/invoke"
+vault_secret_id = "langgraph-prod-token"
+timeout_secs    = 120
 ```
 
-Only the first configured endpoint is registered.  See [remote-agent.md](remote-agent.md) for full details.
+Only the first configured endpoint is registered as the default `remote_agent` skill. See [remote-agent.md](remote-agent.md) for full details.
 
-### GitHub Integration
+### `[integrations.collab]`
 
-GitHub integration and the `deep_research` skill can use a GitHub personal access token stored in the vault:
+Multi-instance swarm collaboration (`collab_workspace`) for distributing DAG sub-tasks across peer IronClad nodes.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | boolean | `false` | Enable multi-instance collaboration endpoints, skills, and dashboard tab |
+| `peers` | [object] | `[]` | List of peer IronClad nodes |
+| `peers[].name` | string | — | Unique friendly name of the peer node |
+| `peers[].url` | string | — | Peer base API URL (e.g. `"http://192.168.1.20:3000"`) |
+| `peers[].key` | string | — | Shared Bearer API key configured on peer (`api.api_key`) |
+| `peers[].timeout_secs` | number | `1800` | Maximum execution budget per distributed node task |
+
+Example:
+
+```toml
+[integrations.collab]
+enabled = true
+
+[[integrations.collab.peers]]
+name         = "ubuntu-worker-1"
+url          = "http://192.168.1.20:3000"
+key          = "peer-shared-secret"
+timeout_secs = 1800
+```
+
+See [collab.md](collab.md) for full details.
+
+### `[integrations.github]`
+
+GitHub integration settings and repository access policies.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `allowed_repos` | [string] | `[]` | Optional allowlist of repositories using glob patterns (e.g. `["my-org/*", "owner/repo"]`). If empty, access is unrestricted |
+
+GitHub personal access token can be configured via environment variable:
 
 ```powershell
 $env:IRONCLAD_GITHUB_KEY="ghp_..."
@@ -552,8 +642,22 @@ The token needs the following scopes depending on what you want to access:
 | `repo` (read) | `github_list_issues`, `github_list_prs`, and access to private repositories during `deep_research` |
 | `read:org` | Deep research across org repos |
 
-When the token is present, IronClad currently registers the read-only GitHub skills `github_list_issues` and `github_list_prs`.
+When the token is present, IronClad registers the read-only GitHub skills `github_list_issues` and `github_list_prs`, strictly validating requested repositories against `allowed_repos`.
 GitHub write skills exist in source but are intentionally disabled at runtime until a dedicated approval workflow exists for external repository mutations.
+
+### Secrets Vault & Credentials
+
+The Secrets Vault subsystem encrypts credentials and database connection strings using AES-256-GCM.
+
+- **Encrypted Storage**: `<workspace_root>/ironclad_vault.db`
+- **Master Encryption Key**: Resolved automatically from:
+  1. `IRONCLAD_MASTER_KEY` environment variable
+  2. OS Keyring (`ironclad_agent` / `master_vault_key`)
+  3. `.ironclad/vault.key` file in workspace root (generated with 256-bit CSPRNG and POSIX `0600` permissions)
+- **Dynamic Scrubber**: Aho-Corasick pattern scrubber automatically redacts secrets from prompt inputs, model thoughts, tool arguments, tool outputs, and logs.
+- **SSRF Hardening**: Outbound network requests (`http_request`, `web_scrape`, `remote_agent`) strictly block access to loopback, private RFC 1918 subnets, cloud metadata services (IMDS `169.254.169.254`), and resolve hostnames pre-flight to defeat DNS rebinding.
+
+See [Secrets Vault Guide](secrets_vault.md) for complete details.
 
 ### `[browser]`
 
@@ -765,6 +869,25 @@ exclude_patterns = [
 ]
 ```
 
+## `[quality_gate]`
+
+Quality gate settings for automated code review and build validation.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `min_test_coverage` | float | `80.0` | Minimum test coverage percentage required to pass |
+| `max_clippy_warnings` | integer | `0` | Maximum number of clippy linter warnings allowed |
+| `block_on_security_issues` | boolean | `true` | Whether to block execution if security vulnerabilities are found |
+| `require_documentation` | boolean | `false` | Whether to require docstrings/comments for all public items |
+
+```toml
+[quality_gate]
+min_test_coverage = 80.0
+max_clippy_warnings = 0
+block_on_security_issues = true
+require_documentation = false
+```
+
 ## Environment Variables
 
 Environment variables override configuration file settings. Use the prefix `IRONCLAD_` and double underscores for nested keys.
@@ -818,24 +941,36 @@ system_prompt = """You are a data analysis expert..."""
 Override configuration via command line:
 
 ```bash
+# Launch interactive TUI
+ironclad
+
 # Use specific config file
 ironclad --config custom-settings.toml
 
-# Override workspace
-ironclad --workspace /path/to/workspace
+# Override workspace or provider
+ironclad --workspace /path/to/workspace --provider openai
 
-# Override provider
-ironclad --provider openai
-
-# Resume session
+# Resume session or force fresh session
 ironclad --session <session-id>
+ironclad --new-session
 
-# List sessions
+# List past stored sessions
 ironclad sessions
 
-# Orchestration mode
+# Autonomous task execution (Orchestrator mode)
 ironclad orchestrate --task "Write a hello world program"
-ironclad orchestrate --task "Analyze data" --persona analyst
+ironclad orchestrate --task "Analyze data" --persona analyst --chat-id 123456789
+
+# Autonomous maintenance run (Pulse)
+ironclad pulse --mode full
+ironclad pulse --mode scan
+
+# Headless REST API server
+ironclad serve --port 3000
+
+# Run automated 8-pillar LLM benchmarks
+ironclad benchmark --mode comparative
+ironclad benchmark --models "qwen2.5-coder:32b" --pillars "pillar1_tool_use"
 ```
 
 ## Validation
