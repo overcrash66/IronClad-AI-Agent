@@ -109,7 +109,7 @@ Low-level design rationale for core systems.
 
 | Document | Description |
 |----------|-------------|
-| [Master Test Plan & Verification Guide](master_test_plan.md) | 7-pillar master test plan for swarms, webhooks, MCP, external agents, and federation |
+| [Master Test Plan & Verification Guide](master_test_plan.md) | 8-pillar master test plan for swarms, webhooks, MCP, external agents, secrets vault, and pulse scheduler |
 | [Pi Agent Setup Guide](guides/pi-agent-setup.md) | Setting up Pi AI coding agent for autonomous task escalation |
 
 ---

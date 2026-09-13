@@ -18,18 +18,20 @@ semantic_profiles_enabled = true
 
 [dashboard]
 enabled = true
+# Host binding: "127.0.0.1" for local-only access, or "0.0.0.0" for LAN access across your local network
+host = "127.0.0.1"
 password = ""
 port = 8080
 username = ""
 
 [faceless_yt]
 background_music_dir = "./assets/music"
-burn_subtitles = true
+burn_subtitles = false
 default_format = "16:9"
 default_model = ""
 enabled = true
 example_topic = ""
-generate_subtitles = true
+generate_subtitles = false
 languages = "en"
 max_video_duration_secs = 300
 niche = "world news"
@@ -44,21 +46,12 @@ audit_db = "ironclad_audit.db"
 log_level = "info"
 workspace_dir = "./scratchpad"
 
+[integrations.collab]
+enabled = false
+
 [integrations.remote_agents]
 enabled = false
 endpoints = []
-
-[integrations.collab]
-enabled = false
-# Peers are other IronClad instances reachable over HTTP. url is the peer's
-# API server base URL, key is the peer's IRONCLAD__API__API_KEY, and
-# timeout_secs is the per-node budget (set generously: node runs take
-# minutes, not seconds).
-# [[integrations.collab.peers]]
-# name = "ubuntu-worker"
-# url = "http://192.168.1.20:3000"
-# key = "shared-secret"
-# timeout_secs = 1800
 
 [integrations.telegram]
 allowed_chat_ids = []
@@ -73,9 +66,9 @@ connect_timeout_secs = 15
 context_compression = true
 default_provider = "ollama"
 dynamic_model_routing = false
-fallback_models = ["anthropic/claude-3-5-sonnet", "gemini/gemini-1.5-pro", "nvidia/meta/llama-3.3-70b-instruct"]
+fallback_models = []
 force_use_default_model = true
-lm_studio_auto_manage = true
+lm_studio_auto_manage = false
 local_stt_cmd = "{python} scripts/transcribe_voice.py {input} --model base"
 local_tts_cmd = "{python} scripts/speak.py {text}"
 loop_timeout_secs = 600
@@ -86,18 +79,18 @@ max_parallel_tools = 4
 max_replan_attempts = 3
 max_retries = 2
 max_task_turns = 60
-max_task_wallclock_secs = 5400
+max_task_wallclock_secs = 10800
 max_tokens = 32000
 max_tool_calls = 30
 max_tool_chain_depth = 10
 orchestrator_enabled = true
-plan_qa_enabled = true
+plan_qa_enabled = false
 planner_cache_max_entries = 100
 planner_cache_ttl_secs = 300
 python_path = ""
-qa_enabled = true
+qa_enabled = false
 session_budget_secs = 0
-step_qa_enabled = true
+step_qa_enabled = false
 timeout_secs = 600
 turbo_mode = false
 
@@ -105,28 +98,28 @@ turbo_mode = false
 api_key = ""
 base_url = "https://api.anthropic.com/v1"
 model = "claude-3-5-sonnet-20240620"
-vision = true
+vision = false
 
 [llm.gemini]
 api_key = ""
 base_url = "https://generativelanguage.googleapis.com/v1beta"
 model = "gemini-1.5-pro"
-vision = true
+vision = false
 
 [llm.model_preferences]
-coding = ["qwen3.6-27b", "qwen3.6", "qwen3.8-27b", "qwen3.8", "deepseek-r1", "gemma-4-31b", "gpt-oss"]
-fast_chat = ["gemma-4-e4b", "e4b", "qwen3.5-9b", "glm-4.6v-flash", "glm-4.7-flash", "4b", "9b", "7b", "8b"]
-math_reasoning = ["deepseek-r1", "gpt-oss", "qwen3.8", "gemma-4-31b", "qwen3.6", "qwen3.5-9b"]
-planning = ["gpt-oss", "claude-opus-reasoning", "reasoning-distilled", "qwen3.8", "deepseek-r1", "qwen3.6"]
-qa_review = ["qwen3.8", "gemma-4-31b", "qwen3.6", "deepseek-r1", "muse-glimmer"]
+coding = ["qwen3.6-27b", "qwen3.6", "qwen3.8-27b", "qwen3.8", "gpt-oss"]
+fast_chat = ["gemma-4-e4b", "e4b", "qwen3.5-9b", "4b", "9b", "7b", "8b"]
+math_reasoning = ["qwen3.8", "qwen3.6", "qwen3.5-9b"]
+planning = ["qwen3.8", "qwen3.6"]
+qa_review = ["qwen3.8", "muse-glimmer"]
 security = ["dolphin", "abliterated", "uncensored", "nous-hermes", "wizard-vicuna", "openhermes", "deepseek-r1", "qwen3.8", "qwen3.6"]
 vision = ["vision", "-vl", "vl-", "qwen-vl", "qwen2.5-vl", "glm-4.6v", "minicpm-v", "pixtral", "llava"]
 
 [llm.nvidia]
 api_key = ""
 base_url = "https://integrate.api.nvidia.com/v1"
-model = "meta/llama-3.3-70b-instruct"
-vision = true
+model = ""
+vision = false
 
 [llm.ollama]
 api_token = ""
@@ -159,7 +152,7 @@ model = "whisper-1"
 [llm.translation]
 api_key = ""
 base_url = ""
-enabled = false
+enabled = true
 model = ""
 
 [llm.tts]
@@ -187,6 +180,9 @@ max_learnings_in_context = 10
 max_sessions_per_run = 10
 min_session_age_days = 7
 schedule = "0 0 3 * * *"
+
+[mission]
+default_session = "default-session"
 
 [personas.analyst]
 description = "Expert in data analysis and visualization."
@@ -216,11 +212,11 @@ system_prompt = "You are IronClad, a fully-capable autonomous AI agent running l
 [quality_gate]
 block_on_security_issues = true
 max_clippy_warnings = 0
-min_test_coverage = 80.0
+min_test_coverage = 80
 require_documentation = false
 
 [rag]
-auto_index = false
+auto_index = true
 auto_inject_context = true
 chunk_overlap = 50
 chunk_size = 512
@@ -236,10 +232,10 @@ max_context_tokens = 1000
 max_file_size_kb = 500
 max_results = 10
 min_similarity = 0.7
+reconcile_interval_secs = 3600
 watch_changes = true
 watch_debounce_ms = 1000
 watcher_channel_capacity = 1024
-reconcile_interval_secs = 3600
 
 [react]
 enabled = true
@@ -248,7 +244,7 @@ inject_stderr_on_failure = true
 max_consecutive_failures = 3
 max_parse_retries = 2
 max_turns = 50
-total_timeout_secs = 3600
+total_timeout_secs = 10800
 
 [sandbox]
 backend = "wsl"
@@ -265,7 +261,7 @@ allowed_path_patterns = "**"
 autonomous_mode = true
 blocked_path_patterns = "**/.env, **/.git/**, **/secrets/**, **/*.pem, **/*.key"
 max_path_length = 4096
-strict_path_validation = true
+strict_path_validation = false
 
 [subprocess]
 allowed_executables = []
@@ -275,10 +271,15 @@ max_concurrent_agents = 5
 
 [tools]
 allow_system_commands = true
-python_venv_enforced = true
+python_venv_enforced = false
 
 [tools.extensions]
 js = "node"
 ps1 = "powershell -ExecutionPolicy Bypass -File"
 py = "python3"
 sh = "bash"
+
+[vault]
+db_path = ".ironclad/vault.db"
+default_session = "default-session"
+pbkdf2_rounds = 100000

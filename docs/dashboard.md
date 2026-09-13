@@ -11,6 +11,8 @@ The IronClad Dashboard is a secure, lightweight single-page web interface (`http
 ```toml
 [dashboard]
 enabled = true
+# Binding: "127.0.0.1" for local-only (default), or "0.0.0.0" for LAN access
+host = "127.0.0.1"
 port = 8080
 # Optional: pre-configure credentials, or set them interactively via First-Run Setup
 username = "admin"
@@ -20,6 +22,7 @@ password = "your-secure-password"
 Or via environment variables:
 ```bash
 IRONCLAD__DASHBOARD__ENABLED=true
+IRONCLAD__DASHBOARD__HOST=0.0.0.0
 IRONCLAD__DASHBOARD__PORT=8080
 IRONCLAD__DASHBOARD__USERNAME=admin
 IRONCLAD__DASHBOARD__PASSWORD=your-secure-password
@@ -60,7 +63,7 @@ If no username/password is pre-configured, IronClad enters **First-Run Setup Mod
 
 The dashboard enforces strict defense-in-depth measures:
 
-1. **Loopback Exclusive (`127.0.0.1`)**: The HTTP listener binds strictly to the loopback interface, preventing external network access.
+1. **Configurable Host Binding (`127.0.0.1` by default; `0.0.0.0` for LAN access)**: Binds strictly to `127.0.0.1` loopback by default. When `host = "0.0.0.0"` is chosen for local area network access, authentication (passwords, session cookies, rate limiting) remains strictly enforced.
 2. **Terminal Setup Token**: First-time admin creation requires proof of local console access, eliminating unauthenticated takeover risks.
 3. **Session Cookies & Sliding Refresh**: Successful authentication issues a cryptographically secure HTTP-only cookie (`ironclad_session`) with constant-time token comparison and a 24-hour sliding inactivity expiration (`SESSION_TTL_SECS = 86400`).
 4. **Per-IP Lockout Throttling**: Repeated authentication failures result in progressive per-IP lockout delays.

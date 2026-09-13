@@ -184,7 +184,6 @@ Explore the complete documentation in the [`docs/`](https://github.com/overcrash
 ### 🏛️ Architecture & Security
 - 🛡️ **[Architecture Overview](docs/architecture.md)** — Three-Ring zero-trust security model, DAG planner, and data flow.
 - 🔐 **[Secrets Vault & Credentials](docs/secrets_vault.md)** — AES-256-GCM encrypted credential storage, database probing, SSRF defense, and Aho-Corasick scrubbing.
-- 📐 **[Mathematical Foundations White Paper](docs/white_paper_mathematical_foundations.md)** — Formal mathematical proofs for model routing, MCTS Pareto rewards, abstract interpretation security lattices, and deadlock freedom.
 - 🚦 **[Autonomy & Traffic Light Policy](docs/autonomy.md)** — Green / Yellow / Red / Blocked intent classification.
 - ⏱️ **[Session Budget](docs/session-budget.md)** — Wall-clock runtime limits for runaway sessions.
 - ⚡ **[Concurrent Tool Dispatch](docs/concurrent-tools.md)** — Parallel tool execution and file-backed outputs.
@@ -216,7 +215,7 @@ Explore the complete documentation in the [`docs/`](https://github.com/overcrash
 - 🖼️ **[Multimodal Setup](docs/multimodal_setup.md)** — Vision model configuration and image analysis.
 - 🎙️ **[Local STT Setup](docs/local_stt_setup.md)** — Local speech-to-text with Whisper or OpenAI-compatible endpoints.
 - 📊 **[Benchmark & Evaluation Suite](docs/benchmarks.md)** — Deterministic offline benchmarks and 8-pillar multi-model matrix evaluation.
-- 🧪 **[Master Test Plan & Verification Guide](docs/master_test_plan.md)** — 7-pillar master test plan for swarms, webhooks, MCP, external agents, and cluster federation.
+- 🧪 **[Master Test Plan & Verification Guide](docs/master_test_plan.md)** — 8-pillar master test plan for swarms, webhooks, MCP, external agents, secrets vault, and pulse scheduler.
 
 ---
 
