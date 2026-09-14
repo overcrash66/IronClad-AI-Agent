@@ -343,11 +343,28 @@ To force a reindex of the workspace:
 }
 ```
 
-Or delete the vector database and restart:
+Or delete the vector database and restart (the live index file is `memory.json`
+next to `memory.db` in the workspace root):
 
 ```bash
-rm -rf .ironclad/vectors
+rm -f memory.json
 ```
+
+### Changing the embedding model
+
+The index does **not** auto-rebuild on an embedding-model change (auto-purge on
+dimension mismatch was removed in v0.6.8 — it wiped the whole index on every
+model hot-swap). After intentionally switching `embedding_provider` /
+`embedding_model`:
+
+1. Stop IronClad, delete `memory.json` (keep the `memory.json` backup if needed).
+2. Set `embedding_dimension` in `settings.toml` to the new model's dimension
+   (e.g. `768` for `nomic-embed-text`, `1024` for `mxbai-embed-large`).
+3. Restart — the workspace is reindexed once in the background.
+
+If you skip step 1, the old index is kept and new chunks with a mismatched
+dimension are skipped with a warning (check the logs for
+`Skipped RAG chunks with mismatched embedding dimension`).
 
 ## Troubleshooting
 
