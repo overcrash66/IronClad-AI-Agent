@@ -689,6 +689,30 @@ Mapping of file extensions to execution commands.
 | `js` | string | `"node"` | Command used to execute JavaScript tools |
 | `ps1` | string | `"powershell -ExecutionPolicy Bypass -File"` | Command used to execute PowerShell tools |
 
+### `[subprocess]`
+
+Subprocess orchestration and external CLI-agent delegation (`delegate_to_cli_agent`, AutonomousWorker) settings.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `max_concurrent_agents` | number | `5` | Maximum number of concurrent subprocess agents |
+| `default_timeout_secs` | number | `300` | Default timeout in seconds for subprocess operations; also the default/max `timeout_seconds` for `delegate_to_cli_agent` and the fallback per-agent cap for worker delegation |
+| `default_driver` | string | `"piped"` | Default driver type: `"piped"` or `"pty"` |
+| `allowed_executables` | array | `[]` | Whitelist of allowed executables (empty = allow all) |
+| `disabled_agents` | array | `[]` | CLI agents to skip (e.g. `["gemini", "opencode"]` to keep only `pi`); also toggleable live in the Dashboard Subprocesses tab |
+| `cli_delegation_budget_secs` | number | `600` | Total wall-clock budget in seconds shared by all CLI-agent attempts in one autonomous-worker tick |
+| `cli_agent_timeout_secs` | number | `0` | Hard cap in seconds for a single CLI-agent attempt; `0` = inherit `default_timeout_secs` |
+
+```toml
+[subprocess]
+default_timeout_secs = 300
+cli_delegation_budget_secs = 600
+cli_agent_timeout_secs = 0   # 0 = inherit default_timeout_secs
+disabled_agents = ["gemini", "opencode"]   # keep only your favorite, e.g. pi
+```
+
+Precedence for the worker delegation budget/cap: legacy `IRONCLAD__PULSE__CLI_*` env vars (when set) > `[subprocess]` settings above (env `IRONCLAD__SUBPROCESS__CLI_*` overrides the file via the usual `IRONCLAD__` mapping) > built-in defaults. A restart is required after editing — bootstrap publishes the merged values once at startup and logs the effective pair. Attempts below a 60s remaining slice are skipped ("CLI delegation budget exhausted") in favor of the local LLM.
+
 ## Tool Security & Isolation
 
 IronClad is "Secure-by-Default," meaning that out-of-the-box, the agent is restricted from making unauthorized changes to your system.

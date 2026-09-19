@@ -68,8 +68,13 @@ If you are using the default bootstrap configuration, this is already set. If de
 
 When this flag is `true`, IronClad will shell out to the `pi` command line utility when escalating tasks.
 
+## Delegation Timeouts
+
+Autonomous delegation to Pi is bounded by `[subprocess]` settings in `settings.toml` (restart after editing): `cli_delegation_budget_secs` (total shared budget per worker tick, default `600`) and `cli_agent_timeout_secs` (`0` = inherit `default_timeout_secs`, default `300`). Interactive `delegate_to_cli_agent` calls default to `default_timeout_secs` unless `timeout_seconds` is passed explicitly.
+
 ## Troubleshooting
 
+- **"CLI delegation budget exhausted … without trying 'pi'"**: an earlier agent in the order (e.g. a dashboard-disabled `opencode`) consumed the shared budget, or the budget is set too low. Check `[subprocess] disabled_agents` / the Dashboard Subprocesses tab and raise `cli_delegation_budget_secs` if needed.
 - **Node version mismatch**: If `pi --version` fails with syntax errors, ensure you are running at least Node.js 18 (`node -v`).
 - **Permission Denied during npm install**: Ensure you use `sudo` or configure npm to install global packages in your home directory without root permissions.
 - **Command not found**: If `pi` is not recognized, make sure your global npm bin path (e.g. `/usr/local/bin` or `~/.npm-global/bin`) is in your system `$PATH`.

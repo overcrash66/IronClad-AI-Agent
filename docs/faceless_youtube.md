@@ -57,6 +57,13 @@ tts_voice_de = ""        # German voice
 
 # Search improvement
 example_topic = ""         # Topic to search for example videos on Pexels
+
+# Low-memory encode profile for small hosts (e.g. 8GB i3, LM Studio remote).
+# Halves the render canvas (720p) and caps ffmpeg CPU. Off by default.
+low_mem = false            # Set true on weak boxes
+encode_preset = "ultrafast" # ffmpeg x264 preset (default in script)
+encode_threads = 2          # ffmpeg threads (default in script)
+max_clip_mb = 150           # Per-clip Pexels download cap in MB
 ```
 
 ### Default TTS Voices by Language
@@ -129,4 +136,17 @@ IRONCLAD__FACeless_YT__TTS_VOICE_FR="fr-FR-DeniseNeural"
 
 # Search Improvement
 IRONCLAD__FACeless_YT__EXAMPLE_TOPIC="artificial intelligence"
+
+# Low-memory encode profile (same as settings.toml [faceless_yt] above)
+IRONCLAD_YT_LOW_MEM=1
+IRONCLAD_YT_PRESET=ultrafast
+IRONCLAD_YT_THREADS=2
+IRONCLAD_YT_MAX_CLIP_MB=150
 ```
+
+> **8GB hosts:** set `low_mem = true` (or `IRONCLAD_YT_LOW_MEM=1`), keep
+> `burn_subtitles = false` for the first run, render one language, and
+> schedule Pulse YT jobs off-hours. The Rust host now streams render logs
+> instead of buffering them, and the script streams downloads, closes clips
+> in `finally`, and cleans `.part` files — but a 300s 1080p render + second
+> ffmpeg subtitle pass can still OOM a small box.

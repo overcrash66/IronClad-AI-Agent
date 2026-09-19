@@ -40,6 +40,12 @@ pexels_api_key = ""
 tts_voice_en = ""
 tts_voice_fr = ""
 youtube_upload = false
+# Low-memory encode profile for small hosts (8GB): halves render canvas.
+# Uncomment on weak boxes. Script defaults: preset ultrafast, threads 2, cap 150MB.
+# low_mem = false
+# encode_preset = "ultrafast"
+# encode_threads = 2
+# max_clip_mb = 150
 
 [general]
 audit_db = "ironclad_audit.db"
@@ -220,7 +226,7 @@ auto_index = true
 auto_inject_context = true
 chunk_overlap = 50
 chunk_size = 512
-db_path = "memory.db"
+db_path = ".ironclad/vectors.json"
 embedding_dimension = 768
 embedding_model = "nomic-embed-text-v1.5"
 embedding_provider = "openai"
@@ -276,6 +282,13 @@ strict_path_validation = false
 
 [subprocess]
 allowed_executables = []
+# Total wall-clock budget (seconds) shared by all CLI-agent delegation
+# attempts in one autonomous-worker tick. Hung agents must not stack
+# full timeouts serially.
+cli_delegation_budget_secs = 600
+# Hard cap (seconds) for a single CLI-agent attempt. 0 = inherit
+# default_timeout_secs above.
+cli_agent_timeout_secs = 0
 default_driver = "piped"
 default_timeout_secs = 300
 max_concurrent_agents = 5

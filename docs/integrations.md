@@ -138,6 +138,8 @@ You can invoke or delegate directly from the TUI / chat prompt:
 > "Delegate this refactoring task to Pi Agent."
 > "Run aider to write unit tests for the authentication module."
 
+Timeouts come from `[subprocess]` in `settings.toml`: `default_timeout_secs` governs the default/max `timeout_seconds` per delegation call, while `cli_delegation_budget_secs` / `cli_agent_timeout_secs` bound autonomous-worker delegation (see [Configuration](configuration.md) and [Pulse Scheduler](pulse_scheduler.md)).
+
 ---
 
 ## Subprocess & PTY Manager (`subprocess_manager`)

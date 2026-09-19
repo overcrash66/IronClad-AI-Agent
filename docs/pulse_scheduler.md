@@ -122,6 +122,17 @@ prefer_cli_delegation = true
 Example:
 > **User:** "Schedule the hourly autonomous worker job."
 
+#### CLI delegation budget
+
+When `prefer_cli_delegation` is `true`, the worker tries enabled CLI agents in order (`opencode` → `pi` → `claude` → `gemini` → `aider`) before falling back to the local LLM. All attempts share one wall-clock budget so hung agents can't stack full timeouts serially:
+
+- Total shared budget: `[subprocess] cli_delegation_budget_secs` (default `600`).
+- Per-agent cap: `[subprocess] cli_agent_timeout_secs` (`0` = inherit `default_timeout_secs`, default `300`).
+- Agents dashboard-disabled via `[subprocess] disabled_agents` (or `IRONCLAD__SUBPROCESS__DISABLED_AGENTS`) are skipped in Auto mode, so they can't burn the budget ahead of your enabled favorite. An explicit `Cli(name)` executor still tries that agent even if disabled, and fails loudly if it isn't installed.
+- When under 60s of budget remains, delegation stops with `WARN CLI delegation budget exhausted; falling through to local LLM without trying '<agent>'`.
+
+See the `[subprocess]` section in [Configuration](configuration.md) for the full precedence chain (legacy `IRONCLAD__PULSE__CLI_*` env vars > settings file > built-in defaults; restart required).
+
 ### `AutonomousMaintenance` *(new)*
 Runs background codebase maintenance loops in `scan`, `fix`, or `full` mode via the PM module.
 

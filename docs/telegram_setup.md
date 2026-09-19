@@ -44,7 +44,7 @@ When running IronClad as a long-running service (`ironclad serve`), IronClad aut
 
 The daemon provides continuous, unassisted remote control:
 - **Zero-poll manual interaction**: Polling runs asynchronously in the background alongside the HTTP API, Webhook server, and Dashboard.
-- **Persistent Sessions**: Each Telegram user chat receives an isolated conversational session (`telegram:<chat_id>`) backed by SQLite memory (`ironclad_memory.db`), preserving task history and context across turns.
+- **Persistent Sessions**: Each Telegram user chat receives an isolated conversational session (`telegram:<chat_id>`) backed by SQLite memory (`ironclad_memory.db`), preserving task history and context across turns. Send `/new` (aliases `/clear`, `/reset`) for a guaranteed fresh session/context.
 - **Instance Conflict Resolution**: Detects `409 Conflict` errors if another process is polling the same bot token and gracefully backs off.
 
 ```bash
@@ -62,6 +62,8 @@ Authorized users can issue the following quick commands:
 |---|---|
 | `/status`, `/ping` | Displays active server status, current default LLM model, chat ID, and active workspace path. |
 | `/id` | Replies with the sender's Telegram chat ID (useful for initial verification). |
+| `/new`, `/clear`, `/reset` | Starts a fresh session — clears Telegram history (`telegram:<chat_id>`) and, in TUI mode, the shared conversation view. Takes precedence over pending clarification prompts. |
+| `/stop`, `/cancel` | Cancels the current in-flight task (history is kept). |
 | `/help` | Shows available command overview and interaction capabilities. |
 
 ---
